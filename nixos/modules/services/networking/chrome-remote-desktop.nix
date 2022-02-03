@@ -4,16 +4,16 @@ let
   cfg = config.services.chrome-remote-desktop;
   chrome-remote-desktop = pkgs.chrome-remote-desktop.override { enableNewSession = cfg.newSession; };
 in {
-  options.services.chrome-remote-desktop = {
-    enable = mkEnableOption "Chrome Remote Desktop";
-    user = mkOption {
+  options = {
+    services.chrome-remote-desktop.enable = mkEnableOption "Chrome Remote Desktop";
+    services.chrome-remote-desktop.user = mkOption {
       type = types.str;
       description = ''
         A user which the service will run as.
       '';
       example = "alice";
     };
-    newSession = mkOption {
+    services.chrome-remote-desktop.newSession = mkOption {
       type = types.bool;
       description = "Whether to start a new session";
       default = false;
