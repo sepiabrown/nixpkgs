@@ -26,6 +26,7 @@
 , pulseaudioSupport ? true
 , libpulseaudio
 , kime
+, qt5
 }:
 
 let
