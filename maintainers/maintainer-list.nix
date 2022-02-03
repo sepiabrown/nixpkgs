@@ -10507,6 +10507,12 @@
     githubId = 529649;
     name = "Raffael Mancini";
   };
+  sepiabrown = {
+    email = "bboxone@gmail.com";
+    github = "sepiabrown";
+    githubId = 35622998;
+    name = "Suwon Park";
+  };
   seppeljordan = {
     email = "sebastian.jordan.mail@googlemail.com";
     github = "seppeljordan";
