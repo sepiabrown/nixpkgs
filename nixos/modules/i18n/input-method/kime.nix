@@ -38,8 +38,8 @@ in
     i18n.inputMethod.package = pkgs.kime;
 
     environment.variables = {
-      GTK_IM_MODULE = "kime";
-      QT_IM_MODULE  = "kime";
+      GTK_IM_MODULE = "kime zoom";
+      QT_IM_MODULE  = "kime zoom";
       XMODIFIERS    = "@im=kime";
     };
 
