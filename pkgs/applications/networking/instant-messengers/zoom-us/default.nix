@@ -113,7 +113,7 @@ stdenv.mkDerivation rec {
       --prefix PATH : ${lib.makeBinPath [ coreutils glib.dev pciutils procps util-linux ]} \
       --prefix LD_LIBRARY_PATH ":" ${libs}
 
-    ln -s ${kime}/lib/qt-${qt5.qtbase.version}/plugins/platforminputcontexts/libkimeplatforminputcontextplugin.so $out/opt/zoom/platforminputcontexts/libkimeplatforminputcontextplugin.so
+    cp ${kime}/lib/qt-${qt5.qtbase.version}/plugins/platforminputcontexts/libkimeplatforminputcontextplugin.so $out/opt/zoom/platforminputcontexts/libkimeplatforminputcontextplugin.so
 
     # Backwards compatiblity: we used to call it zoom-us
     ln -s $out/bin/{zoom,zoom-us}
