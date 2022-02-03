@@ -83,6 +83,9 @@ stdenv.mkDerivation rec {
     runHook preInstall
     mkdir $out
     tar -C $out -xf $src
+    install -m755 ${kime}/lib/qt-${qt5.qtbase.version}/plugins/platforminputcontexts/libkimeplatforminputcontextplugin.so $out/opt/zoom/platforminputcontexts/libkimeplatforminputcontextplugin.so
+    chmod 755 $out/opt/zoom/platforminputcontexts/libkimeplatforminputcontextplugin.so
+    chmod 777 $out/opt/zoom/platforminputcontexts/libibusplatforminputcontextplugin.so
     mv $out/usr/* $out/
     runHook postInstall
   '';
@@ -113,9 +116,6 @@ stdenv.mkDerivation rec {
       --prefix PATH : ${lib.makeBinPath [ coreutils glib.dev pciutils procps util-linux ]} \
       --prefix LD_LIBRARY_PATH ":" ${libs}
 
-    install -m755 ${kime}/lib/qt-${qt5.qtbase.version}/plugins/platforminputcontexts/libkimeplatforminputcontextplugin.so $out/opt/zoom/platforminputcontexts/libkimeplatforminputcontextplugin.so
-    chmod 755 $out/opt/zoom/platforminputcontexts/libkimeplatforminputcontextplugin.so
-    chmod 777 $out/opt/zoom/platforminputcontexts/libibusplatforminputcontextplugin.so
     # Backwards compatiblity: we used to call it zoom-us
     ln -s $out/bin/{zoom,zoom-us}
   '';
