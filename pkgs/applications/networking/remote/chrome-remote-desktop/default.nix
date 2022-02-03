@@ -1,5 +1,5 @@
 { enableNewSession ? false, stdenv, pkgs, lib, config, fetchurl, fetchgit, dpkg, python3, glibc, glib, pam, nss
-, nspr, expat, gtk3, dconf, xorg, fontconfig, dbus_daemon, alsa-lib, shadow, mesa, libdrm, libxkbcommon, wayland }:
+, nspr, expat, gtk3, dconf, xorg, fontconfig, dbus, alsa-lib, shadow, mesa, libdrm, libxkbcommon, wayland }:
 stdenv.mkDerivation rec {
   pname = "chrome-remote-desktop";
   version = "unstable-2022-02-03";
@@ -58,7 +58,6 @@ stdenv.mkDerivation rec {
 
   preFixup = let
     libPath = lib.makeLibraryPath ([
-    ] ++ lib.optionals (!stdenv.isDarwin) [
       glib
       nss
       fontconfig
@@ -81,7 +80,7 @@ stdenv.mkDerivation rec {
       expat
       gtk3
       dconf
-      dbus_daemon.lib
+      dbus.daemon
       libxkbcommon
       shadow
       mesa
