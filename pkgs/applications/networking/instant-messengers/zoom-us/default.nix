@@ -25,8 +25,8 @@
 , util-linux
 , pulseaudioSupport ? true
 , libpulseaudio
-, kime
-, qt5
+#, kime
+#, qt5
 }:
 
 let
@@ -83,13 +83,13 @@ stdenv.mkDerivation rec {
     runHook preInstall
     mkdir $out
     tar -C $out -xf $src
-    install -m755 ${kime}/lib/qt-${qt5.qtbase.version}/plugins/platforminputcontexts/libkimeplatforminputcontextplugin.so $out/opt/zoom/platforminputcontexts/libkimeplatforminputcontextplugin.so
-    chmod 755 $out/opt/zoom/platforminputcontexts/libkimeplatforminputcontextplugin.so
-    chmod 777 $out/opt/zoom/platforminputcontexts/libibusplatforminputcontextplugin.so
     mv $out/usr/* $out/
     runHook postInstall
   '';
 
+   # install -m755 ${kime}/lib/qt-${qt5.qtbase.version}/plugins/platforminputcontexts/libkimeplatforminputcontextplugin.so $out/opt/zoom/platforminputcontexts/libkimeplatforminputcontextplugin.so
+   # chmod 755 $out/opt/zoom/platforminputcontexts/libkimeplatforminputcontextplugin.so
+   # chmod 777 $out/opt/zoom/platforminputcontexts/libibusplatforminputcontextplugin.so
   postFixup = ''
     # Desktop File
     substituteInPlace $out/share/applications/Zoom.desktop \
