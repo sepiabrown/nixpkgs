@@ -80,7 +80,7 @@ stdenv.mkDerivation rec {
       expat
       gtk3
       dconf
-      dbus.daemon
+      dbus.daemon.lib
       libxkbcommon
       shadow
       mesa
