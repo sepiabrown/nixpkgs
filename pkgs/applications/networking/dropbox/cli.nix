@@ -1,16 +1,16 @@
-{ lib, stdenv
-, substituteAll
-, pkg-config
-, fetchurl
-, python3
-, dropbox
-, gtk3
-, gnome
-, gdk-pixbuf
-, gobject-introspection
-}:
-#{ pkgs ? import <nixpkgs> {} }:
-#with pkgs;
+#{ lib, stdenv
+#, substituteAll
+#, pkg-config
+#, fetchurl
+#, python3
+#, dropbox
+#, gtk3
+#, gnome
+#, gdk-pixbuf
+#, gobject-introspection
+#}:
+{ pkgs ? import <nixpkgs> {} }:
+with pkgs;
 let
   version = "2020.03.04";
   dropboxd = "${dropbox}/bin/dropbox";
@@ -38,7 +38,7 @@ stdenv.mkDerivation {
   patchPhase = ''
     substituteInPlace dropbox.in \
     --replace "PARENT_DIR = os.path.expanduser(\"~\")" "PARENT_DIR = os.path.expanduser(\"~/.dropbox-hm\")" \
-    --replace "DROPBOXD_PATH = os.path.join(DROPBOX_DIST_PATH, \"dropboxd\")" "DROPBOXD_PATH = \"@dropboxd@\""
+    --replace "DROPBOXD_PATH = os.path.join(DROPBOX_DIST_PATH, \"dropboxd\")" "DROPBOXD_PATH = \"${dropbox}/bin/dropbox\""
   '';
 
   nativeBuildInputs = [
