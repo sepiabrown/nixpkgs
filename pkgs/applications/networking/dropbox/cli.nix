@@ -28,18 +28,18 @@ stdenv.mkDerivation {
 
   strictDeps = true;
 
-  #patches = [
-  #  (substituteAll {
-  #    src = ./fix-cli-paths.patch;
-  #    inherit dropboxd;
-  #  })
-  #];
+  patches = [
+    (substituteAll {
+      src = ./fix-cli-paths.patch;
+      inherit dropboxd;
+    })
+  ];
 
-  patchPhase = ''
-    substituteInPlace dropbox.in \
-    --replace "PARENT_DIR = os.path.expanduser(\"~\")" "PARENT_DIR = os.path.expanduser(\"~/.dropbox-hm\")" \
-    --replace "DROPBOXD_PATH = os.path.join(DROPBOX_DIST_PATH, \"dropboxd\")" "DROPBOXD_PATH = \"${dropbox}/bin/dropbox\""
-  '';
+  #patchPhase = ''
+  #  substituteInPlace dropbox.in \
+  #  --replace "PARENT_DIR = os.path.expanduser(\"~\")" "PARENT_DIR = os.path.expanduser(\"~/.dropbox-hm\")" \
+  #  --replace "DROPBOXD_PATH = os.path.join(DROPBOX_DIST_PATH, \"dropboxd\")" "DROPBOXD_PATH = \"${dropbox}/bin/dropbox\""
+  #'';
 
   nativeBuildInputs = [
     pkg-config
