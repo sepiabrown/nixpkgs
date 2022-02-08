@@ -9,7 +9,8 @@
 , gdk-pixbuf
 , gobject-introspection
 }:
-
+#{ pkgs ? import <nixpkgs> {} }:
+#with pkgs;
 let
   version = "2020.03.04";
   dropboxd = "${dropbox}/bin/dropbox";
@@ -33,6 +34,12 @@ stdenv.mkDerivation {
       inherit dropboxd;
     })
   ];
+
+  patchPhase = ''
+    substituteInPlace dropbox.in --replace \
+    "PARENT_DIR = os.path.expanduser(\"~\")" \
+    "PARENT_DIR = os.path.expanduser(\"~/.dropbox-hm\")"
+  '';
 
   nativeBuildInputs = [
     pkg-config
