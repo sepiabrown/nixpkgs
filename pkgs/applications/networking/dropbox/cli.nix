@@ -38,7 +38,7 @@ stdenv.mkDerivation {
   patchPhase = ''
     substituteInPlace dropbox.in \
     --replace "PARENT_DIR = os.path.expanduser(\"~\")" "PARENT_DIR = os.path.expanduser(\"~/.dropbox-hm\")"
-    --replace DROPBOXD_PATH = os.path.join(DROPBOX_DIST_PATH, \"dropboxd\") "DROPBOXD_PATH = \"@dropboxd@\""
+    --replace "DROPBOXD_PATH = os.path.join(DROPBOX_DIST_PATH, \"dropboxd\")" "DROPBOXD_PATH = \"@dropboxd@\""
   '';
 
   nativeBuildInputs = [
