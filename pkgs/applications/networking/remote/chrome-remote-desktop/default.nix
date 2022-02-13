@@ -46,7 +46,7 @@ stdenv.mkDerivation rec {
     substituteInPlace $out/$replacePrefix/chrome-remote-desktop --replace /usr/bin/pkexec /run/wrappers/bin/pkexec
     substituteInPlace $out/$replacePrefix/chrome-remote-desktop --replace /usr/bin/gpasswd ${shadow}/bin/gpasswd
     substituteInPlace $out/$replacePrefix/chrome-remote-desktop --replace /usr/sbin/groupadd ${shadow}/sbin/groupadd
-    substituteInPlace $out/$replacePrefix/chrome-remote-desktop --replace "if display_manager_is_gdm():${"\n"}    return False" ""
+    substituteInPlace $out/$replacePrefix/chrome-remote-desktop --replace "if display_manager_is_gdm():${"\n"}    return False;" ""
     substituteInPlace $out/$replacePrefix/chrome-remote-desktop --replace "os.path.isfile(DEBIAN_XSESSION_PATH)" "True"
   '' + lib.optionalString (!enableNewSession) ''
     substituteInPlace $out/$replacePrefix/chrome-remote-desktop --replace "FIRST_X_DISPLAY_NUMBER = 20" "FIRST_X_DISPLAY_NUMBER = 0"
