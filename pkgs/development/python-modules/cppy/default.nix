@@ -8,10 +8,17 @@ buildPythonPackage rec {
   pname = "cppy";
   version = "1.2.0";
 
-  src = fetchPypi {
-    inherit pname version;
-    sha256 = "sha256-leiGLk+CbD8qa3tlgzOxYvgMvp+UOqDQp6ay74UK7/w=";
+  src = pkgs.fetchFromGitHub {
+    owner = "nucleic";
+    repo = "cppy";
+    rev = version;
+    sha256 = "sha256-YPZDsqG2e2CK+QXgDYLZgXoEOlBx7qdpMFP/Iys/C0A=";
   };
+
+  #src = fetchPypi {
+  #  inherit pname version;
+  #  sha256 = "sha256-leiGLk+CbD8qa3tlgzOxYvgMvp+UOqDQp6ay74UK7/w=";
+  #};
 
   # Headers-only library, no tests
   doCheck = false;
