@@ -1,6 +1,7 @@
 { lib
 , buildPythonPackage
 , fetchPypi
+, fetchFromGitHub
 , isPy3k
 }:
 
@@ -8,7 +9,7 @@ buildPythonPackage rec {
   pname = "cppy";
   version = "1.2.0";
 
-  src = pkgs.fetchFromGitHub {
+  src = fetchFromGitHub {
     owner = "nucleic";
     repo = "cppy";
     rev = version;
