@@ -112,6 +112,7 @@ pythonPackages.callPackage
 
       # Stripping pre-built wheels lead to `ELF load command address/offset not properly aligned`
       dontStrip = format == "wheel";
+      dontStrip2 = format != "wheel";
 
       nativeBuildInputs = [
         pythonPackages.poetry2nixFixupHook
