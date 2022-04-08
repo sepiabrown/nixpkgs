@@ -125,7 +125,7 @@ pythonPackages.callPackage
 
       buildInputs = (
         baseBuildInputs
-        ++ pythonPackages.emoji
+        ++ [ pythonPackages.emoji ]
         ++ lib.optional (stdenv.buildPlatform != stdenv.hostPlatform) pythonPackages.setuptools
         ++ lib.optional (!isSource) (getManyLinuxDeps fileInfo.name).pkg
         ++ lib.optional isDirectory buildSystemPkgs
