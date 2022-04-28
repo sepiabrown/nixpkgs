@@ -44,7 +44,7 @@ stdenv.mkDerivation {
   installPhase = (''
   mkdir -p $out/lib $dev/include $dev/lib/pkgconfig
 
-  if [ "${lapackImplementation}" == "mkl" ]; then
+  if [ "${builtins.toString stdenv.hostPlatform.isDarwin}" == "1" ] && [ "${lapackImplementation}" == "mkl" ]; then
     liblapack="${lib.getLib lapackProvider'}/lib/libmkl_rt${canonicalExtension}"
   else
     liblapack="${lib.getLib lapackProvider'}/lib/liblapack${canonicalExtension}"
@@ -77,7 +77,7 @@ Cflags: -I$dev/include
 Libs: -L$out/lib -llapack
 EOF
 
-  if [ "${lapackImplementation}" == "mkl" ]; then
+  if [ "${builtins.toString stdenv.hostPlatform.isDarwin}" == "1" ] && [ "${lapackImplementation}" == "mkl" ]; then
     liblapacke="${lib.getLib lapackProvider'}/lib/libmkl_rt${canonicalExtension}"
   else
     liblapacke="${lib.getLib lapackProvider'}/lib/liblapacke${canonicalExtension}"
