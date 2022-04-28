@@ -67,12 +67,8 @@ stdenv.mkDerivation {
 
   if [ -n "${builtins.toString stdenv.hostPlatform.isDarwin}" ] && [ "${blasImplementation}" == "mkl" ]; then
     libblas="${lib.getLib blasProvider'}/lib/libmkl_rt${canonicalExtension}"
-    echo "1111111111111111111111111111111111111111111111111111111111111111"
-    exit 1
   else
     libblas="${lib.getLib blasProvider'}/lib/libblas${canonicalExtension}"
-    echo "2222222222222222222222222222222222222222222222222222222222222222"
-    exit 1
   fi
 
   if ! [ -e "$libblas" ]; then
