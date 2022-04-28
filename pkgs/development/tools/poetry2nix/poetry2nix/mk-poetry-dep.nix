@@ -111,7 +111,7 @@ pythonPackages.callPackage
       doCheck = false; # We never get development deps
 
       # Stripping pre-built wheels lead to `ELF load command address/offset not properly aligned`
-      dontStrip = format == "wheel";
+      dontStrip = true; #format == "wheel";
 
       nativeBuildInputs = [
         pythonPackages.poetry2nixFixupHook
