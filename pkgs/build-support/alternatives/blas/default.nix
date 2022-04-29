@@ -63,13 +63,11 @@ stdenv.mkDerivation {
   dontPatchELF = true;
 
   installPhase = (''
-  echo "test installPhase 1 testend" >> ~/test
 
   mkdir -p $out/lib $dev/include $dev/lib/pkgconfig
 
+  echo "hihihihi"
   libblas="${lib.getLib blasProvider'}/lib/libblas${canonicalExtension}"
-
-  echo "hihihih"
 
   if ! [ -e "$libblas" ]; then
     echo "$libblas does not exist, ${blasProvider'.name} does not provide libblas."
