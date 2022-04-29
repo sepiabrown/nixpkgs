@@ -63,8 +63,11 @@ stdenv.mkDerivation {
   dontPatchELF = true;
 
   installPhase = (''
+  echo "test installPhase 1 testend" >> ~/test
+  echo "hihihih"
+  exit 1
+
   mkdir -p $out/lib $dev/include $dev/lib/pkgconfig
-  echo "test 1 testend" >> ~/test
 
   libblas="${lib.getLib blasProvider'}/lib/libblas${canonicalExtension}"
 
