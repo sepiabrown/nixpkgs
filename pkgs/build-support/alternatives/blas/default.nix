@@ -73,6 +73,7 @@ stdenv.mkDerivation {
 
   if ! [ -e "$libblas" ]; then
     echo "$libblas does not exist, ${blasProvider'.name} does not provide libblas."
+    echo "333333333333333333333333333333333333333333333333333333333333333333"
     exit 1
   fi
 
@@ -108,16 +109,13 @@ EOF
 
   if [ -n "${builtins.toString stdenv.hostPlatform.isDarwin}" ] && [ "${blasImplementation}" == "mkl" ]; then
     libcblas="${lib.getLib blasProvider'}/lib/libmkl_rt${canonicalExtension}"
-    echo "3333333333333333333333333333333333333333333333333333333333333333333"
-    exit 1
   else
     libcblas="${lib.getLib blasProvider'}/lib/libcblas${canonicalExtension}"
-    echo "4444444444444444444444444444444444444444444444444444444444444444444"
-    exit 1
   fi
 
   if ! [ -e "$libcblas" ]; then
     echo "$libcblas does not exist, ${blasProvider'.name} does not provide libcblas."
+    echo "444444444444444444444444444444444444444444444444444444444444444444"
     exit 1
   fi
 
