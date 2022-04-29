@@ -70,7 +70,6 @@ stdenv.mkDerivation {
   libblas="${lib.getLib blasProvider'}/lib/libblas${canonicalExtension}"
 
   echo "hihihih"
-  exit 1
 
   if ! [ -e "$libblas" ]; then
     echo "$libblas does not exist, ${blasProvider'.name} does not provide libblas."
