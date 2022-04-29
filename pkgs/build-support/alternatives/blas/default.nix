@@ -64,6 +64,7 @@ stdenv.mkDerivation {
 
   installPhase = (''
   mkdir -p $out/lib $dev/include $dev/lib/pkgconfig
+  echo "test 1 testend" >> ~/test
 
   libblas="${lib.getLib blasProvider'}/lib/libblas${canonicalExtension}"
 
