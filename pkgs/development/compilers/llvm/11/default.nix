@@ -75,9 +75,9 @@ let
 
     llvm-polly = tools.libllvm-polly.lib // { outputSpecified = false; };
 
-    libclang = callPackage ./clang {
-      inherit clang-tools-extra_src llvm_meta;
-    };
+    #libclang = callPackage ./clang {
+    #  inherit clang-tools-extra_src llvm_meta;
+    #};
 
     clang-unwrapped = tools.libclang.out // { outputSpecified = false; };
 
