@@ -9,7 +9,8 @@
 let
   self = stdenv.mkDerivation (rec {
     pname = "clang";
-    inherit version;
+    version = "14.0.0";
+    #inherit version;
 
     src = runCommand "${pname}-src-${version}" {} ''
       mkdir -p "$out"
@@ -19,11 +20,11 @@ let
 
     sourceRoot = "${src.name}/${pname}";
 
-    nativeBuildInputs = [ cmake python3 ]
+    nativeBuildInputs = [ cmake python3 zlib ]
       ++ lib.optional enableManpages python3.pkgs.sphinx
       ++ lib.optional stdenv.hostPlatform.isDarwin fixDarwinDylibNames;
 
-    buildInputs = [ libxml2 libllvm ];
+    buildInputs = [ libxml2 libllvm zlib ];
 
     cmakeFlags = [
       "-DCMAKE_CXX_FLAGS=-std=c++14"
