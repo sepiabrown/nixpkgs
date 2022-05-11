@@ -108,7 +108,6 @@ pythonPackages.callPackage
 
       inherit format;
 
-      file_Info_test = [ fileInfo ];
 
       doCheck = false; # We never get development deps
 
@@ -160,6 +159,7 @@ pythonPackages.callPackage
 
       passthru = {
         inherit args;
+        file_Info_test = fileInfo;
       };
 
       # We need to retrieve kind from the interpreter and the filename of the package
