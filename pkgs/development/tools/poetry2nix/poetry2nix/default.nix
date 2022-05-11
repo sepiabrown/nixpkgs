@@ -257,6 +257,9 @@ lib.makeScope pkgs.newScope (self: {
         ++ lib.optional hasEditable editablePackage;
       poetryLock = poetryLock;
       inherit pyProject;
+      passthru = {
+        inherit poetryLock;
+      };
     };
 
   /* Returns a package with a python interpreter and all packages specified in the poetry.lock lock file.
