@@ -77,6 +77,7 @@ pythonPackages.callPackage
         in
         rec {
           inherit (lockFileEntry) file hash;
+          inherit entries preferWheel binaryDist;
           name = file;
           format =
             if _isEgg then "egg"
