@@ -1959,6 +1959,7 @@ lib.composeManyExtensions [
                 pkgs.linuxPackages.nvidia_x11
                 pkgs.nccl.dev
                 pkgs.nccl.out
+                cudatoolkit
               ];
             propagatedBuildInputs = [
               self.numpy
