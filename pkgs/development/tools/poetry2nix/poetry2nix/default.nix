@@ -258,7 +258,7 @@ lib.makeScope pkgs.newScope (self: {
       poetryLock = poetryLock;
       inherit pyProject;
       passthru = {
-        inherit poetryLock;
+        poetryLock_test = poetryLock;
       };
     };
 
