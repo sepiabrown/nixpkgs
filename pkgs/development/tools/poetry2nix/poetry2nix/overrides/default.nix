@@ -1945,8 +1945,8 @@ lib.composeManyExtensions [
               if (!enableCuda) then ''
                 export USE_CUDA=0
               '' else ''
-                export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${cudatoolkit}/targets/x86_64-linux/lib"
-              '';
+                export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${lib.makeLibraryPath [ cudatoolkit "${cudatoolkit}" ]}"
+              ''; # ${cudatoolkit}/targets/x86_64-linux/lib
             preFixup = lib.optionalString (!enableCuda) ''
               # For some reason pytorch retains a reference to libcuda even if it
               # is explicitly disabled with USE_CUDA=0.
