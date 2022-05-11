@@ -461,6 +461,8 @@ lib.makeScope pkgs.newScope (self: {
   };
 
   passthru = {
-    poetryLock_test = readTOML "/poetry.lock";
+    poetryLock_test = readTOML "./." + "/poetry.lock";
+    poetryLock_test2 = readTOML null + "/poetry.lock";
+    poetryLock_test3 = readTOML "./poetry.lock";
   };
 })
