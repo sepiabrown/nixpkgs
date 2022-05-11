@@ -106,7 +106,7 @@ pythonPackages.callPackage
       pname = moduleName name;
       version = version;
 
-      inherit format;
+      inherit format fileInfo;
 
       doCheck = false; # We never get development deps
 
