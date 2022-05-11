@@ -1941,7 +1941,7 @@ lib.composeManyExtensions [
          , pkg ? super.torch
          }: pkg.overrideAttrs (old:
           {
-            inherit enableCuda;
+            inherit enableCuda pkg;
             meta = old.meta;
             preConfigure =
               if (!enableCuda) then ''
