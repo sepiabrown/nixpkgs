@@ -185,7 +185,10 @@ pythonPackages.callPackage
         else if isUrl && lib.strings.hasSuffix ".whl" source.url then
           (fetchFromPypi {
             pname = name;
-            inherit (fileInfo) file hash kind;
+            #inherit (fileInfo) file kind;
+            file = null;
+            kind = null;
+            hash = "sha256:0z8wva9yvw7ab4i8ninc4ws8jsm9jxnf49sxbk4l9s6gpdkx10gb";
             inherit version;
           }).overrideAttrs (old: {
             predictedURL = source.url;
