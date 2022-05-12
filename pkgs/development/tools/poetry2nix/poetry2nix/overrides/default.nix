@@ -1936,7 +1936,7 @@ lib.composeManyExtensions [
       };
 
       torch = lib.makeOverridable
-        ({ enableCuda ? false
+        ({ enableCuda ? true
          , cudatoolkit ? pkgs.cudatoolkit_11_5
          , pkg ? super.torch
          }: pkg.overrideAttrs (old:
@@ -1953,8 +1953,8 @@ lib.composeManyExtensions [
               # is explicitly disabled with USE_CUDA=0.
               find $out -name "*.so" -exec ${pkgs.patchelf}/bin/patchelf --remove-needed libcuda.so.1 {} \;
             '';
-            buildInputs =
-              (old.buildInputs or [ ])
+            nativeBuildInputs =
+              (old.nativeBuildInputs or [ ])
               ++ [ pkgs.stdenv.cc.cc.lib ];
             buildInputs =
               (old.buildInputs or [ ])
