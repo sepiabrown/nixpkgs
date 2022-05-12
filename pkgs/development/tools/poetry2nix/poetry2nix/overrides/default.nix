@@ -2012,7 +2012,7 @@ lib.composeManyExtensions [
                 pkgs.nccl.out
                 cudatoolkit
                 cudnn
-                magma
+                pkgs.magma
                 nccl
               ];
             propagatedBuildInputs = [
