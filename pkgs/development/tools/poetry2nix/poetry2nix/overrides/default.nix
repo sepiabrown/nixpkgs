@@ -1955,10 +1955,10 @@ lib.composeManyExtensions [
             '';
             nativeBuildInputs =
               (old.nativeBuildInputs or [ ])
-              ++ [ pkgs.stdenv.cc.cc.lib pkgs.autoPatchelfHook ];
+              ++ [ pkgs.autoPatchelfHook ];
             buildInputs =
               (old.buildInputs or [ ])
-              ++ [ self.typing-extensions pkgs.stdenv.cc.cc.lib ]
+              ++ [ self.typing-extensions ]
               ++ lib.optionals enableCuda [
                 pkgs.linuxPackages.nvidia_x11
                 pkgs.nccl.dev
