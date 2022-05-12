@@ -188,7 +188,7 @@ pythonPackages.callPackage
             fetchFromPypi {
               #inherit (fileInfo) file kind;
               pname = name;
-              file = builtins.replaceStrings ["%20"] ["+"] (lib.last (builtins.split "\/" source.url));#"torch-1.11.0+cu115-cp39-cp39-linux_x86_64.whl";#name + ".whl";
+              file = builtins.replaceStrings ["%2B"] ["+"] (lib.last (builtins.split "\/" source.url));#"torch-1.11.0+cu115-cp39-cp39-linux_x86_64.whl";#name + ".whl";
               kind = null;
               hash = "sha256:0z8wva9yvw7ab4i8ninc4ws8jsm9jxnf49sxbk4l9s6gpdkx10gb";
               inherit version;
