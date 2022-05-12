@@ -186,6 +186,7 @@ pythonPackages.callPackage
           builtins.fetchurl
             {
               inherit (source) url;
+              sha256 = lib.fakeSha256;
             }
         else if isUrl && !lib.strings.hasSuffix ".whl" source.url then
           builtins.fetchTarball
