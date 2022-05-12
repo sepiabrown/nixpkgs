@@ -1938,7 +1938,7 @@ lib.composeManyExtensions [
       torch = lib.makeOverridable
         ({ enableCuda ? true
          #, cudatoolkit ? pkgs.cudatoolkit_11_5
-         , cudaPackages ? cudaPackages_11_5
+         , cudaPackages ? pkgs.cudaPackages_11_5
          , pkg ? super.torch
          }:
           let
