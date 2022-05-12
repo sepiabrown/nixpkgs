@@ -44,6 +44,7 @@ pythonPackages.callPackage
       isSource = source != null;
       isGit = isSource && source.type == "git";
       isUrl = isSource && source.type == "url";
+      isUrlWhl = isUrl && lib.strings.hasSuffix source.url;
       isDirectory = isSource && source.type == "directory";
       isFile = isSource && source.type == "file";
       isLegacy = isSource && source.type == "legacy";
@@ -101,7 +102,7 @@ pythonPackages.callPackage
         "pyparsing"
       ];
       baseBuildInputs = lib.optional (! lib.elem name skipSetupToolsSCM) pythonPackages.setuptools-scm;
-      format = if isDirectory || isGit || isUrl then "pyproject" else fileInfo.format;
+      format = if isUrlWhl then "wheel" else if isDirectory || isGit || isUrl then "pyproject" else  fileInfo.format;
     in
     buildPythonPackage {
       pname = moduleName name;
@@ -182,17 +183,18 @@ pythonPackages.callPackage
               }
             ))
           )
-        else if isUrl && lib.strings.hasSuffix ".whl" source.url then
-          (fetchFromPypi {
-            pname = name;
-            #inherit (fileInfo) file kind;
-            file = "torch-1.11.0+cu115-cp39-cp39-linux_x86_64.whl";#name + ".whl";
-            kind = null;
-            hash = "sha256:0z8wva9yvw7ab4i8ninc4ws8jsm9jxnf49sxbk4l9s6gpdkx10gb";
-            inherit version;
-          }).overrideAttrs (old: {
-            predictedURL = source.url;
-          })
+        else if isUrlWhl then
+          ( 
+            fetchFromPypi {
+              #inherit (fileInfo) file kind;
+              pname = name;
+              file = builtins.replaceStrings ["%20"] ["+"] (lib.last (builtins.split "\/" source.url));#"torch-1.11.0+cu115-cp39-cp39-linux_x86_64.whl";#name + ".whl";
+              kind = null;
+              hash = "sha256:0z8wva9yvw7ab4i8ninc4ws8jsm9jxnf49sxbk4l9s6gpdkx10gb";
+              inherit version;
+            }).overrideAttrs (old: {
+              predictedURL = source.url;
+            })
           #builtins.fetchurl
           #  {
           #    name = name + ".whl";
