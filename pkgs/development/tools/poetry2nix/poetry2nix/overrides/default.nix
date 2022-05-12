@@ -1983,7 +1983,7 @@ lib.composeManyExtensions [
           {
             src_test = old.src;
 
-            preConfigure = lib.optionalString !enableCuda ''
+            preConfigure = lib.optionalString (!enableCuda) ''
               export USE_CUDA=0
             '' + lib.optionalString enableCuda ''
               export TORCH_CUDA_ARCH_LIST="${lib.strings.concatStringsSep ";" final_cudaArchList}"
