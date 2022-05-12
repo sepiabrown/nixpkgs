@@ -77,7 +77,7 @@ pythonPackages.callPackage
         in
         rec {
           inherit (lockFileEntry) file hash;
-          inherit entries preferWheel binaryDist sourceDist eggs;
+          inherit entries preferWheel binaryDist sourceDist eggs isBdist;
           name = file;
           format =
             if _isEgg then "egg"
@@ -182,7 +182,12 @@ pythonPackages.callPackage
               }
             ))
           )
-        else if isUrl then
+        else if isUrl && fileInfo.isBdist then
+          builtins.fetchurl
+            {
+              inherit (source) url;
+            }
+        else if isUrl && !fileInfo.isBdist then
           builtins.fetchTarball
             {
               inherit (source) url;
