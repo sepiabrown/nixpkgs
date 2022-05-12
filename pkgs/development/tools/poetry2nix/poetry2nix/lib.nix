@@ -109,11 +109,12 @@ let
       predictedURL = predictURLFromPypi { inherit pname file hash kind; };
     in
     (pkgs.stdenvNoCC.mkDerivation {
-      name = file;
+      name = pname;
       nativeBuildInputs = [
         pkgs.buildPackages.curl
         pkgs.buildPackages.jq
       ];
+      isWheel = lib.strings.hasSuffix "whl" file;
       system = "builtin";
 
       preferLocalBuild = true;

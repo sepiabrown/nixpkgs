@@ -186,7 +186,7 @@ pythonPackages.callPackage
           (fetchFromPypi {
             pname = name;
             #inherit (fileInfo) file kind;
-            file = name;
+            file = source.url;
             kind = null;
             hash = "sha256:0z8wva9yvw7ab4i8ninc4ws8jsm9jxnf49sxbk4l9s6gpdkx10gb";
             inherit version;
