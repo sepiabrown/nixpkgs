@@ -1955,7 +1955,7 @@ lib.composeManyExtensions [
             '';
             nativeBuildInputs =
               (old.nativeBuildInputs or [ ])
-              ++ [ pkgs.stdenv.cc.cc.lib autoPatchelfHook ];
+              ++ [ pkgs.stdenv.cc.cc.lib pkgs.autoPatchelfHook ];
             buildInputs =
               (old.buildInputs or [ ])
               ++ [ self.typing-extensions pkgs.stdenv.cc.cc.lib ]
