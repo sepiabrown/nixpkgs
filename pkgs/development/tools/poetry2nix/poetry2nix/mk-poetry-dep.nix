@@ -189,7 +189,7 @@ pythonPackages.callPackage
             inherit version;
           }).overrideAttrs (old: {
             predictedURL = source.url;
-          });
+          })
           #builtins.fetchurl
           #  {
           #    name = name + ".whl";
