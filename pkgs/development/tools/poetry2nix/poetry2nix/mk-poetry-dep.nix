@@ -182,12 +182,12 @@ pythonPackages.callPackage
               }
             ))
           )
-        else if isUrl && fileInfo.isBdist then
+        else if isUrl && lib.strings.hasSuffix ".whl" source.url then
           builtins.fetchurl
             {
               inherit (source) url;
             }
-        else if isUrl && !fileInfo.isBdist then
+        else if isUrl && !lib.strings.hasSuffix ".whl" source.url then
           builtins.fetchTarball
             {
               inherit (source) url;
