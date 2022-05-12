@@ -2004,7 +2004,7 @@ lib.composeManyExtensions [
             nativeBuildInputs =
               (old.nativeBuildInputs or [ ])
               ++ [ pkgs.autoPatchelfHook ]
-              ++ lib.optionals enableCuda [ cudatoolkit_joined ];
+              ++ lib.optionals enableCuda [ cudatoolkit_joined addOpenGLRunpath ];
             buildInputs =
               (old.buildInputs or [ ])
               ++ [ self.typing-extensions ]
