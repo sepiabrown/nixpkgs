@@ -1939,6 +1939,7 @@ lib.composeManyExtensions [
         ({ enableCuda ? true
          #, cudatoolkit ? pkgs.cudatoolkit_11_5
          , cudaPackages ? pkgs.cudaPackages_11_5
+         , cudaArchList ? null
          , pkg ? super.torch
          }:
           let
