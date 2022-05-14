@@ -598,7 +598,7 @@ lib.composeManyExtensions [
 
         checkPhase = ''
           runHook preCheck
-          ${old.python.interpreter} tests/downstream/integrate.py
+          ${self.python.interpreter} tests/downstream/integrate.py
           runHook postCheck
         '';
       });
