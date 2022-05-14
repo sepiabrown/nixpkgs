@@ -574,7 +574,15 @@ lib.composeManyExtensions [
         # listed in backend/src/hatchling/ouroboros.py
         propagatedBuildInputs = (old.propagatedBuildInputs or [ ]) ++[
           self.editables
-          self.packaging
+          self.packaging.overridePythonAttrs ( old: rec {
+            pname = "packaging";
+            version = "21.3";
+
+            src = self.fetchPypi {
+              inherit pname version;
+              sha256 = "sha256-3UfEKSfYmrkR5gZRiQfMLTofOLvQJjhZcGQ/nFuOz+s=";
+            };
+          })
           self.pathspec
           self.pluggy
           self.tomli
@@ -2294,15 +2302,7 @@ lib.composeManyExtensions [
               inherit self;
               drv = old;
               attr = "flit-core";
-            } else old.overridePythonAttrs ( oldAttrs: rec {
-              pname = "packaging";
-              version = "21.3";
-
-              src = self.fetchPypi {
-                inherit pname version;
-                sha256 = "sha256-3UfEKSfYmrkR5gZRiQfMLTofOLvQJjhZcGQ/nFuOz+s=";
-              };
-            });
+            } else old;
 
       psutil = super.psutil.overridePythonAttrs (
         old: {
