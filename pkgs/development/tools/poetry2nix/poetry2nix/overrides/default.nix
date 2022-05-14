@@ -579,33 +579,18 @@ lib.composeManyExtensions [
         };
       });
 
+      # hatchling requires packaging version 21.3
       hatchling = super.hatchling.overridePythonAttrs (old: {
-        #buildInputs = (old.buildInputs or [ ]) ++ [
-        # self.packaging_213
-        #];     
         propagatedBuildInputs = (lib.remove self.packaging old.propagatedBuildInputs or [ ]) ++ [
          self.packaging_213
         ];
       });
 
-      setuptools-scm = super.setuptools-scm.overridePythonAttrs (old: {
-        #buildInputs = (old.buildInputs or [ ]) ++ [
-        # self.packaging_213
-        #];     
-        propagatedBuildInputs = (lib.remove self.packaging old.propagatedBuildInputs or [ ]) ++ [
-         self.packaging_213
-        ];
-      });
-      #hatch-vcs = super.hatch-vcs.overridePythonAttrs (old: 
-      #  {
-      #  #buildInputs = (old.buildInputs or [ ]) ++ [
-      #  #  self.hatchling self.packaging_213
-      #  #];     
-      #  buildInputs = [ self.hatchling ];
-      #  nativeBuildInputs = [];# lib.remove self.hatchling old.nativeBuildInputs or [ ];
-      #  propagatedBuildInputs = [ self.setuptools-scm ];# lib.remove self.hatchling old.propagatedBuildInputs or [ ];
-      #  pythonImportsCheck = [];
-      #  chechInputs = [];
+      # hatch-vcs requires setuptools-scm,hatchling with packging version 21.3
+      #setuptools-scm = super.setuptools-scm.overridePythonAttrs (old: {
+      #  propagatedBuildInputs = (lib.remove self.packaging old.propagatedBuildInputs or [ ]) ++ [
+      #   self.packaging_213
+      #  ];
       #});
 
       h3 = super.h3.overridePythonAttrs (
