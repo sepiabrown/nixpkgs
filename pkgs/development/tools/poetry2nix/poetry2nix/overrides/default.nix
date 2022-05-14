@@ -580,6 +580,9 @@ lib.composeManyExtensions [
         ] ++ pkgs.lib.optionals (lib.versionOlder self.python.version "3.8") [
           self.importlib-metadata
         ];     
+        propagatedNativeBuildInputs = (old.propagatedNativeBuildInputs or [ ] ) ++ [
+          self.packaging
+        ];
         
         doCheck = false;
 
