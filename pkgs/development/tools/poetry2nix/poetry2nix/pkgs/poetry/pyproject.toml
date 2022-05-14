@@ -22,7 +22,7 @@ classifiers = [
 
 # Requirements
 [tool.poetry.dependencies]
-python = "~2.7 || ^3.5"
+python = "^3.6"
 
 poetry-core = "~1.0.7"
 cleo = "^0.8.1"
@@ -62,6 +62,7 @@ keyring = [
 # Use subprocess32 for Python 2.7
 subprocess32 = { version = "^3.5", python = "~2.7" }
 importlib-metadata = {version = "^1.6.0", python = "<3.8"}
+cryptography = "~36"
 
 [tool.poetry.dev-dependencies]
 pytest = [
