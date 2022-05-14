@@ -583,11 +583,12 @@ lib.composeManyExtensions [
         in
         {
         # listed in backend/src/hatchling/ouroboros.py
-        propagatedBuildInputs = (lib.remove self.packaging old.propagatedBuildInputs or [ ]) ++ [
+        buildInputs = (old.buildInputs or [ ]) ++ [
           packaging_213
         ];     
-        propagatedNativeBuildInputs = (old.propagatedNativeBuildInputs or [ ] ) ++ [
-        ];
+        propagatedBuildInputs = (lib.remove self.packaging old.propagatedBuildInputs or [ ]) #++ [
+        #  packaging_213
+        #];     
         
         doCheck = false;
 
