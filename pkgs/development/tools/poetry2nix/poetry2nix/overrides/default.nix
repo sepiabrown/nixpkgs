@@ -2031,10 +2031,10 @@ lib.composeManyExtensions [
 
       torch = lib.makeOverridable
         ({ enableCuda ? true
-         , cudatoolkit ? pkgs.cudatoolkit_11_5
-         , cudnn ? pkgs.cudnn_8_3_cudatoolkit_11_5#_cudatoolkit_11.override { inherit cudatoolkit; }
-         , nccl ? pkgs.nccl_cudatoolkit_11.override { inherit cudatoolkit; }
-         #, cudaPackages ? pkgs.cudaPackages_11_5
+         #, cudatoolkit ? pkgs.cudatoolkit_11_5
+         #, cudnn ? pkgs.cudnn_8_3_cudatoolkit_11_5#_cudatoolkit_11.override { inherit cudatoolkit; }
+         #, nccl ? pkgs.nccl_cudatoolkit_11.override { inherit cudatoolkit; }
+         , cudaPackages ? pkgs.cudaPackages_11_5
          , cudaArchList ? null
          , pkg ? super.torch
          }:
@@ -2098,14 +2098,14 @@ lib.composeManyExtensions [
             nativeBuildInputs =
               (old.nativeBuildInputs or [ ])
               ++ [ pkgs.autoPatchelfHook ]
-              ++ lib.optionals enableCuda [ cudatoolkit_joined ];# pkgs.addOpenGLRunpath ];
+              ++ lib.optionals enableCuda [ cudatoolkit_joined pkgs.addOpenGLRunpath ];
             buildInputs =
               (old.buildInputs or [ ])
               ++ [ self.typing-extensions ]
               ++ lib.optionals enableCuda [
                 pkgs.linuxPackages.nvidia_x11
-                pkgs.nccl.dev
-                pkgs.nccl.out
+                nccl.dev
+                nccl.out
                 cudatoolkit
                 cudnn
                 pkgs.magma
