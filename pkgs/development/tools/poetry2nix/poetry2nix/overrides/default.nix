@@ -579,7 +579,7 @@ lib.composeManyExtensions [
         };
       });
 
-      hatchling = super.hatchling.override { packaging = self.packaging_213; };
+      #hatchling = super.hatchling.override { packaging = self.packaging_213; };
       #PythonAttrs (old: 
       #  {
       #  buildInputs = (old.buildInputs or [ ]) ++ [
