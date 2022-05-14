@@ -599,7 +599,7 @@ lib.composeManyExtensions [
         nativeBuildInputs = (lib.remove self.hatchling old.propagatedBuildInputs or [ ]) ++ [
           super.hatchling
         ];
-        propagatedBuildInputs = (lib.remove self.setuptools-scm (lib.remove self.hatchling old.propagatedBuildInputs) or [ ]) ++ [
+        propagatedBuildInputs = (lib.remove self.setuptools-scm (lib.remove self.hatchling old.propagatedBuildInputs or [ ])) ++ [
           super.hatchling
         ];
       });
