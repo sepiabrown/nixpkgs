@@ -594,6 +594,7 @@ lib.composeManyExtensions [
         ];     
         nativeBuildInputs = lib.remove self.hatchling old.nativeBuildInputs or [ ];
         propagatedBuildInputs = lib.remove self.hatchling old.propagatedBuildInputs or [ ];
+        pythonImportsCheck = [];
       });
 
       h3 = super.h3.overridePythonAttrs (
