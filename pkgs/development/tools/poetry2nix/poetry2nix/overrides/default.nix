@@ -2034,7 +2034,7 @@ lib.composeManyExtensions [
          #, cudatoolkit ? pkgs.cudatoolkit_11_5
          #, cudnn ? pkgs.cudnn_8_3_cudatoolkit_11_5#_cudatoolkit_11.override { inherit cudatoolkit; }
          #, nccl ? pkgs.nccl_cudatoolkit_11.override { inherit cudatoolkit; }
-         , cudaPackages ? pkgs.cudaPackages_11_5
+         , cudaPackages ? pkgs.cudaPackages
          , cudaArchList ? null
          , pkg ? super.torch
          }:
