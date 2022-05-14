@@ -2297,7 +2297,7 @@ lib.composeManyExtensions [
               pname = "packaging";
               version = "21.3";
 
-              src = pkgs.fetchPypi {
+              src = self.fetchPypi {
                 inherit pname version;
                 sha256 = "sha256-3UfEKSfYmrkR5gZRiQfMLTofOLvQJjhZcGQ/nFuOz+s=";
               };
