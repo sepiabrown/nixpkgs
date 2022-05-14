@@ -572,10 +572,10 @@ lib.composeManyExtensions [
       hatchling = super.hatchling.overridePythonAttrs (old: {
         propagatedBuildInputs = [
           self.editables
-          pkgs.packaging
-          pkgs.pathspec
-          pkgs.pluggy
-          pkgs.tomli
+          self.packaging
+          self.pathspec
+          self.pluggy
+          self.tomli
         ] ++ pkgs.lib.optionals (lib.versionOlder self.python.version "3.8") [
           self.importlib-metadata
         ];     
