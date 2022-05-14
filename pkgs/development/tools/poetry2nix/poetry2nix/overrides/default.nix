@@ -594,7 +594,7 @@ lib.composeManyExtensions [
       #});
 
       hatch-vcs = super.hatchling.overridePythonAttrs (old: {
-        propagatedBuildInputs = (lib.remove self.packaging old.propagatedBuildInputs or [ ]); ++ [
+        propagatedBuildInputs = (lib.remove self.packaging old.propagatedBuildInputs or [ ]) ++ [
           self.packaging_213
         ];
       });
