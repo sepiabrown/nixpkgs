@@ -581,7 +581,6 @@ lib.composeManyExtensions [
 
       # hatchling requires packaging version 21.3
       hatchling = super.hatchling.overridePythonAttrs (old: {
-        buildInputs = [ self.packaging self.packaging_213 ];
         propagatedBuildInputs = (lib.remove self.packaging old.propagatedBuildInputs or [ ]) ++ [
          self.packaging_213
         ];
