@@ -588,7 +588,6 @@ lib.composeManyExtensions [
           self.pathspec
           self.pluggy
           self.tomli
-          packaging_213
         ] ++ pkgs.lib.optionals (self.pythonOlder "3.8") [
           self.importlib-metadata
         ];     
@@ -599,23 +598,23 @@ lib.composeManyExtensions [
         doCheck = false;
 
         # listed in /backend/tests/downstream/requirements.txt
-        checkInputs = [
-          self.build
-          packaging_213
-          self.requests
-          self.toml
-          self.virtualenv
-        ];
+        #checkInputs = [
+        #  self.build
+        #  packaging_213
+        #  self.requests
+        #  self.toml
+        #  self.virtualenv
+        #];
 
-        preCheck = ''
-          export HOME=$TMPDIR
-        '';
+        #preCheck = ''
+        #  export HOME=$TMPDIR
+        #'';
 
-        checkPhase = ''
-          runHook preCheck
-          ${self.python.interpreter} tests/downstream/integrate.py
-          runHook postCheck
-        '';
+        #checkPhase = ''
+        #  runHook preCheck
+        #  ${self.python.interpreter} tests/downstream/integrate.py
+        #  runHook postCheck
+        #'';
       });
 
       h3 = super.h3.overridePythonAttrs (
