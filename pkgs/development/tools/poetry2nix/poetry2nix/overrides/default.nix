@@ -594,7 +594,7 @@ lib.composeManyExtensions [
         #];     
         buildInputs = [ self.hatchling self.packaging_213 ];
         nativeBuildInputs = [];# lib.remove self.hatchling old.nativeBuildInputs or [ ];
-        propagatedBuildInputs = [];# lib.remove self.hatchling old.propagatedBuildInputs or [ ];
+        propagatedBuildInputs = [ self.setuptools-scm ];# lib.remove self.hatchling old.propagatedBuildInputs or [ ];
         pythonImportsCheck = [];
         chechInputs = [];
       });
