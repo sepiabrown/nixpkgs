@@ -571,7 +571,7 @@ lib.composeManyExtensions [
 
       hatchling = super.hatchling.overridePythonAttrs (old: {
         propagatedBuildInputs = [
-          packaging
+          self.packaging
         ];
       });
 
