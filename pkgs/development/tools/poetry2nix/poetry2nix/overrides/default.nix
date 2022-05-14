@@ -601,9 +601,9 @@ lib.composeManyExtensions [
         #nativeBuildInputs = (lib.remove super.hatchling old.propagatedBuildInputs or [ ]) ++ [
         #  self.hatchling
         #];
-        #propagatedBuildInputs = (lib.remove self.setuptools-scm (lib.remove super.hatchling old.propagatedBuildInputs or [ ])) ++ [
-        #  self.hatchling
-        #];
+        propagatedBuildInputs = (lib.remove self.setuptools-scm or [ ]) ++ [
+          self.setuptools-scm_213#self.hatchling
+        ];
       });
       #setuptools = super.setuptools.overridePythonAttrs (old: {
       #  nativeBuildInputs = [];
