@@ -592,7 +592,7 @@ lib.composeManyExtensions [
         #buildInputs = (old.buildInputs or [ ]) ++ [
         #  self.hatchling self.packaging_213
         #];     
-        buildInputs = [ self.hatchling ];
+        buildInputs = [ self.hatchling self.packaging_213 ];
         nativeBuildInputs = [];# lib.remove self.hatchling old.nativeBuildInputs or [ ];
         propagatedBuildInputs = [];# lib.remove self.hatchling old.propagatedBuildInputs or [ ];
         pythonImportsCheck = [];
