@@ -56,15 +56,22 @@ lib.composeManyExtensions [
         systems)
       buildSystems)
 
+  platformdirs_custom = super.platformdirs.overridePythonAttrs (old: {
+    nativeBuildInputs = (lib.remove self.setuptools-scm old.nativeBuildInputs or [ ]) ++ [
+      self.setuptools-scm_213
+    ];
+  });
+
   # Build systems with conditionals
   (self: super: {
 
     platformdirs =
-      if lib.versionAtLeast super.platformdirs.version "2.5.2"
-      then addBuildSystem { inherit self; drv = super.platformdirs; attr = "hatchling"; extraAttrs = [ "hatch-vcs" ]; }
+      if lib.versionAtLeast self.platformdirs_custom.version "2.5.2"
+      then addBuildSystem { inherit self; drv = self.platformdirs_custom; attr = "hatchling"; extraAttrs = [ "hatch-vcs" ]; }
       else super.platformdirs;
 
   })
+
 
   # Build fixes
   (self: super:
@@ -595,9 +602,6 @@ lib.composeManyExtensions [
       });
 
       hatch-vcs = super.hatch-vcs.overridePythonAttrs (old: {
-        #nativeBuildInputs = (lib.remove super.hatchling old.propagatedBuildInputs or [ ]) ++ [
-        #  self.hatchling
-        #];
         propagatedBuildInputs = (lib.remove self.setuptools-scm old.propagatedBuildInputs or [ ]) ++ [
           self.setuptools-scm_213#self.hatchling
         ];
