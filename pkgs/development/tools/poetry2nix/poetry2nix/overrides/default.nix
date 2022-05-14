@@ -588,11 +588,11 @@ lib.composeManyExtensions [
           self.pathspec
           self.pluggy
           self.tomli
-          packaging_213
         ] ++ pkgs.lib.optionals (self.pythonOlder "3.8") [
           self.importlib-metadata
         ];     
         propagatedNativeBuildInputs = (old.propagatedNativeBuildInputs or [ ] ) ++ [
+          packaging_213
         ];
         
         doCheck = false;
