@@ -56,14 +56,14 @@ lib.composeManyExtensions [
         systems)
       buildSystems)
 
-  platformdirs_custom = super.platformdirs.overridePythonAttrs (old: {
-    nativeBuildInputs = (lib.remove self.setuptools-scm old.nativeBuildInputs or [ ]) ++ [
-      self.setuptools-scm_213
-    ];
-  });
 
   # Build systems with conditionals
   (self: super: {
+    platformdirs_custom = super.platformdirs.overridePythonAttrs (old: {
+      nativeBuildInputs = (lib.remove self.setuptools-scm old.nativeBuildInputs or [ ]) ++ [
+        self.setuptools-scm_213
+      ];
+    });
 
     platformdirs =
       if lib.versionAtLeast self.platformdirs_custom.version "2.5.2"
