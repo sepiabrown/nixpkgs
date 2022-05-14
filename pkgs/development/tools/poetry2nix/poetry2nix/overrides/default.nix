@@ -570,7 +570,8 @@ lib.composeManyExtensions [
       });
 
       hatchling = super.hatchling.overridePythonAttrs (old: {
-        propagatedBuildInputs = [
+        # listed in backend/src/hatchling/ouroboros.py
+        propagatedBuildInputs = (old.propagatedBuildInputs or [ ]) ++[
           self.editables
           self.packaging
           self.pathspec
@@ -579,6 +580,27 @@ lib.composeManyExtensions [
         ] ++ pkgs.lib.optionals (lib.versionOlder self.python.version "3.8") [
           self.importlib-metadata
         ];     
+        
+        doCheck = false;
+
+        # listed in /backend/tests/downstream/requirements.txt
+        checkInputs = [
+          self.build
+          self.packaging
+          self.requests
+          self.toml
+          self.virtualenv
+        ];
+
+        preCheck = ''
+          export HOME=$TMPDIR
+        '';
+
+        checkPhase = ''
+          runHook preCheck
+          ${old.python.interpreter} tests/downstream/integrate.py
+          runHook postCheck
+        '';
       });
 
       h3 = super.h3.overridePythonAttrs (
