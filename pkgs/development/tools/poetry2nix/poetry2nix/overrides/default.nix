@@ -592,10 +592,13 @@ lib.composeManyExtensions [
       #  ];
       #});
 
-      hatch-vcs = super.hatchling.overridePythonAttrs (old: {
-        propagatedBuildInputs = (lib.remove self.packaging old.propagatedBuildInputs or [ ]) ++ [
-          self.packaging_213
+      hatch-vcs = super.hatch-vcs.overridePythonAttrs (old: {
+        buildInputs = (old.buildInputs or [ ]) ++ [
+          self.setuptools-scm_213 self.setuptools-scm super.setuptools-scm self.hatchling super.hatchling
         ];
+        #propagatedBuildInputs = (lib.remove self.packaging old.propagatedBuildInputs or [ ]) ++ [
+        #  self.packaging_213
+        #];
       });
       #setuptools = super.setuptools.overridePythonAttrs (old: {
       #  nativeBuildInputs = [];
