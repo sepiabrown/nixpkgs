@@ -569,6 +569,12 @@ lib.composeManyExtensions [
         outputs = [ "out" "dev" ];
       });
 
+      hatchling = super.hatchling.overridePythonAttrs (old: {
+        propagatedBuildInputs = [
+          packaging
+        ];
+      });
+
       h3 = super.h3.overridePythonAttrs (
         old: {
           preBuild = (old.preBuild or "") + ''
