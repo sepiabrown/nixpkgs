@@ -60,9 +60,12 @@ lib.composeManyExtensions [
   # Build systems with conditionals
   (self: super: {
     platformdirs_custom = super.platformdirs.overridePythonAttrs (old: {
-      nativeBuildInputs = (lib.remove super.setuptools-scm old.nativeBuildInputs or [ ]) ++ [
+      buildInputs = [];
+      nativeBuildInputs = []; #(lib.remove super.setuptools-scm old.nativeBuildInputs or [ ]) ++ [
         #self.setuptools-scm_213
-      ];
+      #];
+      propagatedBuildInputs = [];
+      propagatedNativeBuildInputs = [];
     });
 
     platformdirs =
