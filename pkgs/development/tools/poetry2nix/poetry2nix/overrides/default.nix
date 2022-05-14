@@ -593,6 +593,10 @@ lib.composeManyExtensions [
       #  ];
       #});
 
+      setuptools = super.setuptools.overridePythonAttrs (old: {
+        nativeBuildInputs = [];
+      });
+
       h3 = super.h3.overridePythonAttrs (
         old: {
           preBuild = (old.preBuild or "") + ''
