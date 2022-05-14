@@ -2039,7 +2039,7 @@ lib.composeManyExtensions [
          , pkg ? super.torch
          }:
           let
-            inherit (cudaPackages) cudatoolkit cudnn nccl;
+            inherit (cudaPackages) cudatoolkit cudnn nccl cuda_nvcc;
 
             cudatoolkit_joined = pkgs.symlinkJoin {
               name = "${cudatoolkit.name}-unsplit";
@@ -2108,6 +2108,7 @@ lib.composeManyExtensions [
                 nccl.out
                 cudatoolkit
                 cudnn
+                cuda_nvcc
                 pkgs.magma
                 nccl
               ];
