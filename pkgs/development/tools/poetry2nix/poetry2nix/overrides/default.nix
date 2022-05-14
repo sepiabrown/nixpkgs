@@ -592,7 +592,7 @@ lib.composeManyExtensions [
         buildInputs = (old.buildInputs or [ ]) ++ [
           super.hatchling
         ];     
-        propagatedBuildInputs = lib.remove self.hatchling old.propagatedBuildInputs or [ ];
+        #propagatedBuildInputs = lib.remove self.hatchling old.propagatedBuildInputs or [ ];
       });
 
       h3 = super.h3.overridePythonAttrs (
