@@ -570,47 +570,37 @@ lib.composeManyExtensions [
         outputs = [ "out" "dev" ];
       });
 
-      hatchling = super.hatchling.overridePythonAttrs (old: 
-        let
-          packaging_213 = super.packaging.overridePythonAttrs ( oldAttrs : rec {
-            pname = "packaging";
-            version = "21.3";
-            src = self.fetchPypi {
-              inherit pname version;
-              sha256 = "sha256-3UfEKSfYmrkR5gZRiQfMLTofOLvQJjhZcGQ/nFuOz+s=";
-            };
-          });
-        in
-        {
-        # listed in backend/src/hatchling/ouroboros.py
-        buildInputs = (old.buildInputs or [ ]) ++ [
-          packaging_213
-        ];     
-        propagatedBuildInputs = lib.remove self.packaging old.propagatedBuildInputs or [ ]; #++ [
-        #  packaging_213
-        #];     
-        
-        doCheck = false;
+      #hatchling = super.hatchling.overridePythonAttrs (old: 
+      #  {
+      #  # listed in backend/src/hatchling/ouroboros.py
+      #  buildInputs = (old.buildInputs or [ ]) ++ [
+      #    packaging_213
+      #  ];     
+      #  propagatedBuildInputs = lib.remove self.packaging old.propagatedBuildInputs or [ ]; #++ [
+      #  #  packaging_213
+      #  #];     
+      #  
+      #  doCheck = false;
 
-        # listed in /backend/tests/downstream/requirements.txt
-        #checkInputs = [
-        #  self.build
-        #  packaging_213
-        #  self.requests
-        #  self.toml
-        #  self.virtualenv
-        #];
+      #  # listed in /backend/tests/downstream/requirements.txt
+      #  #checkInputs = [
+      #  #  self.build
+      #  #  packaging_213
+      #  #  self.requests
+      #  #  self.toml
+      #  #  self.virtualenv
+      #  #];
 
-        #preCheck = ''
-        #  export HOME=$TMPDIR
-        #'';
+      #  #preCheck = ''
+      #  #  export HOME=$TMPDIR
+      #  #'';
 
-        #checkPhase = ''
-        #  runHook preCheck
-        #  ${self.python.interpreter} tests/downstream/integrate.py
-        #  runHook postCheck
-        #'';
-      });
+      #  #checkPhase = ''
+      #  #  runHook preCheck
+      #  #  ${self.python.interpreter} tests/downstream/integrate.py
+      #  #  runHook postCheck
+      #  #'';
+      #});
 
       h3 = super.h3.overridePythonAttrs (
         old: {
@@ -2289,7 +2279,15 @@ lib.composeManyExtensions [
 
       packaging =
         let
-          old = super.packaging;
+          #old = super.packaging;
+          old = super.packaging.overridePythonAttrs ( oldAttrs : rec {
+            pname = "packaging";
+            version = "21.3";
+            src = self.fetchPypi {
+              inherit pname version;
+              sha256 = "sha256-3UfEKSfYmrkR5gZRiQfMLTofOLvQJjhZcGQ/nFuOz+s=";
+            };
+          });
         in
         # From 20.5 until 20.7, packaging used flit for packaging (heh)
           # See https://github.com/pypa/packaging/pull/352 and https://github.com/pypa/packaging/pull/367
