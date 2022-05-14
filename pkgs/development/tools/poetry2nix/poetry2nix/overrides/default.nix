@@ -590,7 +590,7 @@ lib.composeManyExtensions [
       hatch-vcs = super.hatch-vcs.overridePythonAttrs (old: 
         {
         buildInputs = (old.buildInputs or [ ]) ++ [
-          super.hatchling
+          self.hatchling
         ];     
         #propagatedBuildInputs = lib.remove self.hatchling old.propagatedBuildInputs or [ ];
       });
