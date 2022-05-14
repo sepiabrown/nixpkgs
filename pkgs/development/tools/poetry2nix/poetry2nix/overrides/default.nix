@@ -579,13 +579,14 @@ lib.composeManyExtensions [
         };
       });
 
-      hatchling = super.hatchling.overridePythonAttrs (old: 
-        {
-        buildInputs = (old.buildInputs or [ ]) ++ [
-         self.packaging_213
-        ];     
-        propagatedBuildInputs = lib.remove self.packaging old.propagatedBuildInputs or [ ];
-      });
+      hatchling = super.hatchling.override { packaging = self.packaging_213; };
+      #PythonAttrs (old: 
+      #  {
+      #  buildInputs = (old.buildInputs or [ ]) ++ [
+      #   self.packaging_213
+      #  ];     
+      #  propagatedBuildInputs = lib.remove self.packaging old.propagatedBuildInputs or [ ];
+      #});
 
       hatch-vcs = super.hatch-vcs.overridePythonAttrs (old: 
         {
