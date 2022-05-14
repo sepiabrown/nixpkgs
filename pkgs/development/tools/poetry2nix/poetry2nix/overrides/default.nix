@@ -581,8 +581,8 @@ lib.composeManyExtensions [
 
       # hatchling requires packaging version 21.3
       hatchling = super.hatchling.overridePythonAttrs (old: {
-        buildInputs = [ self.packaging_213 ];
-        nativeBuildInputs = [ self.packaging_213 ];
+        #buildInputs = [ self.packaging_213 ];
+        #nativeBuildInputs = [ self.packaging_213 ];
         propagatedBuildInputs = (lib.remove self.packaging old.propagatedBuildInputs or [ ]) ++ [
          self.packaging_213
         ];
@@ -599,10 +599,10 @@ lib.composeManyExtensions [
         #  self.setuptools-scm_213 self.setuptools-scm super.setuptools-scm self.hatchling super.hatchling
         #];
         nativeBuildInputs = (lib.remove self.hatchling old.propagatedBuildInputs or [ ]) ++ [
-          super.hatchling
+          self.hatchling
         ];
-        propagatedBuildInputs = (lib.remove self.setuptools-scm (lib.remove self.hatchling old.propagatedBuildInputs or [ ])) ++ [
-          super.hatchling
+        propagatedBuildInputs = (lib.remove self.setuptools-scm (lib.remove super.hatchling old.propagatedBuildInputs or [ ])) ++ [
+          self.hatchling
         ];
       });
       #setuptools = super.setuptools.overridePythonAttrs (old: {
