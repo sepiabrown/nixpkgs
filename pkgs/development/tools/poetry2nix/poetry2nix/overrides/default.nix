@@ -574,15 +574,14 @@ lib.composeManyExtensions [
         # listed in backend/src/hatchling/ouroboros.py
         propagatedBuildInputs = (old.propagatedBuildInputs or [ ]) ++[
           self.editables
-          self.packaging.overridePythonAttrs ( old: rec {
+          (self.packaging.overridePythonAttrs ( old: rec {
             pname = "packaging";
             version = "21.3";
-
             src = self.fetchPypi {
               inherit pname version;
               sha256 = "sha256-3UfEKSfYmrkR5gZRiQfMLTofOLvQJjhZcGQ/nFuOz+s=";
             };
-          })
+          }))
           self.pathspec
           self.pluggy
           self.tomli
