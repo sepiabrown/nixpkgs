@@ -571,7 +571,7 @@ lib.composeManyExtensions [
 
       hatchling = super.hatchling.overridePythonAttrs (old: {
         propagatedBuildInputs = [
-          pkgs.editables
+          self.editables
           pkgs.packaging
           pkgs.pathspec
           pkgs.pluggy
