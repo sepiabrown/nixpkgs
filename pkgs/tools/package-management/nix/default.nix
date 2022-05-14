@@ -78,19 +78,23 @@ in lib.makeExtensible (self: {
         sha256 = "sha256-xz7QnWVCI12lX1+K/Zr9UpB93b10t1HS9y/5n5FYf8Q=";
       })
     ];
-
   };
 
-  stable = self.nix_2_7;
+  nix_2_8 = common {
+    version = "2.8.0";
+    sha256 = "sha256-gWYNlEyleqkPfxtGXeq6ggjzJwcXJVdieJxA1Obly9s=";
+  };
+
+  stable = self.nix_2_8;
 
   unstable = lib.lowPrio (common rec {
     version = "2.8";
-    suffix = "pre20220322_${lib.substring 0 7 src.rev}";
+    suffix = "pre20220505_${lib.substring 0 7 src.rev}";
     src = fetchFromGitHub {
       owner = "NixOS";
       repo = "nix";
-      rev = "d5d4d980427aca3849b90bfe1694b6d1d14532fb";
-      sha256 = "sha256-fV7nUcRhVmgIvDUraAzHV2TDVHDn1jETfv2zdDMQ59Y=";
+      rev = "f4102de84ba4dd3b845a3e34fabab5400e066ad0";
+      sha256 = "sha256-g3GDM8MSzJ27hJoGWj2QGjINZP/I1KCJpZZn+iPMmfM=";
     };
   });
 })

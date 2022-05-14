@@ -4,7 +4,7 @@
 , libkrb5
 , git
 , installShellFiles
-, testVersion
+, testers
 , openshift
 }:
 
@@ -52,7 +52,7 @@ buildGoModule rec {
     installShellCompletion --zsh contrib/completions/zsh/*
   '';
 
-  passthru.tests.version = testVersion {
+  passthru.tests.version = testers.testVersion {
     package = openshift;
     command = "oc version";
     version = "v${version}";
@@ -60,9 +60,10 @@ buildGoModule rec {
 
   meta = with lib; {
     description = "Build, deploy, and manage your applications with Docker and Kubernetes";
-    license = licenses.asl20;
     homepage = "http://www.openshift.org";
+    license = licenses.asl20;
     maintainers = with maintainers; [ offline bachp moretea stehessel ];
+    mainProgram = "oc";
     platforms = platforms.unix;
   };
 }

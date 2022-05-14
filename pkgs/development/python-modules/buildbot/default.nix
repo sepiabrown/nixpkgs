@@ -31,11 +31,11 @@ let
 
   package = buildPythonPackage rec {
     pname = "buildbot";
-    version = "3.4.1";
+    version = "3.5.0";
 
     src = fetchPypi {
       inherit pname version;
-      sha256 = "sha256-GmKMqejHjtEiEtlZffze7PGNjVwUKB/ZcvUgJ4DoeDQ=";
+      sha256 = "sha256-woGHdCan5qTp00toNkWa821EgVQMrPK+OWXoqFcgIDQ=";
     };
 
     propagatedBuildInputs = [
@@ -53,7 +53,7 @@ let
       unidiff
     ]
       # tls
-      ++ twisted.extras.tls;
+      ++ twisted.extras-require.tls;
 
     checkInputs = [
       treq

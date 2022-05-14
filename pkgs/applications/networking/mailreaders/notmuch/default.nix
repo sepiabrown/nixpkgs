@@ -6,7 +6,7 @@
 , pythonPackages
 , emacs
 , ruby
-, testVersion
+, testers
 , which, dtach, openssl, bash, gdb, man
 , withEmacs ? true
 , withRuby ? true
@@ -79,6 +79,11 @@ stdenv.mkDerivation rec {
   in ''
     mkdir -p test/test-databases
     ln -s ${test-database} test/test-databases/database-v1.tar.xz
+  ''
+  # TODO: restore after resolved upstream
+  # https://www.mail-archive.com/notmuch@notmuchmail.org/msg52808.html
+  + ''
+    rm test/T355-smime.sh
   '';
 
   doCheck = !stdenv.hostPlatform.isDarwin && (lib.versionAtLeast gmime.version "3.0.3");
@@ -102,7 +107,7 @@ stdenv.mkDerivation rec {
 
   passthru = {
     pythonSourceRoot = "notmuch-${version}/bindings/python";
-    tests.version = testVersion { package = notmuch; };
+    tests.version = testers.testVersion { package = notmuch; };
     inherit version;
   };
 

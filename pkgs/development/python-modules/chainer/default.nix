@@ -1,6 +1,6 @@
-{ lib, buildPythonPackage, fetchFromGitHub, isPy3k
+{ config, lib, buildPythonPackage, fetchFromGitHub, isPy3k
 , filelock, protobuf, numpy, pytestCheckHook, mock, typing-extensions
-, cupy, cudaSupport ? false
+, cupy, cudaSupport ? config.cudaSupport or false
 }:
 
 buildPythonPackage rec {
@@ -29,6 +29,11 @@ buildPythonPackage rec {
   ] ++ lib.optionals cudaSupport [ cupy ];
 
   pytestFlagsArray = [ "tests/chainer_tests/utils_tests" ];
+
+  # cf. https://github.com/chainer/chainer/issues/8621
+  preCheck = ''
+    export CHAINER_WARN_VERSION_MISMATCH=0
+  '';
 
   disabledTests = [
     "gpu"

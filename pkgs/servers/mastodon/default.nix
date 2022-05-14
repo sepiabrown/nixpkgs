@@ -18,7 +18,7 @@ stdenv.mkDerivation rec {
 
   yarnOfflineCache = fetchYarnDeps {
     yarnLock = "${src}/yarn.lock";
-    sha256 = "sha256-Ngfs15YKLfSBOKju3BzpZFnenB370jId2G1g9Qy1y5w=";
+    sha256 = "sha256-FCwyJJwZ3/CVPT8LUid+KJcWCmFQet8Cftl7DVYhZ6I=";
   };
 
   mastodon-gems = bundlerEnv {

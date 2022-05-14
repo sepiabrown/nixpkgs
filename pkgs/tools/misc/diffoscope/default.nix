@@ -11,11 +11,11 @@
 # Note: when upgrading this package, please run the list-missing-tools.sh script as described below!
 python3Packages.buildPythonApplication rec {
   pname = "diffoscope";
-  version = "209";
+  version = "210";
 
   src = fetchurl {
     url = "https://diffoscope.org/archive/diffoscope-${version}.tar.bz2";
-    sha256 = "sha256-ZyHec9EbLrHmzCGd/Cwg/y9XCUQPtZhRH0xCouHKMp0=";
+    sha256 = "sha256-KaECH995scVdBbxQ4YhZUFmm04ptgi4yx14oDFX+zSw=";
   };
 
   outputs = [ "out" "man" ];
@@ -51,7 +51,7 @@ python3Packages.buildPythonApplication rec {
     ]
     ++ (with python3Packages; [
       argcomplete debian defusedxml jsondiff jsbeautifier libarchive-c
-      python_magic progressbar33 pypdf2 rpm tlsh
+      python-magic progressbar33 pypdf2 rpm tlsh
     ])
     ++ lib.optionals stdenv.isLinux [ python3Packages.pyxattr acl cdrkit dtc ]
     ++ lib.optionals enableBloat ([

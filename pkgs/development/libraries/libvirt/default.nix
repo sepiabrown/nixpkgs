@@ -26,6 +26,7 @@
 , ninja
 , perl
 , perlPackages
+, polkit
 , pkg-config
 , pmutils
 , python3
@@ -227,6 +228,9 @@ stdenv.mkDerivation rec {
         --replace "gmake" "make" \
         --replace "ggrep" "grep"
 
+      substituteInPlace src/util/virpolkit.h \
+        --replace '"/usr/bin/pkttyagent"' '"${polkit.bin}/bin/pkttyagent"'
+
       patchShebangs .
     ''
     + (lib.concatStringsSep "\n" (lib.mapAttrsToList patchBuilder overrides));
@@ -323,7 +327,9 @@ stdenv.mkDerivation rec {
     gettext() { "${gettext}/bin/gettext" "$@"; }
     '
   '' + optionalString isLinux ''
-    substituteInPlace $out/lib/systemd/system/libvirtd.service --replace /bin/kill ${coreutils}/bin/kill
+    for f in $out/lib/systemd/system/*.service ; do
+      substituteInPlace $f --replace /bin/kill ${coreutils}/bin/kill
+    done
     rm $out/lib/systemd/system/{virtlockd,virtlogd}.*
     wrapProgram $out/sbin/libvirtd \
       --prefix PATH : /run/libvirt/nix-emulators:${binPath}
