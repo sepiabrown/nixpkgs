@@ -576,7 +576,7 @@ lib.composeManyExtensions [
           pkgs.pathspec
           pkgs.pluggy
           pkgs.tomli
-        ] ++ pkgs.lib.optionals (pythonOlder "3.8") [
+        ] ++ pkgs.lib.optionals (pkgs.pythonOlder "3.8") [
           self.importlib-metadata
         ];     
       });
