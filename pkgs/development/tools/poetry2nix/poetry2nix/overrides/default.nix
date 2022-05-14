@@ -583,16 +583,10 @@ lib.composeManyExtensions [
         in
         {
         # listed in backend/src/hatchling/ouroboros.py
-        propagatedBuildInputs = (old.propagatedBuildInputs or [ ]) ++[
-          self.editables
-          self.pathspec
-          self.pluggy
-          self.tomli
-        ] ++ pkgs.lib.optionals (self.pythonOlder "3.8") [
-          self.importlib-metadata
+        propagatedBuildInputs = (remove self.packaging old.propagatedBuildInputs or [ ]) ++ [
+          packaging_213
         ];     
         propagatedNativeBuildInputs = (old.propagatedNativeBuildInputs or [ ] ) ++ [
-          packaging_213
         ];
         
         doCheck = false;
