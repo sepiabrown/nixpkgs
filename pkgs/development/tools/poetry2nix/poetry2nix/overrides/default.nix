@@ -570,26 +570,30 @@ lib.composeManyExtensions [
         outputs = [ "out" "dev" ];
       });
 
-      hatchling = super.hatchling.overridePythonAttrs (old: {
-        # listed in backend/src/hatchling/ouroboros.py
-        propagatedBuildInputs = (old.propagatedBuildInputs or [ ]) ++[
-          self.editables
-          (self.packaging.overridePythonAttrs ( old: rec {
+      hatchling = super.hatchling.overridePythonAttrs (old: 
+        let
+          packaging_213 = self.packaging.overridePythonAttrs ( old: rec {
             pname = "packaging";
             version = "21.3";
             src = self.fetchPypi {
               inherit pname version;
               sha256 = "sha256-3UfEKSfYmrkR5gZRiQfMLTofOLvQJjhZcGQ/nFuOz+s=";
             };
-          }))
+          });
+        in
+        {
+        # listed in backend/src/hatchling/ouroboros.py
+        propagatedBuildInputs = (old.propagatedBuildInputs or [ ]) ++[
+          self.editables
           self.pathspec
           self.pluggy
           self.tomli
+          packaging_213
         ] ++ pkgs.lib.optionals (self.pythonOlder "3.8") [
           self.importlib-metadata
         ];     
         propagatedNativeBuildInputs = (old.propagatedNativeBuildInputs or [ ] ) ++ [
-          self.packaging
+          packaging_213
         ];
         
         doCheck = false;
@@ -597,7 +601,7 @@ lib.composeManyExtensions [
         # listed in /backend/tests/downstream/requirements.txt
         checkInputs = [
           self.build
-          self.packaging
+          packaging_213
           self.requests
           self.toml
           self.virtualenv
