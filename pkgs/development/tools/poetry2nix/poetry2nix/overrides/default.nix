@@ -582,19 +582,21 @@ lib.composeManyExtensions [
       hatchling = super.hatchling.overridePythonAttrs (old: 
         {
         buildInputs = (old.buildInputs or [ ]) ++ [
-          self.packaging_213
+         self.packaging_213
         ];     
         propagatedBuildInputs = lib.remove self.packaging old.propagatedBuildInputs or [ ];
       });
 
       hatch-vcs = super.hatch-vcs.overridePythonAttrs (old: 
         {
-        buildInputs = (old.buildInputs or [ ]) ++ [
-          self.hatchling self.packaging_213
-        ];     
-        nativeBuildInputs = lib.remove self.hatchling old.nativeBuildInputs or [ ];
-        propagatedBuildInputs = lib.remove self.hatchling old.propagatedBuildInputs or [ ];
+        #buildInputs = (old.buildInputs or [ ]) ++ [
+        #  self.hatchling self.packaging_213
+        #];     
+        buildInputs = [ self.hatchling ];
+        nativeBuildInputs = [];# lib.remove self.hatchling old.nativeBuildInputs or [ ];
+        propagatedBuildInputs = [];# lib.remove self.hatchling old.propagatedBuildInputs or [ ];
         pythonImportsCheck = [];
+        chechInputs = [];
       });
 
       h3 = super.h3.overridePythonAttrs (
