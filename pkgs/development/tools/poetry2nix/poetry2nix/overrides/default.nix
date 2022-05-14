@@ -61,7 +61,7 @@ lib.composeManyExtensions [
   (self: super: {
     platformdirs_custom = super.platformdirs.overridePythonAttrs (old: {
       nativeBuildInputs = (lib.remove super.setuptools-scm old.nativeBuildInputs or [ ]) ++ [
-        self.setuptools-scm_213
+        #self.setuptools-scm_213
       ];
     });
 
