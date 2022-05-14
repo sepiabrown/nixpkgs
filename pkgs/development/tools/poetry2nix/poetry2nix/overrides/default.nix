@@ -572,7 +572,7 @@ lib.composeManyExtensions [
 
       hatchling = super.hatchling.overridePythonAttrs (old: 
         let
-          packaging_213 = self.packaging.overridePythonAttrs ( old: rec {
+          packaging_213 = super.packaging.overridePythonAttrs ( old: rec {
             pname = "packaging";
             version = "21.3";
             src = self.fetchPypi {
