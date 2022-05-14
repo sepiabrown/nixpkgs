@@ -586,7 +586,7 @@ lib.composeManyExtensions [
         buildInputs = (old.buildInputs or [ ]) ++ [
           packaging_213
         ];     
-        propagatedBuildInputs = (lib.remove self.packaging old.propagatedBuildInputs or [ ]) #++ [
+        propagatedBuildInputs = (lib.remove self.packaging old.propagatedBuildInputs or [ ]); #++ [
         #  packaging_213
         #];     
         
