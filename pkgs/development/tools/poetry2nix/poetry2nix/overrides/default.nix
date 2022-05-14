@@ -586,11 +586,11 @@ lib.composeManyExtensions [
         ];
       });
 
-      #setuptools-scm_213 = super.setuptools-scm.overridePythonAttrs (old: {
-      #  propagatedBuildInputs = (lib.remove self.packaging old.propagatedBuildInputs or [ ]) ++ [
-      #   self.packaging_213
-      #  ];
-      #});
+      setuptools-scm_213 = super.setuptools-scm.overridePythonAttrs (old: {
+        propagatedBuildInputs = (lib.remove self.packaging old.propagatedBuildInputs or [ ]) ++ [
+         self.packaging_213
+        ];
+      });
 
       hatch-vcs = super.hatch-vcs.overridePythonAttrs (old: {
         buildInputs = (old.buildInputs or [ ]) ++ [
