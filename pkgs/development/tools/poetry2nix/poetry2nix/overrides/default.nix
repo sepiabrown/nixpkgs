@@ -577,7 +577,7 @@ lib.composeManyExtensions [
           self.pathspec
           self.pluggy
           self.tomli
-        ] ++ pkgs.lib.optionals (lib.versionOlder self.python.version "3.8") [
+        ] ++ pkgs.lib.optionals (self.pythonOlder "3.8") [
           self.importlib-metadata
         ];     
         propagatedNativeBuildInputs = (old.propagatedNativeBuildInputs or [ ] ) ++ [
@@ -2293,7 +2293,15 @@ lib.composeManyExtensions [
               inherit self;
               drv = old;
               attr = "flit-core";
-            } else old;
+            } else old.overridePythonAttrs ( oldAttrs: rec {
+              pname = "packaging";
+              version = "21.3";
+
+              src = fetchPypi {
+                inherit pname version;
+                sha256 = "sha256-3UfEKSfYmrkR5gZRiQfMLTofOLvQJjhZcGQ/nFuOz+s=";
+              };
+            });
 
       psutil = super.psutil.overridePythonAttrs (
         old: {
