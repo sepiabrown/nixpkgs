@@ -48,7 +48,6 @@ print(url)
 print(package_name)
 print(index_url)
 print(package_filename)
-exit(1)
 
 # Parse username and password for this host from the netrc file if given.
 username, password = None, None
@@ -89,6 +88,7 @@ package_file = open(package_filename, "wb")
 # Sometimes the href is a relative path
 print("test1111111111111111")
 print(parser.sources[package_filename])
+exit(1)
 if urlparse(parser.sources[package_filename]).netloc == "":
     parsed_url = urlparse(index_url)
     package_url = urlunparse(
@@ -103,7 +103,6 @@ if urlparse(parser.sources[package_filename]).netloc == "":
     )
 else:
     package_url = parser.sources[package_filename]
-
 # Handle urls containing "../"
 parsed_url = urlparse(package_url)
 real_package_url = urlunparse(
