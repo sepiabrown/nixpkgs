@@ -69,7 +69,7 @@ lib.composeManyExtensions [
     });
 
     platformdirs =
-      if lib.versionAtLeast self.platformdirs_custom.version "2.5.2"
+      if lib.versionAtLeast self.platformdirs_custom.version "2.5.1";#2"
       then addBuildSystem { inherit self; drv = self.platformdirs_custom; attr = "hatchling"; extraAttrs = [ "hatch-vcs" ]; }
       else self.platformdirs_custom;
 
@@ -591,8 +591,6 @@ lib.composeManyExtensions [
 
       # hatchling requires packaging version 21.3
       hatchling = super.hatchling.overridePythonAttrs (old: {
-        #buildInputs = [ self.packaging_213 ];
-        #nativeBuildInputs = [ self.packaging_213 ];
         propagatedBuildInputs = (lib.remove self.packaging old.propagatedBuildInputs or [ ]) ++ [
          self.packaging_213
         ];
@@ -606,7 +604,7 @@ lib.composeManyExtensions [
 
       hatch-vcs = super.hatch-vcs.overridePythonAttrs (old: {
         propagatedBuildInputs = (lib.remove self.setuptools-scm old.propagatedBuildInputs or [ ]) ++ [
-          self.setuptools-scm_213#self.hatchling
+          self.setuptools-scm_213
         ];
       });
       #setuptools = super.setuptools.overridePythonAttrs (old: {
