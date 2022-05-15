@@ -44,11 +44,11 @@ url = sys.argv[1]
 package_name = sys.argv[2]
 index_url = url + "/" + package_name + "/"
 package_filename = sys.argv[3]
-print("test0000000000000")
-print(url)
-print(package_name)
-print(index_url)
-print(package_filename)
+#print("test0000000000000")
+#print(url)
+#print(package_name)
+#print(index_url)
+#print(package_filename)
 
 # Parse username and password for this host from the netrc file if given.
 username, password = None, None
@@ -87,17 +87,16 @@ if package_filename not in parser.sources:
 
 package_file = open(package_filename, "wb")
 # Sometimes the href is a relative path
-print("test1111111111111111")
-print(str(index))
-print(parser.sources[package_filename])
-exit(1)
+#print("test1111111111111111")
+#print(str(index))
+#print(parser.sources[package_filename])
 if urlparse(parser.sources[package_filename]).netloc == "":
     parsed_url = urlparse(index_url)
     package_url = urlunparse(
         (
             parsed_url.scheme,
             parsed_url.netloc,
-            parsed_url.path + "/" + parser.sources[package_filename],
+            parsed_url.path + "/" + package_filename,
             None,
             None,
             None,
