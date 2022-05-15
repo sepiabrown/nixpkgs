@@ -24,7 +24,7 @@ let
             { }
           else
             {
-              nativeBuildInputs = (old.nativeBuildInputs or [ ]);# ++ [ self.${attr} ] ++ map (a: self.${a}) extraAttrs;
+              nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ self.${attr} ];# ++ map (a: self.${a}) extraAttrs;
             }
         )
     );
@@ -287,14 +287,6 @@ lib.composeManyExtensions [
         old: {
           buildInputs = (old.buildInputs or [ ]) ++ [
             pkgs.rdkafka
-          ];
-        }
-      );
-
-      crashtest = super.crashtest.overridePythonAttrs (
-        old: {
-          buildInputs = (old.buildInputs or [ ]) ++ [
-            self.poetry
           ];
         }
       );
