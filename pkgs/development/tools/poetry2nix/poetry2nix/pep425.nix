@@ -77,7 +77,7 @@ let
           then
           # See PEP 600 for details.
             (p:
-              builtins.match "any|(many|linux)[1|2010|2014]*_${escapeRegex targetMachine}|manylinux_[0-9]+_[0-9]+_${escapeRegex targetMachine}" p != null
+              builtins.match "any|(many|)linux(|1|2010|2014|_[0-9]+_[0-9]+)_${escapeRegex targetMachine}" p != null
             )
           else
             (p: p == "any")
