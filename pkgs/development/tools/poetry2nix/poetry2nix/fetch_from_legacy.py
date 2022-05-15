@@ -26,6 +26,7 @@ class Pep503(HTMLParser):
     def handle_data(self, data):
         if self.url is not None:
             self.name = data
+            print("Data     :", data)
 
     def handle_starttag(self, tag, attrs):
         if tag == "a":
