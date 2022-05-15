@@ -64,6 +64,7 @@ pythonPackages.callPackage
       fileInfo =
         let
           filecan = fileCandidates;
+          swhl = selectWheel;
           isBdist = f: lib.strings.hasSuffix "whl" f.file;
           isSdist = f: ! isBdist f && ! isEgg f;
           isEgg = f: lib.strings.hasSuffix ".egg" f.file;
