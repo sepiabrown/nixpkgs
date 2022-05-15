@@ -98,7 +98,7 @@ let
       choose = files:
         let
           osxMatches = [ "12_0" "11_0" "10_12" "10_11" "10_10" "10_9" "10_8" "10_7" "any" ];
-          linuxMatches = [ "manylinux1_" "manylinux2010_" "manylinux2014_" "manylinux_" "any" ];
+          linuxMatches = [ "manylinux1_" "manylinux2010_" "manylinux2014_" "manylinux_" "any" "linux" ];
           chooseLinux = x: lib.take 1 (findBestMatches linuxMatches x);
           chooseOSX = x: lib.take 1 (findBestMatches osxMatches x);
         in
