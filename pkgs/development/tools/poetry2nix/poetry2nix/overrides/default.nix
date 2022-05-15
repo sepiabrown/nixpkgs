@@ -59,24 +59,21 @@ lib.composeManyExtensions [
 
   # Build systems with conditionals
   (self: super: {
-    #platformdirs_custom = super.platformdirs.overridePythonAttrs (old: {
-    #  buildInputs = [];
-    #  nativeBuildInputs = []; #(lib.remove super.setuptools-scm old.nativeBuildInputs or [ ]) ++ [
-    #    #self.setuptools-scm_213
-    #  #];
-    #  propagatedBuildInputs = [];
-    #  propagatedNativeBuildInputs = [];
-    #});
-
-    #platformdirs =
-    #  if lib.versionAtLeast self.platformdirs_custom.version "2.5.1"#2"
-    #  then addBuildSystem { inherit self; drv = self.platformdirs_custom; attr = "hatchling"; extraAttrs = [ "hatch-vcs" ]; }
-    #  else self.platformdirs_custom;
+    platformdirs_custom = super.platformdirs.overridePythonAttrs (old: {
+      nativeBuildInputs = (lib.remove super.setuptools-scm old.nativeBuildInputs or [ ]) ++ [
+        self.setuptools-scm_213
+      ];
+    });
 
     platformdirs =
-      if lib.versionAtLeast super.platformdirs.version "2.5.1"#2"
-      then addBuildSystem { inherit self; drv = super.platformdirs; attr = "hatchling"; extraAttrs = [ "hatch-vcs" ]; }
-      else super.platformdirs;
+      if lib.versionAtLeast self.platformdirs_custom.version "2.5.1"#2"
+      then addBuildSystem { inherit self; drv = self.platformdirs_custom; attr = "hatchling"; extraAttrs = [ "hatch-vcs" ]; }
+      else self.platformdirs_custom;
+
+    #platformdirs =
+    #  if lib.versionAtLeast super.platformdirs.version "2.5.1"#2"
+    #  then addBuildSystem { inherit self; drv = super.platformdirs; attr = "hatchling"; extraAttrs = [ "hatch-vcs" ]; }
+    #  else super.platformdirs;
 
   })
 
