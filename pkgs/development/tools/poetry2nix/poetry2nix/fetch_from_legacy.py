@@ -43,7 +43,7 @@ url = sys.argv[1]
 package_name = sys.argv[2]
 index_url = url + "/" + package_name + "/"
 package_filename = sys.argv[3]
-print(test0000000000000)
+print("test0000000000000")
 print(url)
 print(package_name)
 print(index_url)
