@@ -60,9 +60,8 @@ lib.composeManyExtensions [
   # Build systems with conditionals
   (self: super: {
     platformdirs_custom = super.platformdirs.overridePythonAttrs (old: {
-      nativeBuildInputs = (lib.remove self.setuptools-scm old.nativeBuildInputs or [ ]) ++ [
-        self.setuptools-scm_213
-      ];
+      nativeBuildInputs = (lib.remove self.setuptools-scm old.nativeBuildInputs or [ ]);# ++ [
+      #];
     });
 
     platformdirs =
@@ -292,13 +291,13 @@ lib.composeManyExtensions [
         }
       );
 
-      crashtest = super.crashtest.overridePythonAttrs (
-        old: {
-          buildInputs = (old.buildInputs or [ ]) ++ [
-            self.poetry
-          ];
-        }
-      );
+      #crashtest = super.crashtest.overridePythonAttrs (
+      #  old: {
+      #    buildInputs = (old.buildInputs or [ ]) ++ [
+      #      self.poetry
+      #    ];
+      #  }
+      #);
 
       cryptography =
         let
