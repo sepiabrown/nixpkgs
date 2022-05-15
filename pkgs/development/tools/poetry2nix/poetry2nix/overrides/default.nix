@@ -2311,9 +2311,9 @@ lib.composeManyExtensions [
         }
       );
 
-      pyparsing = super.pyparsing.overridePythonAttrs ( old: {
-        buildInputs = (old.buildInputs or [ ]) ++ [ self.flit-core ];
-      });
+      #pyparsing = super.pyparsing.overridePythonAttrs ( old: {
+      #  nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ self.flit-core ];
+      #});
 
       sentencepiece = super.sentencepiece.overridePythonAttrs (
         old: {
