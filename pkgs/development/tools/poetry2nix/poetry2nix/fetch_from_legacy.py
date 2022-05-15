@@ -81,6 +81,8 @@ if package_filename not in parser.sources:
 
 package_file = open(package_filename, "wb")
 # Sometimes the href is a relative path
+print("test1111111111111111")
+print(parser.sources[package_filename])
 if urlparse(parser.sources[package_filename]).netloc == "":
     parsed_url = urlparse(index_url)
     package_url = urlunparse(
