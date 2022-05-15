@@ -24,7 +24,7 @@ let
             { }
           else
             {
-              nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ self.${attr} ] ++ map (a: self.${a}) extraAttrs;
+              nativeBuildInputs = (old.nativeBuildInputs or [ ]);# ++ [ self.${attr} ] ++ map (a: self.${a}) extraAttrs;
             }
         )
     );
