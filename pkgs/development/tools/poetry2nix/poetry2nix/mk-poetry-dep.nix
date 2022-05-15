@@ -92,6 +92,7 @@ pythonPackages.callPackage
 
       # Prevent infinite recursion
       skipSetupToolsSCM = [
+        "setuptools"
         "setuptools_scm"
         "setuptools-scm"
         "toml" # Toml is an extra for setuptools-scm
