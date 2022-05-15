@@ -2311,10 +2311,6 @@ lib.composeManyExtensions [
         }
       );
 
-      #pyparsing = super.pyparsing.overridePythonAttrs ( old: {
-      #  nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ self.flit-core ];
-      #});
-
       sentencepiece = super.sentencepiece.overridePythonAttrs (
         old: {
           dontUseCmakeConfigure = true;
