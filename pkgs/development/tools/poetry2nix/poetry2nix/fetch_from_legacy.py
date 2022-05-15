@@ -48,8 +48,7 @@ print(url)
 print(package_name)
 print(index_url)
 print(package_filename)
-if package_name != "torch":
-    exit(1)
+exit(1)
 
 # Parse username and password for this host from the netrc file if given.
 username, password = None, None
