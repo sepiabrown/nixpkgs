@@ -295,7 +295,7 @@ lib.composeManyExtensions [
       crashtest = super.crashtest.overridePythonAttrs (
         old: {
           buildInputs = (old.buildInputs or [ ]) ++ [
-            self.poetry
+            super.poetry
           ];
         }
       );
