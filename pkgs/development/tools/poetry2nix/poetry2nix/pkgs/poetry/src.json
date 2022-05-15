@@ -1,7 +1,7 @@
 {
   "owner": "sepiabrown",
   "repo": "poetry",
-  "rev": "3235ffe74d39d6187aef160ab2a5e5ed14499839",
-  "sha256": "1vdwrqci70wwdfqq61dlvw999djflczak9dwndjbp6hplx9k42mf",
+  "rev": "ff016f04ad02f175657cef47ffeb266fa4223b06",
+  "sha256": "1kh5fkfb9nz7bcvwjap1l8dgqn60z0m5l2bcjypplf3mblmiw891",
   "fetchSubmodules": true
 }
