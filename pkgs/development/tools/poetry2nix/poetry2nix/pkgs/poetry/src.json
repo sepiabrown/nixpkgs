@@ -1,5 +1,6 @@
 {
   "owner": "sepiabrown",
   "repo": "poetry",
+  "rev": "cache_test",
   "fetchSubmodules": true
 }
