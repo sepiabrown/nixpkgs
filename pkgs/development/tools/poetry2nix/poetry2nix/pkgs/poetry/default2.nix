@@ -1,12 +1,14 @@
-{ lib
-, poetry2nix
-, python
-, fetchFromGitHub
+#{ lib
+#, poetry2nix
+#, python
+#, fetchFromGitHub
+{  pkgs ? import <nixpkgs> { }
 , projectDir ? ./.
 , pyproject ? projectDir + "/pyproject.toml"
 , poetrylock ? projectDir + "/poetry.lock"
 }:
 
+with pkgs;
 
 poetry2nix.mkPoetryApplication {
 

@@ -1221,14 +1221,14 @@ lib.composeManyExtensions [
           self.typing
         ];
 
-        checkInputs = [
-          self.git
-          self.pep517
-          self.pytest-mock
-          self.pytestCheckHook
-          self.tomlkit
-          self.virtualenv
-        ];
+        #checkInputs = [
+        #  self.git
+        #  self.pep517
+        #  self.pytest-mock
+        #  self.pytestCheckHook
+        #  self.tomlkit
+        #  self.virtualenv
+        #];
         #postPatch = ''
         #  echo "import sys" >> poetry/__init__.py
         #  for path in $propagatedBuildInputs; do
