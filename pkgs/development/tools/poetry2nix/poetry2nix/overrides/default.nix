@@ -2080,11 +2080,11 @@ lib.composeManyExtensions [
               export CUDNN_INCLUDE_DIR=${cudnn}/include
             ''; # enableCuda ${cudatoolkit}/targets/x86_64-linux/lib
 
+              # patchelf --set-rpath "${lib.makeLibraryPath [ stdenv.cc.cc.lib ]}"
             preFixup = lib.optionalString (!enableCuda) ''
               # For some reason pytorch retains a reference to libcuda even if it
               # is explicitly disabled with USE_CUDA=0.
               find $out -name "*.so" -exec ${pkgs.patchelf}/bin/patchelf --remove-needed libcuda.so.1 {} \;
-              patchelf --set-rpath "${lib.makeLibraryPath [ stdenv.cc.cc.lib ]}"
             '';
             nativeBuildInputs =
               (old.nativeBuildInputs or [ ])
