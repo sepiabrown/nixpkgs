@@ -2096,7 +2096,7 @@ lib.composeManyExtensions [
       };
 
       torch = lib.makeOverridable
-        ({ enableCuda ? false
+        ({ enableCuda ? true
          , cudaPackages ? pkgs.cudaPackages #, cudatoolkit ? pkgs.cudatoolkit_10_1
          , cudaArchList ? null
          , pkg ? super.torch
@@ -2177,6 +2177,8 @@ lib.composeManyExtensions [
                 nccl
                 stdenv.cc.cc
                 stdenv.cc.cc.lib
+                glibc
+                gcc-unwrapped
               ];
             propagatedBuildInputs = [
               self.numpy
