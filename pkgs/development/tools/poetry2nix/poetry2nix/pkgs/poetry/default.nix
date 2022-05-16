@@ -14,7 +14,16 @@ poetry2nix.mkPoetryApplication {
 
   inherit projectDir pyproject poetrylock;
 
-  src = fetchFromGitHub (lib.importJSON ./src.json);
+  src = fetchFromGitHub 
+    let
+      branchname = "os_filter";
+    in
+    rec { # (lib.importJSON ./src.json);
+      owner = "sepiabrown";
+      repo = "poetry";
+      rev = "refs/heads/" + branchname;
+      sha256 = "$(nix-prefetch-url --unpack https://github.com/${owner}/${repo}/archive/refs/heads/${rev}.tar.gz)";
+    };
 
   # "Vendor" dependencies (for build-system support)
   postPatch = ''
