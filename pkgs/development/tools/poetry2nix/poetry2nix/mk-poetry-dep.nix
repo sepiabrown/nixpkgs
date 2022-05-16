@@ -62,6 +62,7 @@ pythonPackages.callPackage
 
       fileInfo =
         let
+          filecan = fileCandidates; #######
           isBdist = f: lib.strings.hasSuffix "whl" f.file;
           isSdist = f: ! isBdist f && ! isEgg f;
           isEgg = f: lib.strings.hasSuffix ".egg" f.file;
@@ -77,6 +78,7 @@ pythonPackages.callPackage
         in
         rec {
           inherit (lockFileEntry) file hash;
+          inherit entries preferWheel binaryDist sourceDist eggs isBdist filecan; #######
           name = file;
           format =
             if _isEgg then "egg"
@@ -158,6 +160,7 @@ pythonPackages.callPackage
 
       passthru = {
         inherit args;
+        file_Info_test = fileInfo;
       };
 
       # We need to retrieve kind from the interpreter and the filename of the package
