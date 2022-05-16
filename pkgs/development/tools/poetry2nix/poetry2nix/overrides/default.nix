@@ -2097,28 +2097,83 @@ lib.composeManyExtensions [
 
       torch = lib.makeOverridable
         ({ enableCuda ? false
-         , cudatoolkit ? pkgs.cudatoolkit_10_1
+         , cudaPackages ? pkgs.cudaPackages #, cudatoolkit ? pkgs.cudatoolkit_10_1
+         , cudaArchList ? null
          , pkg ? super.torch
-         }: pkg.overrideAttrs (old:
+         }:
+          let
+            inherit (cudaPackages) cudatoolkit cudnn nccl cuda_nvcc;
+
+            cudatoolkit_joined = pkgs.symlinkJoin {
+              name = "${cudatoolkit.name}-unsplit";
+              # nccl is here purely for semantic grouping it could be moved to nativeBuildInputs
+              paths = [ cudatoolkit.out cudatoolkit.lib nccl.dev nccl.out ];
+            };
+
+            cudaCapabilities = rec {
+              cuda9 = [
+                "3.5"
+                "5.0"
+                "5.2"
+                "6.0"
+                "6.1"
+                "7.0"
+                "7.0+PTX"  # I am getting a "undefined architecture compute_75" on cuda 9
+                           # which leads me to believe this is the final cuda-9-compatible architecture.
+              ];
+
+              cuda10 = cuda9 ++ [
+                "7.5"
+                "7.5+PTX"  # < most recent architecture as of cudatoolkit_10_0 and pytorch-1.2.0
+              ];
+
+              cuda11 = cuda10 ++ [
+                "8.0"
+                "8.0+PTX"  # < CUDA toolkit 11.0
+                "8.6"
+                "8.6+PTX"  # < CUDA toolkit 11.1
+              ];
+            };
+            final_cudaArchList =
+              if !enableCuda || cudaArchList != null
+              then cudaArchList
+              else cudaCapabilities."cuda${lib.versions.major cudatoolkit.version}";
+          in
+            pkg.overrideAttrs (old:
           {
-            preConfigure =
-              if (!enableCuda) then ''
-                export USE_CUDA=0
-              '' else ''
-                export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${cudatoolkit}/targets/x86_64-linux/lib"
-              '';
+            src_test = old.src;
+
+            preConfigure = lib.optionalString (!enableCuda) ''
+              export USE_CUDA=0
+            '' + lib.optionalString enableCuda ''
+              export TORCH_CUDA_ARCH_LIST="${lib.strings.concatStringsSep ";" final_cudaArchList}"
+              export CC=${cudatoolkit.cc}/bin/gcc CXX=${cudatoolkit.cc}/bin/g++
+              export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${lib.makeLibraryPath [ cudatoolkit "${cudatoolkit}" ]}"
+            '' + lib.optionalString (enableCuda && cudnn != null) ''
+              export CUDNN_INCLUDE_DIR=${cudnn}/include
+            ''; # enableCuda ${cudatoolkit}/targets/x86_64-linux/lib
+
             preFixup = lib.optionalString (!enableCuda) ''
               # For some reason pytorch retains a reference to libcuda even if it
               # is explicitly disabled with USE_CUDA=0.
               find $out -name "*.so" -exec ${pkgs.patchelf}/bin/patchelf --remove-needed libcuda.so.1 {} \;
             '';
+            nativeBuildInputs =
+              (old.nativeBuildInputs or [ ])
+              ++ [ pkgs.autoPatchelfHook ]
+              ++ lib.optionals enableCuda [ cudatoolkit_joined pkgs.addOpenGLRunpath ];
             buildInputs =
               (old.buildInputs or [ ])
               ++ [ self.typing-extensions ]
               ++ lib.optionals enableCuda [
                 pkgs.linuxPackages.nvidia_x11
-                pkgs.nccl.dev
-                pkgs.nccl.out
+                nccl.dev
+                nccl.out
+                cudatoolkit
+                cudnn
+                cuda_nvcc
+                pkgs.magma
+                nccl
               ];
             propagatedBuildInputs = [
               self.numpy
