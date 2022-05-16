@@ -87,7 +87,7 @@ if urlparse(parser.sources[package_filename]).netloc == "":
         (
             parsed_url.scheme,
             parsed_url.netloc,
-            parsed_url.path + "/" + package_filename,
+            parsed_url.path + "/" + quote(package_filename),
             None,
             None,
             None,
@@ -108,7 +108,6 @@ real_package_url = urlunparse(
         parsed_url.fragment,
     )
 )
-real_package_url = quote(real_package_url)
 print("Downloading %s" % real_package_url)
 
 req = urllib.request.Request(real_package_url)
