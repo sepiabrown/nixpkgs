@@ -1216,7 +1216,7 @@ lib.composeManyExtensions [
 
         propagatedBuildInputs = (old.propagatedBuildInputs or [ ]) ++ lib.optionals (lib.versionOlder self.python.version "3.8") [
           self.importlib-metadata
-        ] ++ pkgs.lib.optionals isPy27 [
+        ] ++ lib.optionals self.isPy27 [
           self.pathlib2
           self.typing
         ];
