@@ -7,7 +7,9 @@
 , poetrylock ? projectDir + "/poetry.lock"
 }:
 
-
+let
+  branchname = "os_filter";
+in
 poetry2nix.mkPoetryApplication {
 
   inherit python;
@@ -15,9 +17,6 @@ poetry2nix.mkPoetryApplication {
   inherit projectDir pyproject poetrylock;
 
   src = fetchFromGitHub 
-    let
-      branchname = "os_filter";
-    in
     rec { # (lib.importJSON ./src.json);
       owner = "sepiabrown";
       repo = "poetry";
