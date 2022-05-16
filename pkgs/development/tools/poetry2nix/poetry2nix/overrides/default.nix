@@ -59,20 +59,20 @@ lib.composeManyExtensions [
 
   # Build systems with conditionals
   (self: super: rec  {
-    platformdirs_custom = super.platformdirs.overridePythonAttrs (old: {
-      nativeBuildInputs = (lib.remove self.setuptools-scm old.nativeBuildInputs or [ ]);# ++ [
-      #];
-    });
-
-    platformdirs =
-      if lib.versionAtLeast platformdirs_custom.version "2.5.2"
-      then addBuildSystem { inherit self; drv = platformdirs_custom; attr = "hatchling"; extraAttrs = [ "hatch-vcs" ]; }
-      else platformdirs_custom;
+    #platformdirs_custom = super.platformdirs.overridePythonAttrs (old: {
+    #  nativeBuildInputs = (lib.remove self.setuptools-scm old.nativeBuildInputs or [ ]);# ++ [
+    #  #];
+    #});
 
     #platformdirs =
-    #  if lib.versionAtLeast super.platformdirs.version "2.5.1"#2"
-    #  then addBuildSystem { inherit self; drv = super.platformdirs; attr = "hatchling"; extraAttrs = [ "hatch-vcs" ]; }
-    #  else super.platformdirs;
+    #  if lib.versionAtLeast platformdirs_custom.version "2.5.2"
+    #  then addBuildSystem { inherit self; drv = platformdirs_custom; attr = "hatchling"; extraAttrs = [ "hatch-vcs" ]; }
+    #  else platformdirs_custom;
+
+    platformdirs =
+      if lib.versionAtLeast super.platformdirs.version "2.5.2"
+      then addBuildSystem { inherit self; drv = super.platformdirs; attr = "hatchling"; extraAttrs = [ "hatch-vcs" ]; }
+      else super.platformdirs;
 
   })
 
