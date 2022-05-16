@@ -81,6 +81,15 @@ if package_filename not in parser.sources:
     exit(1)
 
 _clean_re = re.compile(r"[^a-z0-9$&+,/:;=?@.#%_\\|-]", re.I)
+print("parsed_url")
+print(parsed_url)
+print("parser_sources_package_filename")
+print(parser.sources[package_filename])
+print("urljoin1")
+print(urljoin(parsed_url,parser.sources[package_filename]))
+print(_clean_re.sub(lambda match: f"%{match.group(0):2x}",urljoin(parsed_url.path,parser.sources[package_filename])))
+print("urljoin2")
+print(_clean_re.sub(lambda match: f"%{match.group(0):2x}",urljoin(parsed_url.path,package_filename)))
 
 package_file = open(package_filename, "wb")
 # Sometimes the href is a relative path
