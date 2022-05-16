@@ -2161,7 +2161,7 @@ lib.composeManyExtensions [
             '';
             nativeBuildInputs =
               (old.nativeBuildInputs or [ ])
-              ++ [ pkgs.autoPatchelfHook stdenv.cc.cc stdenv.cc.cc.lib ]
+              ++ [ pkgs.autoPatchelfHook stdenv.cc.cc stdenv.cc.cc.lib pkgs.glibc pkgs.gcc-unwrapped ]
               ++ lib.optionals enableCuda [ cudatoolkit_joined pkgs.addOpenGLRunpath ];
             buildInputs =
               (old.buildInputs or [ ])
@@ -2177,8 +2177,8 @@ lib.composeManyExtensions [
                 nccl
                 stdenv.cc.cc
                 stdenv.cc.cc.lib
-                glibc
-                gcc-unwrapped
+                pkgs.glibc
+                pkgs.gcc-unwrapped
               ];
             propagatedBuildInputs = [
               self.numpy
