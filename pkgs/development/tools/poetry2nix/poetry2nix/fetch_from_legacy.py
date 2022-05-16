@@ -7,12 +7,13 @@
 import os
 import sys
 import netrc
-from urllib.parse import urlparse, urlunparse, quote
+from urllib.parse import urlparse, urlunparse, urljoin
 from html.parser import HTMLParser
 import urllib.request
 import shutil
 import ssl
 from os.path import normpath
+import re
 
 
 # Parse the legacy index page to extract the href and package names
@@ -79,6 +80,8 @@ if package_filename not in parser.sources:
     )
     exit(1)
 
+_clean_re = re.compile(r"[^a-z0-9$&+,/:;=?@.#%_\\|-]", re.I)
+
 package_file = open(package_filename, "wb")
 # Sometimes the href is a relative path
 if urlparse(parser.sources[package_filename]).netloc == "":
@@ -87,7 +90,7 @@ if urlparse(parser.sources[package_filename]).netloc == "":
         (
             parsed_url.scheme,
             parsed_url.netloc,
-            parsed_url.path + "/" + quote(package_filename),
+            _clean_re.sub(lambda match: f"%{match.group(0):2x}",urljoin(parsed_url.path,package_filename)),
             None,
             None,
             None,
