@@ -22,6 +22,15 @@ in
 
 runTests {
 
+# FLAKES
+
+  testCallLocklessFlake = {
+    expr = callLocklessFlake {
+      path = ./flakes/subflakeTest;
+      inputs = { subflake = ./flakes/subflakeTest/subflake; inherit callLocklessFlake; };
+    };
+    expected = { x = 1; outPath = ./flakes/subflakeTest; };
+  };
 
 # TRIVIAL
 
@@ -251,6 +260,68 @@ runTests {
     expected = "&quot;test&quot; &apos;test&apos; &lt; &amp; &gt;";
   };
 
+  testToShellVars = {
+    expr = ''
+      ${toShellVars {
+        STRing01 = "just a 'string'";
+        _array_ = [ "with" "more strings" ];
+        assoc."with some" = ''
+          strings
+          possibly newlines
+        '';
+        drv = {
+          outPath = "/drv";
+          foo = "ignored attribute";
+        };
+        path = /path;
+        stringable = {
+          __toString = _: "hello toString";
+          bar = "ignored attribute";
+        };
+      }}
+    '';
+    expected = ''
+      STRing01='just a '\'''string'\''''
+      declare -a _array_=('with' 'more strings')
+      declare -A assoc=(['with some']='strings
+      possibly newlines
+      ')
+      drv='/drv'
+      path='/path'
+      stringable='hello toString'
+    '';
+  };
+
+  testHasInfixFalse = {
+    expr = hasInfix "c" "abde";
+    expected = false;
+  };
+
+  testHasInfixTrue = {
+    expr = hasInfix "c" "abcde";
+    expected = true;
+  };
+
+  testHasInfixDerivation = {
+    expr = hasInfix "hello" (import ../.. { system = "x86_64-linux"; }).hello;
+    expected = true;
+  };
+
+  testHasInfixPath = {
+    expr = hasInfix "tests" ./.;
+    expected = true;
+  };
+
+  testHasInfixPathStoreDir = {
+    expr = hasInfix builtins.storeDir ./.;
+    expected = true;
+  };
+
+  testHasInfixToString = {
+    expr = hasInfix "a" { __toString = _: "a"; };
+    expected = true;
+  };
+
 # LISTS
 
   testFilter = {
@@ -467,6 +538,66 @@ runTests {
       [section 1]
       attribute1=5
       boolean=false
+      x=Me-se JarJar Binx
+    '';
+  };
+
+  testToINIWithGlobalSectionEmpty = {
+    expr = generators.toINIWithGlobalSection {} {
+      globalSection = {
+      };
+      sections = {
+      };
+    };
+    expected = ''
+    '';
+  };
+
+  testToINIWithGlobalSectionGlobalEmptyIsTheSameAsToINI =
+    let
+      sections = {
+        "section 1" = {
+          attribute1 = 5;
+          x = "Me-se JarJar Binx";
+        };
+        "foo" = {
+          "he\\h=he" = "this is okay";
+        };
+      };
+    in {
+      expr =
+        generators.toINIWithGlobalSection {} {
+            globalSection = {};
+            sections = sections;
+        };
+      expected = generators.toINI {} sections;
+  };
+
+  testToINIWithGlobalSectionFull = {
+    expr = generators.toINIWithGlobalSection {} {
+      globalSection = {
+        foo = "bar";
+        test = false;
+      };
+      sections = {
+        "section 1" = {
+          attribute1 = 5;
+          x = "Me-se JarJar Binx";
+        };
+        "foo" = {
+          "he\\h=he" = "this is okay";
+        };
+      };
+    };
+    expected = ''
+      foo=bar
+      test=false
+
+      [foo]
+      he\h\=he=this is okay
+
+      [section 1]
+      attribute1=5
       x=Me-se JarJar Binx
     '';
   };

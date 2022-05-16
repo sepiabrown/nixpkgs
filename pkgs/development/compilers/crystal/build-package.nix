@@ -6,6 +6,7 @@
 , pkg-config
 , which
 , linkFarm
+, fetchgit
 , fetchFromGitHub
 , installShellFiles
 , removeReferencesTo
@@ -39,7 +40,10 @@ let
   crystalLib = linkFarm "crystal-lib" (lib.mapAttrsToList
     (name: value: {
       inherit name;
-      path = fetchFromGitHub value;
+      path =
+        if (builtins.hasAttr "url" value)
+        then fetchgit value
+        else fetchFromGitHub value;
     })
     (import shardsFile));
 
@@ -68,16 +72,17 @@ stdenv.mkDerivation (mkDerivationArgs // {
 
   PREFIX = placeholder "out";
 
-  buildInputs = args.buildInputs or [ ] ++ [ crystal ]
-    ++ lib.optional (format != "crystal") shards;
+  strictDeps = true;
+  buildInputs = args.buildInputs or [ ] ++ [ crystal ];
 
   nativeBuildInputs = args.nativeBuildInputs or [ ] ++ [
+    crystal
     git
     installShellFiles
     removeReferencesTo
     pkg-config
     which
-  ];
+  ] ++ lib.optional (format != "crystal") shards;
 
   buildPhase = args.buildPhase or (lib.concatStringsSep "\n" ([
     "runHook preBuild"

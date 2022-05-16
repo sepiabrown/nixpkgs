@@ -58,8 +58,8 @@ stdenv.mkDerivation rec {
       --add-flags "-cp $out/share/java/jameica.jar:$out/share/jameica-${version}/* ${
         lib.optionalString stdenv.isDarwin ''-Xdock:name="Jameica" -XstartOnFirstThread''
       } de.willuhn.jameica.Main" \
-      --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath buildInputs} \
-      --run "cd $out/share/java/"
+      --prefix LD_LIBRARY_PATH : ${lib.escapeShellArg (lib.makeLibraryPath buildInputs)} \
+      --chdir "$out/share/java/"
   '';
 
   meta = with lib; {

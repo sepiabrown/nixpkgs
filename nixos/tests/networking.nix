@@ -139,6 +139,26 @@ let
               client.wait_until_succeeds("ping -c 1 192.168.3.1")
         '';
     };
+    dhcpDefault = {
+      name = "useDHCP-by-default";
+      nodes.router = router;
+      nodes.client = { lib, ... }: {
+        # Disable test driver default config
+        networking.interfaces = lib.mkForce {};
+        networking.useNetworkd = networkd;
+        virtualisation.vlans = [ 1 ];
+      };
+      testScript = ''
+        start_all()
+        client.wait_for_unit("multi-user.target")
+        client.wait_until_succeeds("ip addr show dev eth1 | grep '192.168.1'")
+        client.shell_interact()
+        client.succeed("ping -c 1 192.168.1.1")
+        router.succeed("ping -c 1 192.168.1.1")
+        router.succeed("ping -c 1 192.168.1.2")
+        client.succeed("ping -c 1 192.168.1.2")
+      '';
+    };
     dhcpSimple = {
       name = "SimpleDHCP";
       nodes.router = router;
@@ -878,7 +898,7 @@ let
                 linkConfig.Name = "custom_name";
               };
             }
-       else { services.udev.initrdRules = ''
+       else { boot.initrd.services.udev.rules = ''
                SUBSYSTEM=="net", ACTION=="add", DRIVERS=="?*", ATTR{address}=="52:54:00:12:01:01", KERNEL=="eth*", NAME="custom_name"
               '';
             });

@@ -2,6 +2,7 @@
 , stdenv
 , buildGoModule
 , fetchFromGitHub
+, installShellFiles
 , pkg-config
 , gpgme
 , glibc
@@ -11,18 +12,18 @@
 
 buildGoModule rec {
   pname = "werf";
-  version = "1.2.78";
+  version = "1.2.99";
 
   src = fetchFromGitHub {
     owner = "werf";
     repo = "werf";
     rev = "v${version}";
-    sha256 = "sha256-ehrzb7WvkYL8oj2RSzKc1KDagV0zg6vMzgpT2sPyhcI=";
+    sha256 = "sha256-D9NwVZGB0UV0tRe927GpxHzdvAeqcRJOYfocbbj6BRM=";
   };
-  vendorSha256 = "sha256-w8ZeAQbZIVOBoRa9fJhXgTeYRCYpkh/U4pwb5u6A9mQ=";
+  vendorSha256 = "sha256-ZMSTl9WFTF5x+tiQZ37ihVrOuLS0W5PjyXbbzyHJNsI=";
   proxyVendor = true;
 
-  nativeBuildInputs = [ pkg-config ];
+  nativeBuildInputs = [ installShellFiles pkg-config ];
   buildInputs = [ gpgme ]
     ++ lib.optionals stdenv.isLinux [ glibc.static lvm2 btrfs-progs ];
 
@@ -43,6 +44,12 @@ buildGoModule rec {
   ];
 
   subPackages = [ "cmd/werf" ];
+
+  postInstall = ''
+    installShellCompletion --cmd werf \
+      --bash <($out/bin/werf completion --shell=bash) \
+      --zsh <($out/bin/werf completion --shell=zsh)
+  '';
 
   meta = with lib; {
     homepage = "https://github.com/werf/werf";

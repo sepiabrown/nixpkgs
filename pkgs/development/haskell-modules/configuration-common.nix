@@ -99,7 +99,7 @@ self: super: {
       name = "git-annex-${super.git-annex.version}-src";
       url = "git://git-annex.branchable.com/";
       rev = "refs/tags/" + super.git-annex.version;
-      sha256 = "066gs2lkkiz9z9n6rjg33wmgi04qmn6xpnx86j0x3d56r1110id4";
+      sha256 = "sha256-NYe34bsq2v0rlmcSMgYvU9ec94meXFFJoWo0sIjX/bY=";
       # delete android and Android directories which cause issues on
       # darwin (case insensitive directory). Since we don't need them
       # during the build process, we can delete it to prevent a hash
@@ -252,7 +252,7 @@ self: super: {
   binary-protocol = dontCheck super.binary-protocol;    # http://hydra.cryp.to/build/499749/log/raw
   binary-search = dontCheck super.binary-search;
   bits = dontCheck super.bits;                          # http://hydra.cryp.to/build/500239/log/raw
-  bloodhound = dontCheck super.bloodhound;
+  bloodhound = dontCheck super.bloodhound;              # https://github.com/plow-technologies/quickcheck-arbitrary-template/issues/10
   buildwrapper = dontCheck super.buildwrapper;
   burst-detection = dontCheck super.burst-detection;    # http://hydra.cryp.to/build/496948/log/raw
   cabal-meta = dontCheck super.cabal-meta;              # http://hydra.cryp.to/build/497892/log/raw
@@ -334,15 +334,7 @@ self: super: {
   matplotlib = dontCheck super.matplotlib;
 
   # https://github.com/matterhorn-chat/matterhorn/issues/679 they do not want to be on stackage
-  matterhorn = doJailbreak (super.matterhorn.overrideScope (self: super: {
-    brick = self.brick_0_64_2;
-    # Doesn't support aeson 2.0
-    # https://github.com/matterhorn-chat/matterhorn/issues/759
-    aeson = self.aeson_1_5_6_0;
-  }));
-  mattermost-api = super.mattermost-api.override {
-    aeson = self.aeson_1_5_6_0;
-  };
+  matterhorn = doJailbreak super.matterhorn;
 
   memcache = dontCheck super.memcache;
   metrics = dontCheck super.metrics;
@@ -619,7 +611,7 @@ self: super: {
     doCheck = false;            # https://github.com/kazu-yamamoto/ghc-mod/issues/335
     executableToolDepends = drv.executableToolDepends or [] ++ [pkgs.buildPackages.emacs];
     postInstall = ''
-      local lispdir=( "$data/share/${self.ghc.name}/*/${drv.pname}-${drv.version}/elisp" )
+      local lispdir=( "$data/share/${self.ghc.targetPrefix}${self.ghc.haskellCompilerName}/*/${drv.pname}-${drv.version}/elisp" )
       make -C $lispdir
       mkdir -p $data/share/emacs/site-lisp
       ln -s "$lispdir/"*.el{,c} $data/share/emacs/site-lisp/
@@ -654,7 +646,7 @@ self: super: {
     # cannot easily byte-compile these files, unfortunately, because they
     # depend on a new version of haskell-mode that we don't have yet.
     postInstall = ''
-      local lispdir=( "$data/share/${self.ghc.name}/"*"/${drv.pname}-"*"/elisp" )
+      local lispdir=( "$data/share/${self.ghc.targetPrefix}${self.ghc.haskellCompilerName}/"*"/${drv.pname}-"*"/elisp" )
       mkdir -p $data/share/emacs
       ln -s $lispdir $data/share/emacs/site-lisp
     '';
@@ -665,7 +657,7 @@ self: super: {
     # We cannot easily byte-compile these files, unfortunately, because they
     # depend on a new version of haskell-mode that we don't have yet.
     postInstall = ''
-      local lispdir=( "$data/share/${self.ghc.name}/"*"/${drv.pname}-"*"/elisp" )
+      local lispdir=( "$data/share/${self.ghc.targetPrefix}${self.ghc.haskellCompilerName}/"*"/${drv.pname}-"*"/elisp" )
       mkdir -p $data/share/emacs
       ln -s $lispdir $data/share/emacs/site-lisp
     '';
@@ -686,9 +678,6 @@ self: super: {
 
   # https://github.com/pxqr/base32-bytestring/issues/4
   base32-bytestring = dontCheck super.base32-bytestring;
-
-  # 2022-03-24: Strict aeson bound: https://github.com/berberman/nvfetcher/pull/63
-  nvfetcher = throwIfNot (super.nvfetcher.version == "0.4.0.0") "nvfetcher: remove jailbreak after update" doJailbreak super.nvfetcher;
 
   # 2022-03-24: Strict aeson bound:
   arch-web = throwIfNot (super.arch-web.version == "0.1.0") "arch-web: remove jailbreak after update"  doJailbreak super.arch-web;
@@ -853,6 +842,18 @@ self: super: {
 
   # test suite requires git and does a bunch of git operations
   restless-git = dontCheck super.restless-git;
+
+  # requires git at test-time *and* runtime, but we'll just rely on users to
+  # bring their own git at runtime
+  sensei = overrideCabal (drv: {
+    testHaskellDepends = drv.testHaskellDepends or [] ++ [ self.hspec-meta_2_9_3 ];
+    testToolDepends = drv.testToolDepends or [] ++ [ pkgs.git ];
+  }) (super.sensei.overrideScope (self: super: {
+    hspec-meta = self.hspec-meta_2_9_3;
+    hspec = self.hspec_2_9_7;
+    hspec-core = dontCheck self.hspec-core_2_9_7;
+    hspec-discover = self.hspec-discover_2_9_7;
+  }));
 
   # Depends on broken fluid.
   fluid-idl-http-client = markBroken super.fluid-idl-http-client;
@@ -1045,12 +1046,6 @@ self: super: {
   # Generate shell completion.
   cabal2nix = generateOptparseApplicativeCompletion "cabal2nix" super.cabal2nix;
 
-  # 2022-03-20: niv is unmaintained we pin stuff to keep it running
-  niv = generateOptparseApplicativeCompletion "niv" (super.niv.overrideScope (self: super: {
-   optparse-applicative = self.optparse-applicative_0_15_1_0;
-   aeson = self.aeson_1_5_6_0;
-  }));
-
   ormolu = generateOptparseApplicativeCompletion "ormolu" super.ormolu;
 
   stack =
@@ -1160,6 +1155,16 @@ self: super: {
   # https://github.com/danfran/cabal-macosx/issues/13
   cabal-macosx = dontCheck super.cabal-macosx;
 
+  # Causes Test.QuickCheck.resize: negative size crashes e.g. in test suites
+  # https://github.com/typeable/generic-arbitrary/issues/14
+  generic-arbitrary = appendPatches [
+    (pkgs.fetchpatch {
+      name = "generic-arbitrary-no-negative-resize.patch";
+      url = "https://github.com/typeable/generic-arbitrary/commit/c13d119d8ad0d43860ecdb93b357b0239e366a6c.patch";
+      sha256 = "1jgbd2jn575icqw9nfdzh57nacm3pn8n53ka52129pnfjqfzyhsi";
+    })
+  ] super.generic-arbitrary;
+
   # https://github.com/DanielG/cabal-helper/pull/123
   cabal-helper = doJailbreak super.cabal-helper;
 
@@ -1196,8 +1201,29 @@ self: super: {
   # Fix build with attr-2.4.48 (see #53716)
   xattr = appendPatch ./patches/xattr-fix-build.patch super.xattr;
 
-  # Some tests depend on a postgresql instance
-  esqueleto = dontCheck super.esqueleto;
+  esqueleto =
+    overrideCabal
+      (drv: {
+        postPatch = drv.postPatch or "" + ''
+          # patch out TCP usage: https://nixos.org/manual/nixpkgs/stable/#sec-postgresqlTestHook-tcp
+          sed -i test/PostgreSQL/Test.hs \
+            -e s^host=localhost^^
+        '';
+        # Match the test suite defaults (or hardcoded values?)
+        preCheck = drv.preCheck or "" + ''
+          PGUSER=esqutest
+          PGDATABASE=esqutest
+        '';
+        testFlags = drv.testFlags or [] ++ [
+          # We don't have a MySQL test hook yet
+          "--skip=/Esqueleto/MySQL"
+        ];
+        testToolDepends = drv.testToolDepends or [] ++ [
+          pkgs.postgresql
+          pkgs.postgresqlTestHook
+        ];
+      })
+      super.esqueleto;
 
   # Requires API keys to run tests
   algolia = dontCheck super.algolia;
@@ -1316,7 +1342,25 @@ self: super: {
 
   # Test suite requires database
   persistent-mysql = dontCheck super.persistent-mysql;
-  persistent-postgresql = dontCheck super.persistent-postgresql;
+  persistent-postgresql =
+    overrideCabal
+      (drv: {
+        postPatch = drv.postPath or "" + ''
+          # patch out TCP usage: https://nixos.org/manual/nixpkgs/stable/#sec-postgresqlTestHook-tcp
+          # NOTE: upstream host variable takes only two values...
+          sed -i test/PgInit.hs \
+            -e s^'host=" <> host <> "'^^
+        '';
+        preCheck = drv.preCheck or "" + ''
+          PGDATABASE=test
+          PGUSER=test
+        '';
+        testToolDepends = drv.testToolDepends or [] ++ [
+          pkgs.postgresql
+          pkgs.postgresqlTestHook
+        ];
+      })
+      super.persistent-postgresql;
 
   # Fix EdisonAPI and EdisonCore for GHC 8.8:
   # https://github.com/robdockins/edison/pull/16
@@ -1484,35 +1528,53 @@ self: super: {
 
   # hasura packages need some extra care
   graphql-engine = overrideCabal (drv: {
-    patches = [ ./patches/graphql-engine-mapkeys.patch ];
+    patches = [
+      # Compat with unordered-containers >= 0.2.15.0
+      (fetchpatch {
+        name = "hasura-graphql-engine-updated-deps.patch";
+        url = "https://github.com/hasura/graphql-engine/commit/d50aae87a58794bc1fc66c7a60acb0c34b5e70c7.patch";
+        stripLen = 1;
+        excludes = [ "cabal.project.freeze" ];
+        sha256 = "0lb5l9vfynr85i9xs53w4mpgczp04ncxz7846n3y91ri34fa87v3";
+      })
+      # Compat with hashable >= 1.3.4.0
+      (fetchpatch {
+        name = "hasura-graphql-engine-hashable-1.3.4.0.patch";
+        url = "https://github.com/hasura/graphql-engine/commit/e48b2287315fb09005ffd52c0a686dc321171ae2.patch";
+        sha256 = "1jppnanmsyl8npyf59s0d8bgjy7bq50vkh5zx4888jy6jqh27jb6";
+        stripLen = 1;
+      })
+      # Compat with unordered-containers >= 0.2.17.0
+      (fetchpatch {
+        name = "hasura-graphql-engine-unordered-containers-0.2.17.0.patch";
+        url = "https://github.com/hasura/graphql-engine/commit/3a1eb3128a2ded2da7c5fef089738890828cce03.patch";
+        sha256 = "0vz7s8m8mjvv728vm4q0dvvrirvydaw7xks30b5ddj9f6a72a2f1";
+        stripLen = 1;
+      })
+    ];
     doHaddock = false;
-    version = "2.0.10";
-  }) (super.graphql-engine.overrideScope (self: super: {
+    version = "2.3.1";
+  }) (super.graphql-engine.override {
     immortal = self.immortal_0_2_2_1;
     resource-pool = self.hasura-resource-pool;
     ekg-core = self.hasura-ekg-core;
     ekg-json = self.hasura-ekg-json;
-    hspec = dontCheck self.hspec_2_9_4;
-    hspec-core = dontCheck self.hspec-core_2_9_4;
-    hspec-discover = dontCheck super.hspec-discover_2_9_4;
-  }));
-  hasura-ekg-core = doJailbreak (super.hasura-ekg-core.overrideScope (self: super: {
-    hspec = dontCheck self.hspec_2_9_4;
-    hspec-core = dontCheck self.hspec-core_2_9_4;
-    hspec-discover = dontCheck super.hspec-discover_2_9_4;
-  }));
-  hasura-ekg-json = super.hasura-ekg-json.overrideScope (self: super: {
-    ekg-core = self.hasura-ekg-core;
-    hspec = dontCheck self.hspec_2_9_4;
-    hspec-core = dontCheck self.hspec-core_2_9_4;
-    hspec-discover = dontCheck super.hspec-discover_2_9_4;
   });
+  hasura-ekg-json = super.hasura-ekg-json.override {
+    ekg-core = self.hasura-ekg-core;
+  };
   pg-client = overrideCabal (drv: {
     librarySystemDepends = with pkgs; [ postgresql krb5.dev openssl.dev ];
-    # wants a running DB to check against
-    doCheck = false;
+    testToolDepends = drv.testToolDepends or [] ++ [
+      pkgs.postgresql pkgs.postgresqlTestHook
+    ];
+    preCheck = drv.preCheck or "" + ''
+      # empty string means use default connection
+      export DATABASE_URL=""
+    '';
   }) (super.pg-client.override {
     resource-pool = self.hasura-resource-pool;
+    ekg-core = self.hasura-ekg-core;
   });
 
   # https://github.com/bos/statistics/issues/170
@@ -1596,19 +1658,6 @@ self: super: {
   ];
 
   lsp = assert super.lsp.version == "1.4.0.0"; dontCheck super.lsp;
-
-  hls-test-utils = assert super.hls-test-utils.version == "1.2.0.0"; appendPatches [
-    (fetchpatch {
-      url = "https://github.com/haskell/haskell-language-server/commit/074593987e9086e308b89ecde336de2c64861dc0.patch";
-      sha256 = "sha256-uTlIbGQKulP3963UPL2V9cqMoIvPscK+s2W/HtBmMWc=";
-      relative = "hls-test-utils";
-    })
-    (fetchpatch {
-      url = "https://github.com/haskell/haskell-language-server/commit/78305f21783807b04baebca4860c255bfe84d4ab.patch";
-      sha256 = "sha256-oe8Q8kBJBkel+pR5imFj43NVpm4afcyLgAUCWhrIoPk=";
-      relative = "hls-test-utils";
-    })
-   ] super.hls-test-utils;
 
   # 2021-05-08: Tests fail: https://github.com/haskell/haskell-language-server/issues/1809
   hls-eval-plugin = dontCheck super.hls-eval-plugin;
@@ -2044,18 +2093,6 @@ self: super: {
     '' + (drv.postPatch or "");
   }) (doJailbreak super.jsaddle);
 
-  # 2022-03-22: PR for haskell-gi-base compat https://github.com/ghcjs/jsaddle/pull/129
-  jsaddle-webkit2gtk =
-    appendPatch (
-      fetchpatch {
-        name = "haskell-gi-base-0.26-compat-patch";
-        url = "https://github.com/ghcjs/jsaddle/commit/c9a9ad39addea469f7e3f5bc6b1c778fefaab5d8.patch";
-        sha256 = "sha256-4njoOxtJH2jVqiPmW8f9hGUqpzI3yJ1XP4u85QgmvjU=";
-        relative = "jsaddle-webkit2gtk";
-      }
-    )
-    super.jsaddle-webkit2gtk;
-
   # 2022-03-22: Jailbreak for base bound: https://github.com/reflex-frp/reflex-dom/pull/433
   reflex-dom = assert super.reflex-dom.version == "0.6.1.1"; doJailbreak super.reflex-dom;
 
@@ -2262,6 +2299,10 @@ self: super: {
 
   # 2021-09-18: https://github.com/haskell/haskell-language-server/issues/2205
   hls-stylish-haskell-plugin = doJailbreak super.hls-stylish-haskell-plugin;
+
+  # Necesssary .txt files are not included in sdist.
+  # https://github.com/haskell/haskell-language-server/pull/2887
+  hls-change-type-signature-plugin = dontCheck super.hls-change-type-signature-plugin;
 
   # Too strict bounds on hspec
   # https://github.com/haskell-works/hw-hspec-hedgehog/issues/62
@@ -2591,5 +2632,17 @@ self: super: {
   vaultenv = super.vaultenv.overrideScope (self: super: {
     aeson = self.aeson_1_5_6_0;
   });
+
+  # Support network >= 3.1.2
+  # https://github.com/erebe/wstunnel/pull/107
+  wstunnel = appendPatch (fetchpatch {
+    url = "https://github.com/erebe/wstunnel/pull/107/commits/47c1f62bdec1dbe77088d9e3ceb6d872f922ce34.patch";
+    sha256 = "sha256-fW5bVbAGQxU/gd9zqgVNclwKraBtUjkKDek7L0c4+O0=";
+  }) super.wstunnel;
+
+  # Adjustment of bounds on servant is unreleased
+  # https://github.com/haskell-servant/servant-cassava/commit/66617547851d38d48f5f1d1b786db1286bdafa9d
+  servant-cassava = assert super.servant-cassava.version == "0.10.1";
+    doJailbreak super.servant-cassava;
 
 } // import ./configuration-tensorflow.nix {inherit pkgs haskellLib;} self super

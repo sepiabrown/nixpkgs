@@ -1,8 +1,8 @@
-{ lib, buildGoModule, fetchurl, fetchFromGitHub, nixosTests, tzdata, wire }:
+{ lib, buildGoModule, fetchurl, fetchFromGitHub, nixosTests, tzdata, wire, fetchpatch }:
 
 buildGoModule rec {
   pname = "grafana";
-  version = "8.4.5";
+  version = "8.5.2";
 
   excludedPackages = [ "alert_webhook_listener" "clean-swagger" "release_publisher" "slow_proxy" "slow_proxy_mac" "macaron" ];
 
@@ -10,15 +10,23 @@ buildGoModule rec {
     rev = "v${version}";
     owner = "grafana";
     repo = "grafana";
-    sha256 = "sha256-CdGg979c7XD5V3jZbVeHUGylAarGc+cR+bFi5FngKtU=";
+    sha256 = "sha256-9m6fu+wwmKpw/ehAIfgLe5YzOqTP3BC6/9mUgLL9XS0=";
   };
 
   srcStatic = fetchurl {
     url = "https://dl.grafana.com/oss/release/grafana-${version}.linux-amd64.tar.gz";
-    sha256 = "sha256-PjDTEmzjDmT1WQGqF3GwojJ6mG2whBoPK0KWfXI8AB4=";
+    sha256 = "1gq0wyqpgc7crbz8cd4dnwixhx7chnmbl2di4zcqs26g8y30q7rj";
   };
 
-  vendorSha256 = "sha256-iOJEy7dCZGRTaOuL/09wcMlNDHjRi9SIr9bialdcKi4=";
+  patches = [
+    # skip a flaky test, remove on the next update
+    (fetchpatch {
+      url = "https://github.com/grafana/grafana/commit/9e3a01a1bea3f4d5d99e53d55128d79160610349.patch";
+      sha256 = "sha256-rzZxNLn074JBb4DW3QC1zWNGe1uLGIlXvnjh60e8B3Q=";
+    })
+  ];
+
+  vendorSha256 = "sha256-ZL+A6Sz0uHg7ZzYHmA4EU5ZxfRXBLyKglk135iQT600=";
 
   nativeBuildInputs = [ wire ];
 
@@ -66,7 +74,10 @@ buildGoModule rec {
     cp ./conf/defaults.ini $out/share/grafana/conf/
   '';
 
-  passthru.tests = { inherit (nixosTests) grafana; };
+  passthru = {
+    tests = { inherit (nixosTests) grafana; };
+    updateScript = ./update.sh;
+  };
 
   meta = with lib; {
     description = "Gorgeous metric viz, dashboards & editors for Graphite, InfluxDB & OpenTSDB";

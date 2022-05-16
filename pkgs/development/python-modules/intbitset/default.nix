@@ -2,16 +2,19 @@
 , fetchPypi
 , buildPythonPackage
 , pytestCheckHook
+, pythonOlder
 }:
 
 buildPythonPackage rec {
   pname = "intbitset";
-  version = "3.0.0";
+  version = "3.0.1";
   format = "setuptools";
+
+  disabled = pythonOlder "3.7";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "sha256-tDG3CAlTZvz9Pi2pLq0TEPhl3DyYuWQS1N6VNNNokEE=";
+    hash = "sha256-8ebQPGcpkioiPFGEnfZbnpFuYlrvuRF4Tn+azUwgfVM=";
   };
 
   checkInputs = [
@@ -25,7 +28,7 @@ buildPythonPackage rec {
   meta = with lib; {
     description = "C-based extension implementing fast integer bit sets";
     homepage = "https://github.com/inveniosoftware/intbitset";
-    license = licenses.lgpl3Only;
+    license = licenses.lgpl3Plus;
     maintainers = teams.determinatesystems.members;
   };
 }
