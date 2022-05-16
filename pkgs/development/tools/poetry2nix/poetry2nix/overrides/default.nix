@@ -2084,10 +2084,11 @@ lib.composeManyExtensions [
               # For some reason pytorch retains a reference to libcuda even if it
               # is explicitly disabled with USE_CUDA=0.
               find $out -name "*.so" -exec ${pkgs.patchelf}/bin/patchelf --remove-needed libcuda.so.1 {} \;
+              patchelf --set-rpath "${lib.makeLibraryPath [ stdenv.cc.cc.lib ]}"
             '';
             nativeBuildInputs =
               (old.nativeBuildInputs or [ ])
-              ++ [ pkgs.autoPatchelfHook ]
+              ++ [ pkgs.autoPatchelfHook stdenv.cc.cc stdenv.cc.cc.lib ]
               ++ lib.optionals enableCuda [ cudatoolkit_joined pkgs.addOpenGLRunpath ];
             buildInputs =
               (old.buildInputs or [ ])
@@ -2101,6 +2102,7 @@ lib.composeManyExtensions [
                 cuda_nvcc
                 pkgs.magma
                 nccl
+                stdenv.cc.cc
                 stdenv.cc.cc.lib
               ];
             propagatedBuildInputs = [
