@@ -65,7 +65,7 @@ lib.composeManyExtensions [
     });
 
     platformdirs =
-      if lib.versionAtLeast platformdirs_custom.version "2.5.1"#2"
+      if lib.versionAtLeast platformdirs_custom.version "2.5.2"
       then addBuildSystem { inherit self; drv = platformdirs_custom; attr = "hatchling"; extraAttrs = [ "hatch-vcs" ]; }
       else platformdirs_custom;
 
