@@ -80,6 +80,7 @@ if package_filename not in parser.sources:
     )
     exit(1)
 
+parsed_url = urlparse(index_url)
 _clean_re = re.compile(r"[^a-z0-9$&+,/:;=?@.#%_\\|-]", re.I)
 print("parsed_url")
 print(parsed_url)
@@ -94,7 +95,7 @@ print(_clean_re.sub(lambda match: f"%{match.group(0):2x}",urljoin(parsed_url.pat
 package_file = open(package_filename, "wb")
 # Sometimes the href is a relative path
 if urlparse(parser.sources[package_filename]).netloc == "":
-    parsed_url = urlparse(index_url)
+    #parsed_url = urlparse(index_url)
     package_url = urlunparse(
         (
             parsed_url.scheme,
