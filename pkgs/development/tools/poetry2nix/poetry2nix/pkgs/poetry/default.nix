@@ -21,7 +21,7 @@ poetry2nix.mkPoetryApplication {
       owner = "sepiabrown";
       repo = "poetry";
       rev = "refs/heads/" + branchname;
-      sha256 = "$(nix-prefetch-url --unpack https://github.com/${owner}/${repo}/archive/refs/heads/${rev}.tar.gz)";
+      sha256 = "$(nix-prefetch-url --unpack https\://github.com/${owner}/${repo}/archive/refs/heads/${rev}.tar.gz)";
     };
 
   # "Vendor" dependencies (for build-system support)
