@@ -7,7 +7,7 @@
 import os
 import sys
 import netrc
-from urllib.parse import urlparse, urlunparse
+from urllib.parse import urlparse, urlunparse, quote
 from html.parser import HTMLParser
 import urllib.request
 import shutil
@@ -108,6 +108,7 @@ real_package_url = urlunparse(
         parsed_url.fragment,
     )
 )
+real_package_url = quote(real_package_url)
 print("Downloading %s" % real_package_url)
 
 req = urllib.request.Request(real_package_url)
