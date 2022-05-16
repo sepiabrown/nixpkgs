@@ -2102,7 +2102,6 @@ lib.composeManyExtensions [
                 cuda_nvcc
                 pkgs.magma
                 nccl
-                pkgs.glibc
               ];
             propagatedBuildInputs = [
               self.numpy
