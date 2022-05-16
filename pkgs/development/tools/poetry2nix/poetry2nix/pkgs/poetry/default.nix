@@ -7,22 +7,22 @@
 , poetrylock ? projectDir + "/poetry.lock"
 }:
 
-let
-  branchname = "os_filter";
-in
+#let
+#  branchname = "os_filter";
+#in
 poetry2nix.mkPoetryApplication {
 
   inherit python;
 
   inherit projectDir pyproject poetrylock;
 
-  src = fetchFromGitHub 
-    rec { # (lib.importJSON ./src.json);
-      owner = "sepiabrown";
-      repo = "poetry";
-      rev = "refs/heads/" + branchname;
-      sha256 = "$(nix-prefetch-url --unpack https\://github.com/${owner}/${repo}/archive/refs/heads/${rev}.tar.gz)";
-    };
+  src = fetchFromGitHub (lib.importJSON ./src.json);
+    #rec {
+    #  owner = "sepiabrown";
+    #  repo = "poetry";
+    #  rev = "refs/heads/" + branchname;
+    #  sha256 = "$(nix-prefetch-url --unpack https\://github.com/${owner}/${repo}/archive/refs/heads/${rev}.tar.gz)";
+    #};
 
   # "Vendor" dependencies (for build-system support)
   postPatch = ''
