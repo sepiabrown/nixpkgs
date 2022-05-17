@@ -172,7 +172,6 @@ let
 
     postFixup = lib.optionalString (!dontWrapPythonPrograms) ''
       wrapPythonPrograms
-      testtest
     '' + attrs.postFixup or "";
 
     # Python packages built through cross-compilation are always for the host platform.
