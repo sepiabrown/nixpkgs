@@ -1,7 +1,7 @@
 {
   "owner": "sepiabrown",
   "repo": "poetry",
-  "rev": "refs/heads/download_fix",
+  "rev": "refs/heads/download_fix2",
   "sha256": "0ckdb9ksh1ymgks8721a5skgcxrw74llv56bw521xmxmd221vnrb",
   "fetchSubmodules": true
 }
