@@ -1306,45 +1306,47 @@ lib.composeManyExtensions [
       );
 
       poetry-core = super.poetry-core.overridePythonAttrs (old: {
+        # 1.2.0b1
+        #postPatch = lib.optionalString (lib.versionOlder self.python.version "3.8") ''
+        #  # remove >1.0.3
+        #  substituteInPlace pyproject.toml \
+        #    --replace 'importlib-metadata = {version = "^1.7.0", python = "~2.7 || >=3.5, <3.8"}' \
+        #      'importlib-metadata = {version = ">=1.7.0", python = "~2.7 || >=3.5, <3.8"}'
+        #'';
+
+        #nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
+        #  self.intreehooks
+        #];
+
+        #propagatedBuildInputs = (old.propagatedBuildInputs or [ ]) ++ lib.optionals (lib.versionOlder self.python.version "3.8") [
+        #  self.importlib-metadata
+        #] ++ lib.optionals self.isPy27 [
+        #  self.pathlib2
+        #  self.typing
+        #];
+
+        #checkInputs = [
+        #  pkgs.git
+        #  self.pep517
+        #  self.pytest-mock
+        #  self.pytestCheckHook
+        #  self.tomlkit
+        #  self.virtualenv
+        #];
+        # 1.1.13
         # "Vendor" dependencies (for build-system support)
-        postPatch = lib.optionalString (lib.versionOlder self.python.version "3.8") ''
-          # remove >1.0.3
-          substituteInPlace pyproject.toml \
-            --replace 'importlib-metadata = {version = "^1.7.0", python = "~2.7 || >=3.5, <3.8"}' \
-              'importlib-metadata = {version = ">=1.7.0", python = "~2.7 || >=3.5, <3.8"}'
+        postPatch = ''
+          echo "import sys" >> poetry/__init__.py
+          for path in $propagatedBuildInputs; do
+              echo "sys.path.insert(0, \"$path\")" >> poetry/__init__.py
+          done
         '';
 
-        nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
-          self.intreehooks
-        ];
-
-        propagatedBuildInputs = (old.propagatedBuildInputs or [ ]) ++ lib.optionals (lib.versionOlder self.python.version "3.8") [
-          self.importlib-metadata
-        ] ++ lib.optionals self.isPy27 [
-          self.pathlib2
-          self.typing
-        ];
-
-        checkInputs = [
-          pkgs.git
-          self.pep517
-          self.pytest-mock
-          self.pytestCheckHook
-          self.tomlkit
-          self.virtualenv
-        ];
-        #postPatch = ''
-        #  echo "import sys" >> poetry/__init__.py
-        #  for path in $propagatedBuildInputs; do
-        #      echo "sys.path.insert(0, \"$path\")" >> poetry/__init__.py
-        #  done
-        #'';
-
-        ## Propagating dependencies leads to issues downstream
-        ## We've already patched poetry to prefer "vendored" dependencies
-        #postFixup = ''
-        #  rm $out/nix-support/propagated-build-inputs
-        #'';
+        # Propagating dependencies leads to issues downstream
+        # We've already patched poetry to prefer "vendored" dependencies
+        postFixup = ''
+          rm $out/nix-support/propagated-build-inputs
+        '';
       });
 
       portend = super.portend.overridePythonAttrs (
