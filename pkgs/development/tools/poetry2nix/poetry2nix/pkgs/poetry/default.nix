@@ -7,7 +7,9 @@
 , poetrylock ? projectDir + "/poetry.lock"
 }:
 
-
+#let
+#  branchname = "os_filter";
+#in
 poetry2nix.mkPoetryApplication {
 
   inherit python;
@@ -15,12 +17,18 @@ poetry2nix.mkPoetryApplication {
   inherit projectDir pyproject poetrylock;
 
   src = fetchFromGitHub (lib.importJSON ./src.json);
+    #rec {
+    #  owner = "sepiabrown";
+    #  repo = "poetry";
+    #  rev = "refs/heads/" + branchname;
+    #  sha256 = "$(nix-prefetch-url --unpack https\://github.com/${owner}/${repo}/archive/refs/heads/${rev}.tar.gz)";
+    #};
 
   # "Vendor" dependencies (for build-system support)
   postPatch = ''
-    echo "import sys" >> poetry/__init__.py
+    echo "import sys" >> src/poetry/__init__.py
     for path in $propagatedBuildInputs; do
-        echo "sys.path.insert(0, \"$path\")" >> poetry/__init__.py
+        echo "sys.path.insert(0, \"$path\")" >> src/poetry/__init__.py
     done
   '';
 

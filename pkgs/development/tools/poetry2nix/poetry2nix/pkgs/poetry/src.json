@@ -1,7 +1,7 @@
 {
-  "owner": "python-poetry",
+  "owner": "sepiabrown",
   "repo": "poetry",
-  "rev": "1.1.13",
-  "sha256": "0zm73wcxjfad3841wl1xpx20drhynrqlxsjh1d1gsh618b7ldpib",
+  "rev": "refs/heads/download_fix2",
+  "sha256": "0ckdb9ksh1ymgks8721a5skgcxrw74llv56bw521xmxmd221vnrb",
   "fetchSubmodules": true
 }
