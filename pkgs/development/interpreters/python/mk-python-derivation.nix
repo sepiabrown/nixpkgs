@@ -119,7 +119,7 @@ let
       python
       wrapPython
       ensureNewerSourcesForZipFilesHook  # move to wheel installer (pip) or builder (setuptools, flit, ...)?
-      pythonRemoveTestsDirHook
+      #pythonRemoveTestsDirHook
     ] ++ lib.optionals catchConflicts [
       setuptools pythonCatchConflictsHook
     ] ++ lib.optionals removeBinBytecode [
@@ -143,7 +143,7 @@ let
       #pythonImportsCheckHook
     ] ++ lib.optionals (python.pythonAtLeast "3.3") [
       # Optionally enforce PEP420 for python3
-      pythonNamespacesHook
+      #pythonNamespacesHook
     ] ++ nativeBuildInputs;
 
     buildInputs = buildInputs ++ pythonPath;
