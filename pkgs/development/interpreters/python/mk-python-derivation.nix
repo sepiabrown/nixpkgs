@@ -55,7 +55,7 @@
 # Raise an error if two packages are installed with the same name
 # TODO: For cross we probably need a different PYTHONPATH, or not
 # add the runtime deps until after buildPhase.
-, catchConflicts ? (python.stdenv.hostPlatform == python.stdenv.buildPlatform)
+, catchConflicts ? false #(python.stdenv.hostPlatform == python.stdenv.buildPlatform)
 
 # Additional arguments to pass to the makeWrapper function, which wraps
 # generated binaries.
@@ -116,35 +116,35 @@ let
     name = namePrefix + name_;
 
     nativeBuildInputs = [
-      python
-      wrapPython
-      ensureNewerSourcesForZipFilesHook  # move to wheel installer (pip) or builder (setuptools, flit, ...)?
-      pythonRemoveTestsDirHook
+      #python
+      #wrapPython
+      #ensureNewerSourcesForZipFilesHook  # move to wheel installer (pip) or builder (setuptools, flit, ...)?
+      #pythonRemoveTestsDirHook
     ] ++ lib.optionals catchConflicts [
-      setuptools pythonCatchConflictsHook
+      #setuptools pythonCatchConflictsHook
     ] ++ lib.optionals removeBinBytecode [
-      pythonRemoveBinBytecodeHook
+      #pythonRemoveBinBytecodeHook
     ] ++ lib.optionals (lib.hasSuffix "zip" (attrs.src.name or "")) [
       unzip
     ] ++ lib.optionals (format == "setuptools") [
-      setuptoolsBuildHook
+      #setuptoolsBuildHook
     ] ++ lib.optionals (format == "flit") [
-      flitBuildHook
+      #flitBuildHook
     ] ++ lib.optionals (format == "pyproject") [
-      pipBuildHook
+      #pipBuildHook
     ] ++ lib.optionals (format == "wheel") [
-      wheelUnpackHook
+      #wheelUnpackHook
     ] ++ lib.optionals (format == "egg") [
-      eggUnpackHook eggBuildHook eggInstallHook
+      #eggUnpackHook eggBuildHook eggInstallHook
     ] ++ lib.optionals (!(format == "other") || dontUsePipInstall) [
-      pipInstallHook
+      #pipInstallHook
     ] ++ lib.optionals (stdenv.buildPlatform == stdenv.hostPlatform) [
       # This is a test, however, it should be ran independent of the checkPhase and checkInputs
-      pythonImportsCheckHook
+      #pythonImportsCheckHook
     ] ++ lib.optionals (python.pythonAtLeast "3.3") [
       # Optionally enforce PEP420 for python3
-      pythonNamespacesHook
-    ] ++ nativeBuildInputs;
+      #pythonNamespacesHook
+    ]; #++ nativeBuildInputs;
 
     buildInputs = buildInputs ++ pythonPath;
 
