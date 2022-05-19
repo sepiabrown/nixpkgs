@@ -69,7 +69,7 @@ in buildPythonPackage rec {
   catchConflicts = false;
 
   # Requires pytest, causing infinite recursion.
-  doCheck = false;
+  doCheck = true;
 
   meta = with lib; {
     description = "Utilities to facilitate the installation of Python packages";
