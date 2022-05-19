@@ -123,7 +123,7 @@ let
     ] ++ lib.optionals catchConflicts [
       setuptools pythonCatchConflictsHook
     ] ++ lib.optionals removeBinBytecode [
-      pythonRemoveBinBytecodeHook
+      #pythonRemoveBinBytecodeHook
     ] ++ lib.optionals (lib.hasSuffix "zip" (attrs.src.name or "")) [
       unzip
     ] ++ lib.optionals (format == "setuptools") [
@@ -140,7 +140,7 @@ let
       pipInstallHook
     ] ++ lib.optionals (stdenv.buildPlatform == stdenv.hostPlatform) [
       # This is a test, however, it should be ran independent of the checkPhase and checkInputs
-      pythonImportsCheckHook
+      #pythonImportsCheckHook
     ] ++ lib.optionals (python.pythonAtLeast "3.3") [
       # Optionally enforce PEP420 for python3
       pythonNamespacesHook
