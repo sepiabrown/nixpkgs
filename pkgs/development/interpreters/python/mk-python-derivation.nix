@@ -55,7 +55,7 @@
 # Raise an error if two packages are installed with the same name
 # TODO: For cross we probably need a different PYTHONPATH, or not
 # add the runtime deps until after buildPhase.
-, catchConflicts ? true #(python.stdenv.hostPlatform == python.stdenv.buildPlatform)
+, catchConflicts ? (python.stdenv.hostPlatform == python.stdenv.buildPlatform)
 
 # Additional arguments to pass to the makeWrapper function, which wraps
 # generated binaries.
@@ -187,6 +187,8 @@ let
   passthru.catchConflicts_test = catchConflicts;
   passthru.format_test = format;
   passthru.dontUsePipInstall_test = dontUsePipInstall;
+  passthru.native_test = nativeBuildInputs;
+  passthru.build_test = buildInputs;
 
   passthru.updateScript = let
       filename = builtins.head (lib.splitString ":" self.meta.position);
