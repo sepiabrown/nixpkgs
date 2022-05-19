@@ -1914,7 +1914,7 @@ lib.composeManyExtensions [
         nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
           pkgs.tewisay
         ];
-      };
+      });
 
       shapely = super.shapely.overridePythonAttrs (
         old: {
