@@ -57,7 +57,7 @@ let
     in
     {
       buildInputs = mkInput "buildInputs" (if includeBuildSystem then buildSystemPkgs else [ ]);
-      propagatedBuildInputs = mkInput "propagatedBuildInputs" (getDeps "dependencies") ++ ([ py.pkgs.setuptools ]);
+      propagatedBuildInputs = mkInput "propagatedBuildInputs" (getDeps "dependencies"); #++ ([ py.pkgs.setuptools ]);
       nativeBuildInputs = mkInput "nativeBuildInputs" [ ];
       checkInputs = mkInput "checkInputs" (getDeps "dev-dependencies");
     };
