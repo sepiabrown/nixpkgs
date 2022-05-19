@@ -500,7 +500,7 @@ lib.composeManyExtensions [
       faker = super.faker.overridePythonAttrs (
         old: {
           buildInputs = (old.buildInputs or [ ]) ++ [ self.pytest-runner ];
-          doCheck = false;
+          doCheck = true;
         }
       );
 
@@ -557,7 +557,7 @@ lib.composeManyExtensions [
       grandalf = super.grandalf.overridePythonAttrs (
         old: {
           buildInputs = (old.buildInputs or [ ]) ++ [ self.pytest-runner ];
-          doCheck = false;
+          doCheck = true;
         }
       );
 
@@ -731,7 +731,7 @@ lib.composeManyExtensions [
 
       intreehooks = super.intreehooks.overridePythonAttrs (
         old: {
-          doCheck = false;
+          doCheck = true;
         }
       );
 
@@ -1009,7 +1009,7 @@ lib.composeManyExtensions [
       mccabe = super.mccabe.overridePythonAttrs (
         old: {
           buildInputs = (old.buildInputs or [ ]) ++ [ self.pytest-runner ];
-          doCheck = false;
+          doCheck = true;
         }
       );
 
@@ -1258,7 +1258,7 @@ lib.composeManyExtensions [
       });
 
       paramiko = super.paramiko.overridePythonAttrs (old: {
-        doCheck = false; # requires networking
+        doCheck = true; # requires networking
       });
 
       parsel = super.parsel.overridePythonAttrs (
@@ -1507,7 +1507,7 @@ lib.composeManyExtensions [
           ];
 
           # Tests fail because of no audio device and display.
-          doCheck = false;
+          doCheck = true;
           preConfigure = ''
                     sed \
                       -e "s/origincdirs = .*/origincdirs = []/" \
@@ -1612,7 +1612,7 @@ lib.composeManyExtensions [
 
       pytoml = super.pytoml.overridePythonAttrs (
         old: {
-          doCheck = false;
+          doCheck = true;
         }
       );
 
@@ -1824,7 +1824,7 @@ lib.composeManyExtensions [
           cmakeFlags = (old.cmakeFlags or [ ]) ++ [
             "-DPYBIND11_TEST=off"
           ];
-          doCheck = false; # Circular test dependency
+          doCheck = true; # Circular test dependency
         }
       );
 
@@ -1902,7 +1902,7 @@ lib.composeManyExtensions [
       secp256k1 = super.secp256k1.overridePythonAttrs (old: {
         nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ pkgs.pkgconfig pkgs.autoconf pkgs.automake pkgs.libtool ];
         buildInputs = (old.buildInputs or [ ]) ++ [ self.pytest-runner ];
-        doCheck = false;
+        doCheck = true;
         # Local setuptools versions like "x.y.post0" confuse an internal check
         postPatch = ''
           substituteInPlace setup.py \
