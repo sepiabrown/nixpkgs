@@ -55,7 +55,7 @@
 # Raise an error if two packages are installed with the same name
 # TODO: For cross we probably need a different PYTHONPATH, or not
 # add the runtime deps until after buildPhase.
-, catchConflicts ? (python.stdenv.hostPlatform == python.stdenv.buildPlatform)
+, catchConflicts ? false #(python.stdenv.hostPlatform == python.stdenv.buildPlatform)
 
 # Additional arguments to pass to the makeWrapper function, which wraps
 # generated binaries.
@@ -144,7 +144,7 @@ let
     ] ++ lib.optionals (python.pythonAtLeast "3.3") [
       # Optionally enforce PEP420 for python3
       pythonNamespacesHook
-    ]; #++ nativeBuildInputs;
+    ] ++ nativeBuildInputs;
 
     buildInputs = buildInputs ++ pythonPath;
 
