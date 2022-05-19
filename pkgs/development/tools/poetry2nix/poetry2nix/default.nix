@@ -225,7 +225,7 @@ lib.makeScope pkgs.newScope (self: {
             (self: super: lib.mapAttrs
               (name: value: (
                 if lib.isDerivation value && lib.hasAttr "overridePythonAttrs" value
-                then value.overridePythonAttrs (_: { doCheck = false; })
+                then value.overridePythonAttrs (_: { doCheck = true; })
                 else value
               ))
               super)
