@@ -1909,6 +1909,12 @@ lib.composeManyExtensions [
             --replace 'setuptools_version.' '"${self.setuptools.version}".'
         '';
       });
+      setuptools = super.setuptools.overridePythonAttrs (old: {
+        version = "11111";
+        nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
+          pkgs.tewisay
+        ];
+      };
 
       shapely = super.shapely.overridePythonAttrs (
         old: {
