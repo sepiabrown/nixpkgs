@@ -184,6 +184,8 @@ let
   } //  lib.optionalAttrs (disabledTestPaths != []) {
       disabledTestPaths = lib.escapeShellArgs disabledTestPaths;
   }));
+  passthru.catchConflicts_test = catchConflicts;
+  passthru.format_test = format;
 
   passthru.updateScript = let
       filename = builtins.head (lib.splitString ":" self.meta.position);
