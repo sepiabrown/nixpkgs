@@ -186,6 +186,7 @@ let
   }));
   passthru.catchConflicts_test = catchConflicts;
   passthru.format_test = format;
+  passthru.dontUsePipInstall_test = dontUsePipInstall;
 
   passthru.updateScript = let
       filename = builtins.head (lib.splitString ":" self.meta.position);
