@@ -13,7 +13,6 @@ import urllib.request
 import shutil
 import ssl
 from os.path import normpath
-import re
 
 
 # Parse the legacy index page to extract the href and package names
@@ -87,17 +86,6 @@ package_file = open(package_filename, "wb")
 # Sometimes the href is a relative path
 if urlparse(parser.sources[package_filename]).netloc == "":
     package_url = urljoin(index_url,parser.sources[package_filename])
-    #parsed_url = urlparse(index_url)
-    #package_url = urlunparse(
-    #    (
-    #        parsed_url.scheme,
-    #        parsed_url.netloc,
-    #        _clean_re.sub(lambda match: f"%{match.group(0):2x}",urljoin(parsed_url.path,package_filename)),
-    #        None,
-    #        None,
-    #        None,
-    #    )
-    #)
 else:
     package_url = parser.sources[package_filename]
 
