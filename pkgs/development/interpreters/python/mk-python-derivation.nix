@@ -187,7 +187,6 @@ let
   passthru.format_test = format;
   passthru.native_test = nativeBuildInputs;
   passthru.build_test = buildInputs;
-  passthru.pnative_test = propagatedNativeBuildInputs;
   passthru.pbuild_test = propagatedBuildInputs;
 
   passthru.updateScript = let
