@@ -82,4 +82,6 @@ buildPythonPackage rec {
     platforms = platforms.unix;
   };
 
+  passthru.cuda_test = cudaSupport;
+
 }
