@@ -87,7 +87,7 @@ stdenv.mkDerivation {
   '';
 
   passthru = {
-    inherit useCudatoolkitRunfile;
+    inherit useCudatoolkitRunfile sha256 hash;
 
     cudatoolkit = lib.warn ''
       cudnn.cudatoolkit passthru attribute is deprecated;
