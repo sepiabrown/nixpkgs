@@ -61,7 +61,7 @@ context.check_hostname = False
 context.verify_mode = ssl.CERT_NONE
 
 req = urllib.request.Request(index_url)
-req2 = urllib.request.Request(url)
+req2 = urllib.request.Request(url + "/" + package_filename)
 if username and password:
     import base64
 
@@ -73,6 +73,7 @@ try:
     response = urllib.request.urlopen(req, context=context)
 except:
     response = urllib.request.urlopen(req2, context=context)
+    pass
 
 index = response.read()
 
