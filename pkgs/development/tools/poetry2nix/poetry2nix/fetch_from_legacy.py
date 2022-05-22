@@ -73,6 +73,8 @@ index_url2 = urlunparse(
         None,
     )
 )
+print("hi")
+print(index_url2)
 req2 = urllib.request.Request(index_url2)
 if username and password:
     import base64
