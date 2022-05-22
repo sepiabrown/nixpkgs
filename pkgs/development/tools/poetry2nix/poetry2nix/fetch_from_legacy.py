@@ -61,6 +61,7 @@ context.check_hostname = False
 context.verify_mode = ssl.CERT_NONE
 
 req = urllib.request.Request(index_url)
+req2 = urllib.request.Request(url)
 if username and password:
     import base64
 
@@ -68,7 +69,11 @@ if username and password:
         "utf-8"
     )
     req.add_header("Authorization", "Basic {}".format(password_b64))
-response = urllib.request.urlopen(req, context=context)
+try:
+    response = urllib.request.urlopen(req, context=context)
+except:
+    response = urllib.request.urlopen(req_2, context=context)
+
 index = response.read()
 
 parser = Pep503()
