@@ -45,7 +45,7 @@ let
 
   # We need to be careful with overriding Python packages within the package set
   # as this can lead to collisions!
-  libgpuarray_ = libgpuarray.override { inherit cudaSupport cudaPackages; };
+  #libgpuarray_ = libgpuarray.override { inherit cudaSupport cudaPackages; };
 
 in buildPythonPackage rec {
   pname = "Theano";
@@ -85,7 +85,7 @@ in buildPythonPackage rec {
   checkInputs = [ nose ];
   # setuptools needed for cuda support
   propagatedBuildInputs = [
-    libgpuarray_
+    libgpuarray
     numpy
     numpy.blas
     scipy
