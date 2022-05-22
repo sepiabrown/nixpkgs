@@ -132,6 +132,7 @@ let
 
       passthru = {
         urls = [ predictedURL ]; # retain compatibility with nixpkgs' fetchurl
+        file_test = file;
       };
     })
   );
