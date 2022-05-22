@@ -67,7 +67,7 @@ index_url2 = urlunparse(
     (
         url2.scheme,
         url2.netloc,
-        url2.patl + url2.path + ".html",
+        url2.path + url2.path.replace("-", "_") + ".html",
         None,
         None,
         None,
@@ -75,7 +75,7 @@ index_url2 = urlunparse(
 )
 print("hi")
 print(index_url2)
-req2 = urllib.request.Request(index_url2.replace("-", "_"))
+req2 = urllib.request.Request(index_url2)
 if username and password:
     import base64
 
