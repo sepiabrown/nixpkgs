@@ -21,4 +21,6 @@ $curl $predictedURL --output $out && exit 0
 echo "Predicted URL '$predictedURL' failed, querying pypi.org"
 $curl "https://pypi.org/pypi/$pname/json" | jq -r ".releases.\"$version\"[] | select(.filename == \"$file\") | .url" > url
 url=$(cat url)
+echo "hi"
+echo "$url"
 $curl -k $url --output $out
