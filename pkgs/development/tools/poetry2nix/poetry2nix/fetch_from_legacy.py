@@ -67,7 +67,7 @@ index_url2 = urlunparse(
     (
         url2.scheme,
         url2.netloc,
-        url2.path + url2.path + ".html",
+        url2.patl + url2.path.replace("-","_") + ".html",
         None,
         None,
         None,
