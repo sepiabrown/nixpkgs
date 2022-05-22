@@ -40,7 +40,7 @@ let
     if stdenv.cc.isClang then "clang++" else
     throw "Unknown C++ compiler";
   cxx_compiler = wrapped cxx_compiler_name "\\$HOME/.theano"
-    (    lib.optional cudaSupport libgpuarray_
+    (    lib.optional cudaSupport libgpuarray
       ++ lib.optional cudnnSupport cudnn );
 
   # We need to be careful with overriding Python packages within the package set
