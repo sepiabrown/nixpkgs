@@ -61,7 +61,19 @@ context.check_hostname = False
 context.verify_mode = ssl.CERT_NONE
 
 req = urllib.request.Request(index_url)
-req2 = urllib.request.Request(url + "/" + package_filename)
+
+url2 = urlparse(url)
+index_url2 = urlunparse(
+    (
+        url2.scheme,
+        url2.netloc,
+        url2.path + "/" + url2.path + ".html",
+        None,
+        None,
+        None,
+    )
+)
+req2 = urllib.request.Request(index_url2)
 if username and password:
     import base64
 
