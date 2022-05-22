@@ -72,7 +72,7 @@ if username and password:
 try:
     response = urllib.request.urlopen(req, context=context)
 except:
-    response = urllib.request.urlopen(req_2, context=context)
+    response = urllib.request.urlopen(req2, context=context)
 
 index = response.read()
 
