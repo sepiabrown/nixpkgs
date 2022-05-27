@@ -28,7 +28,7 @@ in stdenv.mkDerivation rec {
     owner = "cdr";
     repo = "code-server";
     rev = "v${version}";
-    sha256 = "sha256-iNssX9751w0l1l+Xr4gmAh/oW+oc9j+EeD2d/qw/XaM=";
+    sha256 = "sha256-4t4drddJBRSksGGg6vX/cccbtLOPr0WzQ/PDkHDROnA=";
   };
 
   cloudAgent = buildGoModule rec {
@@ -42,7 +42,7 @@ in stdenv.mkDerivation rec {
       sha256 = "sha256-iNssX9751w0l1l+Xr4gmAh/oW+oc9j+EeD2d/qw/XaM=";
     };
 
-    vendorSha256 = "sha256-iNssX9751w0l1l+Xr4gmAh/oW+oc9j+EeD2d/qw/XaM=";
+    vendorSha256 = "sha256-NNssX9751w0l1l+Xr4gmAh/oW+oc9j+EeD2d/qw/XaM=";
 
     postPatch = ''
       # the cloud-agent release tag has an empty version string, so add it back in
