@@ -22,7 +22,7 @@ let
 in stdenv.mkDerivation rec {
   pname = "code-server";
   version = "4.4.0";
-  commit = "7fe23daf009e5234eaa54a1ea5ff26df384c47ac";
+  commit = "c96202528fc0daf1339a55c45951f40834b72c95";
 
   src = fetchFromGitHub {
     owner = "cdr";
@@ -42,7 +42,7 @@ in stdenv.mkDerivation rec {
       sha256 = "sha256-iNssX9751w0l1l+Xr4gmAh/oW+oc9j+EeD2d/qw/XaM=";
     };
 
-    vendorSha256 = "sha256-NNssX9751w0l1l+Xr4gmAh/oW+oc9j+EeD2d/qw/XaM=";
+    vendorSha256 = lib.fakeSha256;#"sha256-NNssX9751w0l1l+Xr4gmAh/oW+oc9j+EeD2d/qw/XaM=";
 
     postPatch = ''
       # the cloud-agent release tag has an empty version string, so add it back in
