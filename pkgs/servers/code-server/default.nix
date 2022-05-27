@@ -39,7 +39,7 @@ in stdenv.mkDerivation rec {
       owner = "cdr";
       repo = "cloud-agent";
       rev = "v0.2.4";
-      sha256 = "sha256-uGuwD+Zv0IqtqgYAQYb/mMc/exHAEIl9Rf7JO0afgvA=";
+      sha256 = "sha256-0GuwD+Zv0IqtqgYAQYb/mMc/exHAEIl9Rf7JO0afgvA=";
     };
 
     vendorSha256 = "sha256-TuBds/s9SBq+ji353y932NPXGbewgEtc8+QKaX/wmlY=";
