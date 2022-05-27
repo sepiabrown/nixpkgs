@@ -25,7 +25,7 @@ in stdenv.mkDerivation rec {
   commit = "c96202528fc0daf1339a55c45951f40834b72c95";
 
   src = fetchFromGitHub {
-    owner = "cdr";
+    owner = "coder";
     repo = "code-server";
     rev = "v${version}";
     sha256 = "sha256-4t4drddJBRSksGGg6vX/cccbtLOPr0WzQ/PDkHDROnA=";
