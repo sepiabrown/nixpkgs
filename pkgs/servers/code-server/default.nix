@@ -1,12 +1,12 @@
 { lib, stdenv, fetchFromGitHub, buildGoModule, makeWrapper, runCommand
 , cacert, moreutils, jq, git, rsync, pkg-config, yarn, python3
-, esbuild, nodejs-14_x, node-gyp, libsecret, xorg, ripgrep
+, esbuild, nodejs-16_x, node-gyp, libsecret, xorg, ripgrep
 , AppKit, Cocoa, CoreServices, Security, cctools, xcbuild }:
 
 let
   system = stdenv.hostPlatform.system;
 
-  nodejs = nodejs-14_x;
+  nodejs = nodejs-16_x;
   python = python3;
   yarn' = yarn.override { inherit nodejs; };
   defaultYarnOpts = [ "frozen-lockfile" "non-interactive" "no-progress"];
@@ -233,7 +233,7 @@ in stdenv.mkDerivation rec {
     ln -s "${cloudAgent}/bin/cloud-agent" $out/libexec/code-server/lib/coder-cloud-agent
 
     # create wrapper
-    makeWrapper "${nodejs-14_x}/bin/node" "$out/bin/code-server" \
+    makeWrapper "${nodejs-16_x}/bin/node" "$out/bin/code-server" \
       --add-flags "$out/libexec/code-server/out/node/entry.js"
   '';
 
