@@ -71,7 +71,7 @@ in stdenv.mkDerivation rec {
     outputHashAlgo = "sha256";
 
     # to get hash values use nix-build -A code-server.prefetchYarnCache
-    outputHash = "0qmfsirld1qfl2s26rxbpmvxsyj2pvzkgk8w89zlrgbhgc5fj8p9";
+    outputHash = "sha256-iNssX9751w0l1l+Xr4gmAh/oW+oc9j+EeD2d/qw/XaM=";
   };
 
   nativeBuildInputs = [
