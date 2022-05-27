@@ -59,7 +59,7 @@ in stdenv.mkDerivation rec {
       export HOME=$PWD
       export GIT_SSL_CAINFO="${cacert}/etc/ssl/certs/ca-bundle.crt"
 
-      yarn --cwd "./vendor" install --modules-folder modules --ignore-scripts --frozen-lockfile
+      yarn --cwd "./lib" install --modules-folder modules --ignore-scripts --frozen-lockfile
 
       yarn config set yarn-offline-mirror $out
       find "$PWD" -name "yarn.lock" -printf "%h\n" | \
@@ -144,25 +144,25 @@ in stdenv.mkDerivation rec {
 
     # Replicate ci/dev/postinstall.sh
     echo "----- Replicate ci/dev/postinstall.sh"
-    yarn --cwd "./vendor" install --modules-folder modules --offline --ignore-scripts --frozen-lockfile
+    yarn --cwd "./lib" install --modules-folder modules --offline --ignore-scripts --frozen-lockfile
 
     # Replicate vendor/postinstall.sh
     echo " ----- Replicate vendor/postinstall.sh"
-    yarn --cwd "./vendor/modules/code-oss-dev" --offline --frozen-lockfile --ignore-scripts install
+    yarn --cwd "./lib/vscode" --offline --frozen-lockfile --ignore-scripts install
 
     # remove all built-in extensions, as these are 3rd party extensions that
     # get downloaded from vscode marketplace
-    jq --slurp '.[0] * .[1]' "vendor/modules/code-oss-dev/product.json" <(
+    jq --slurp '.[0] * .[1]' "lib/vscode/product.json" <(
       cat << EOF
     {
       "builtInExtensions": []
     }
     EOF
-    ) | sponge vendor/modules/code-oss-dev/product.json
+    ) | sponge lib/vscode/product.json
 
     # disable automatic updates
     sed -i '/update.mode/,/\}/{s/default:.*/default: "none",/g}' \
-      vendor/modules/code-oss-dev/src/vs/platform/update/common/update.config.contribution.ts
+      lib/vscode/src/vs/platform/update/common/update.config.contribution.ts
 
     # put ripgrep binary into bin, so postinstall does not try to download it
     find -name vscode-ripgrep -type d \
@@ -179,7 +179,7 @@ in stdenv.mkDerivation rec {
 
     # Replicate install vscode dependencies without running script for all vscode packages
     # that require patching for postinstall scripts to succeed
-    find ./vendor/modules/code-oss-dev -path "*node_modules" -prune -o \
+    find ./lib/vscode -path "*node_modules" -prune -o \
       -path "./*/*/*/*/*" -name "yarn.lock" -printf "%h\n" | \
         xargs -I {} yarn --cwd {} \
           --frozen-lockfile --offline --ignore-scripts --ignore-engines
@@ -188,12 +188,12 @@ in stdenv.mkDerivation rec {
     # patch shebangs of everything to allow binary packages to build
     patchShebangs .
 
-    ${patchEsbuild "./vendor/modules/code-oss-dev/build" "0.12.6"}
-    ${patchEsbuild "./vendor/modules/code-oss-dev/extensions" "0.11.23"}
+    ${patchEsbuild "./lib/vscode/build" "0.12.6"}
+    ${patchEsbuild "./lib/vscode/extensions" "0.11.23"}
   '' + lib.optionalString stdenv.isDarwin ''
     # use prebuilt binary for @parcel/watcher, which requires macOS SDK 10.13+
     # (see issue #101229)
-    pushd ./vendor/modules/code-oss-dev/remote/node_modules/@parcel/watcher
+    pushd ./lib/vscode/remote/node_modules/@parcel/watcher
     mkdir -p ./build/Release
     mv ./prebuilds/darwin-x64/node.napi.glibc.node ./build/Release/watcher.node
     jq "del(.scripts) | .gypfile = false" ./package.json | sponge ./package.json
@@ -202,10 +202,10 @@ in stdenv.mkDerivation rec {
     # rebuild binaries, we use npm here, as yarn does not provide an alternative
     # that would not attempt to try to reinstall everything and break our
     # patching attempts
-    npm rebuild --prefix vendor/modules/code-oss-dev --update-binary
+    npm rebuild --prefix lib/vscode --update-binary
 
     # run postinstall scripts after patching
-    find ./vendor/modules/code-oss-dev -path "*node_modules" -prune -o \
+    find ./lib/vscode -path "*node_modules" -prune -o \
       -path "./*/*/*/*/*" -name "yarn.lock" -printf "%h\n" | \
         xargs -I {} sh -c 'jq -e ".scripts.postinstall" {}/package.json >/dev/null && yarn --cwd {} postinstall --frozen-lockfile --offline || true'
 
