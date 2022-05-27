@@ -21,14 +21,14 @@ let
 
 in stdenv.mkDerivation rec {
   pname = "code-server";
-  version = "4.0.1";
+  version = "4.4.0";
   commit = "7fe23daf009e5234eaa54a1ea5ff26df384c47ac";
 
   src = fetchFromGitHub {
     owner = "cdr";
     repo = "code-server";
     rev = "v${version}";
-    sha256 = "1s3dcmzlkyh7qfs3ai1p7dlp45iys0ax1fbxxz17p395pw9anrrl";
+    sha256 = "0s3dcmzlkyh7qfs3ai1p7dlp45iys0ax1fbxxz17p395pw9anrrl";
   };
 
   cloudAgent = buildGoModule rec {
@@ -39,10 +39,10 @@ in stdenv.mkDerivation rec {
       owner = "cdr";
       repo = "cloud-agent";
       rev = "v${version}";
-      sha256 = "14i1qq273f0yn5v52ryiqwj7izkd1yd212di4gh4bqypmmzhw3jj";
+      sha256 = "04i1qq273f0yn5v52ryiqwj7izkd1yd212di4gh4bqypmmzhw3jj";
     };
 
-    vendorSha256 = "0k9v10wkzx53r5syf6bmm81gr4s5dalyaa07y9zvx6vv5r2h0661";
+    vendorSha256 = "1k9v10wkzx53r5syf6bmm81gr4s5dalyaa07y9zvx6vv5r2h0661";
 
     postPatch = ''
       # the cloud-agent release tag has an empty version string, so add it back in
