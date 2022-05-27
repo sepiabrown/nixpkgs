@@ -27,8 +27,8 @@ in stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "coder";
     repo = "code-server";
-    rev = "v${version}";
-    sha256 = "sha256-0t4drddJBRSksGGg6vX/cccbtLOPr0WzQ/PDkHDROnA=";
+    rev = "v4.4.0";
+    sha256 = "sha256-4t4drddJBRSksGGg6vX/cccbtLOPr0WzQ/PDkHDROnA=";
   };
 
   cloudAgent = buildGoModule rec {
@@ -38,7 +38,7 @@ in stdenv.mkDerivation rec {
     src = fetchFromGitHub {
       owner = "cdr";
       repo = "cloud-agent";
-      rev = "v${version}";
+      rev = "v0.2.4;
       sha256 = "sha256-uGuwD+Zv0IqtqgYAQYb/mMc/exHAEIl9Rf7JO0afgvA=";
     };
 
