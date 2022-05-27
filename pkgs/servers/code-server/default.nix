@@ -38,7 +38,7 @@ in stdenv.mkDerivation rec {
     src = fetchFromGitHub {
       owner = "cdr";
       repo = "cloud-agent";
-      rev = "v0.2.4;
+      rev = "v0.2.4";
       sha256 = "sha256-uGuwD+Zv0IqtqgYAQYb/mMc/exHAEIl9Rf7JO0afgvA=";
     };
 
