@@ -28,7 +28,7 @@ in stdenv.mkDerivation rec {
     owner = "cdr";
     repo = "code-server";
     rev = "v${version}";
-    sha256 = "0s3dcmzlkyh7qfs3ai1p7dlp45iys0ax1fbxxz17p395pw9anrrl";
+    sha256 = "sha256-4t4drddJBRSksGGg6vX/cccbtLOPr0WzQ/PDkHDROnA=";
   };
 
   cloudAgent = buildGoModule rec {
