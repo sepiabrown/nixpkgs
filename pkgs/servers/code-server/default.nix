@@ -33,7 +33,7 @@ in stdenv.mkDerivation rec {
 
   cloudAgent = buildGoModule rec {
     pname = "cloud-agent";
-    version = "0.2.3";
+    version = "0.2.4";
 
     src = fetchFromGitHub {
       owner = "cdr";
