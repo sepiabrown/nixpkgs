@@ -42,7 +42,7 @@ in stdenv.mkDerivation rec {
       sha256 = "sha256-uGuwD+Zv0IqtqgYAQYb/mMc/exHAEIl9Rf7JO0afgvA=";
     };
 
-    vendorSha256 = lib.fakeSha256;#"sha256-NNssX9751w0l1l+Xr4gmAh/oW+oc9j+EeD2d/qw/XaM=";
+    vendorSha256 = "sha256-TuBds/s9SBq+ji353y932NPXGbewgEtc8+QKaX/wmlY=";
 
     postPatch = ''
       # the cloud-agent release tag has an empty version string, so add it back in
