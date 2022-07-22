@@ -17,9 +17,8 @@ poetry2nix.mkPoetryApplication {
 
   # "Vendor" dependencies (for build-system support)
   postPatch = ''
-    echo "import sys" >> src/poetry/__init__.py
     for path in $propagatedBuildInputs; do
-        echo "sys.path.insert(0, \"$path\")" >> src/poetry/__init__.py
+      sed -i "4 i sys.path.insert(0,\"$path\")" src/poetry/__main__.py
     done
   '';
 
