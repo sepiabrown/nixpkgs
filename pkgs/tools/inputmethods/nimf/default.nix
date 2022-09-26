@@ -30,7 +30,7 @@
 }:
 let
   libhangul = stdenv.mkDerivation {
-    pname = "libhangul";
+    name = "libhangul";
     src = fetchFromGitHub {
       owner = "libhangul";
       repo = "libhangul";
