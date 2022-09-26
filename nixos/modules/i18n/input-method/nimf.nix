@@ -47,6 +47,9 @@ in
     xdg.portal.extraPortals = mkIf config.xdg.portal.enable [
       pkgs.nimf
     ];
+
+    environment.sessionVariables.XDG_DATA_DIRS = [ "${pkgs.nimf}/share/gsettings-schemas/${pkgs.nimf.name}" ];
+
     # uses attributes of the linked package
     meta.buildDocsInSandbox = false;
     #services.xserver.displayManager.sessionCommands = "${pkgs.nimf}/bin/nimf &";
