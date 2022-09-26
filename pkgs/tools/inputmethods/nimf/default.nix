@@ -240,8 +240,13 @@ stdenv.mkDerivation rec {
     ls $out/lib
     echo "##### 4 ######"
     ls $out/share
+    echo "##### 5 ######"
     mv $out/etc/gtk-3.0 $out/lib/gtk-3.0
     mv $out/etc/gtk-2.0 $out/lib/gtk-2.0
+    echo "##### 6 ######"
+    ls $out/etc
+    echo "##### 7 ######"
+    ls $out/lib
   '';
   #  substituteInPlace modules/clients/qt5/Makefile.am \
   #  --replace "-I \''$(QT5_CORE_PRIVATE_INCLUDE_PATH) \\" "\\" \
