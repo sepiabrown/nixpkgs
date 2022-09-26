@@ -160,6 +160,7 @@ stdenv.mkDerivation rec {
   [
     gtk3
     gsettings-desktop-schemas
+    wrapGAppsHook
     #dconf
   ];
 
