@@ -25,6 +25,7 @@
 , runCommand
 , writeText
 , nixosTests
+, nix-update-script
 , useOperatingSystemEtc ? true
   # An optional string containing Fish code that initializes the environment.
   # This is run at the very beginning of initialization. If it sets $NIX_PROFILES
@@ -287,7 +288,7 @@ let
       homepage = "https://fishshell.com/";
       license = licenses.gpl2;
       platforms = platforms.unix;
-      maintainers = with maintainers; [ cole-h ];
+      maintainers = with maintainers; [ cole-h winter srapenne ];
     };
 
     passthru = {
@@ -326,6 +327,7 @@ let
             ${fish}/bin/fish ${fishScript} && touch $out
           '';
       };
+      updateScript = nix-update-script { attrPath = pname; };
     };
   };
 in

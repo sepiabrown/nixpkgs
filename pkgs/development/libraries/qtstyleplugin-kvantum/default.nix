@@ -1,28 +1,55 @@
-{ lib, stdenv, fetchFromGitHub, qmake, qtbase, qtsvg, qtx11extras, kwindowsystem
-, libX11, libXext, qttools, wrapQtAppsHook
+{ lib
+, stdenv
+, fetchFromGitHub
+, fetchpatch
+, qmake
+, qtbase
+, qtsvg
+, qtx11extras
+, kwindowsystem
+, libX11
+, libXext
+, qttools
+, wrapQtAppsHook
 , gitUpdater
 }:
 
 stdenv.mkDerivation rec {
   pname = "qtstyleplugin-kvantum";
-  version = "1.0.3";
+  version = "1.0.5";
 
   src = fetchFromGitHub {
     owner = "tsujan";
     repo = "Kvantum";
     rev = "V${version}";
-    sha256 = "hY8QQVcP3E+GAdLOqtVbqCWBcxS2M6sMOr/vr+DryyQ=";
+    sha256 = "DJRTOpmmiB3VivZt66qaQwz7tp+sEMP+3E0dwUAkvXU=";
   };
 
   nativeBuildInputs = [
-    qmake qttools wrapQtAppsHook
+    qmake
+    qttools
+    wrapQtAppsHook
   ];
 
   buildInputs = [
-    qtbase qtsvg qtx11extras kwindowsystem libX11 libXext
+    qtbase
+    qtsvg
+    qtx11extras
+    kwindowsystem
+    libX11
+    libXext
   ];
 
   sourceRoot = "source/Kvantum";
+
+  patches = [
+    (fetchpatch {
+      # add xdg dirs support
+      url = "https://github.com/tsujan/Kvantum/commit/01989083f9ee75a013c2654e760efd0a1dea4a68.patch";
+      hash = "sha256-HPx+p4Iek/Me78olty1fA0dUNceK7bwOlTYIcQu8ycc=";
+      stripLen = 1;
+    })
+  ];
 
   postPatch = ''
     # Fix plugin dir
@@ -42,6 +69,6 @@ stdenv.mkDerivation rec {
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
     broken = lib.versionOlder qtbase.version "5.14";
-    maintainers = [ maintainers.bugworm ];
+    maintainers = [ maintainers.romildo ];
   };
 }

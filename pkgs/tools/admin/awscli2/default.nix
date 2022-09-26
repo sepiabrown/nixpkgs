@@ -8,19 +8,11 @@ let
   py = python3.override {
     packageOverrides = self: super: {
       awscrt = super.awscrt.overridePythonAttrs (oldAttrs: rec {
-        version = "0.13.11";
+        version = "0.14.0";
         src = self.fetchPypi {
           inherit (oldAttrs) pname;
           inherit version;
-          sha256 = "sha256-Yx3I3RD57Nx6Cvm4moc5zmMbdsHeYiMghDfbQUor38E=";
-        };
-      });
-      jmespath = super.jmespath.overridePythonAttrs (oldAttrs: rec {
-        version = "0.10.0";
-        src = self.fetchPypi {
-          inherit (oldAttrs) pname;
-          inherit version;
-          sha256 = "sha256-uF0FZ7hmYUmpMXJxLmiSBzQzPAzn6Jt4s+mH9x5e1Pk=";
+          sha256 = "sha256-MGLTFcsWVC/gTdgjny6LwyOO6QRc1QcLkVzy677Lqqw=";
         };
       });
     };
@@ -29,13 +21,13 @@ let
 in
 with py.pkgs; buildPythonApplication rec {
   pname = "awscli2";
-  version = "2.7.14"; # N.B: if you change this, check if overrides are still up-to-date
+  version = "2.7.33"; # N.B: if you change this, check if overrides are still up-to-date
 
   src = fetchFromGitHub {
     owner = "aws";
     repo = "aws-cli";
     rev = version;
-    sha256 = "sha256-ji/hKoYxM3wag9DXy2e/VsJZVGN5UEebWX/ctOVJ42M=";
+    sha256 = "sha256-9X056Xc9DPp8BiuAeCvQrswcj7mnZKrkMOad5aP1TI8=";
   };
 
   propagatedBuildInputs = [
@@ -69,8 +61,9 @@ with py.pkgs; buildPythonApplication rec {
       --replace "colorama>=0.2.5,<0.4.4" "colorama" \
       --replace "cryptography>=3.3.2,<37.0.0" "cryptography" \
       --replace "docutils>=0.10,<0.16" "docutils" \
-      --replace "ruamel.yaml>=0.15.0,<0.16.0" "ruamel.yaml" \
+      --replace "ruamel.yaml>=0.15.0,<=0.17.21" "ruamel.yaml" \
       --replace "wcwidth<0.2.0" "wcwidth" \
+      --replace "prompt-toolkit>=3.0.24,<3.0.29" "prompt-toolkit~=3.0" \
       --replace "distro>=1.5.0,<1.6.0" "distro"
   '';
 

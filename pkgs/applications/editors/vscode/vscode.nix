@@ -1,7 +1,11 @@
-{ stdenv, lib, callPackage, fetchurl, isInsiders ? false }:
+{ stdenv, lib, callPackage, fetchurl
+, isInsiders ? false
+, commandLineArgs ? ""
+}:
 
 let
   inherit (stdenv.hostPlatform) system;
+  throwSystem = throw "Unsupported system: ${system}";
 
   plat = {
     x86_64-linux = "linux-x64";
@@ -9,27 +13,28 @@ let
     aarch64-linux = "linux-arm64";
     aarch64-darwin = "darwin-arm64";
     armv7l-linux = "linux-armhf";
-  }.${system};
+  }.${system} or throwSystem;
 
   archive_fmt = if stdenv.isDarwin then "zip" else "tar.gz";
 
   sha256 = {
-    x86_64-linux = "0jixjbj1h9l0zrkb8sc3p4x7kjh87dramaz6j8369vv6mc4h8ymr";
-    x86_64-darwin = "1lqxjzyzhr3dpvjpmmlvknaxjzryr6yz8rg1mh5p211wfi13rf1c";
-    aarch64-linux = "0y4q1kpwhz0hyipsc7hah6xgz9p3sn0ysaqzw32dl91hkr6d52mf";
-    aarch64-darwin = "1d89gr4aj0vl05rz9d5iv8kkgb8p5jbfc9b0hjj1cp0d276x6ipy";
-    armv7l-linux = "11cawg3ql9iq9z56i68h26cz7ydg0az298cbs2kpsz2lzkw97wbd";
-  }.${system};
+    x86_64-linux = "0ar8gpklaa0aa3k1934jyg2vh65hzncx0awl1f0wz8n4fjasfrpc";
+    x86_64-darwin = "0jkpzyg2pk2d88w2ffrp2lr0qadss7ccycx4vpmjmw62d3sap8n1";
+    aarch64-linux = "1g7lzqghagz63pljg4wy34z706j70vjmk49cl8v27jbnsgnva56a";
+    aarch64-darwin = "132ml95xlyv5c343bfv0gpgr8rmk85xspsy9baninlmhnmy7mivv";
+    armv7l-linux = "04anb6r7hkk3y3vahx32nxj5dz2i66rrnl0561xkcjr4cqvxykiw";
+  }.${system} or throwSystem;
 in
   callPackage ./generic.nix rec {
     # Please backport all compatible updates to the stable release.
     # This is important for the extension ecosystem.
-    version = "1.69.1";
+    version = "1.71.2";
     pname = "vscode";
 
     executableName = "code" + lib.optionalString isInsiders "-insiders";
     longName = "Visual Studio Code" + lib.optionalString isInsiders " - Insiders";
     shortName = "Code" + lib.optionalString isInsiders " - Insiders";
+    inherit commandLineArgs;
 
     src = fetchurl {
       name = "VSCode_${version}_${plat}.${archive_fmt}";

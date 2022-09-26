@@ -8,14 +8,14 @@
 
 buildPythonPackage rec {
   pname = "json-stream";
-  version = "1.3.0";
+  version = "1.4.3";
   format = "pyproject";
 
   disabled = pythonOlder "3.7";
 
   src = fetchPypi {
     inherit pname version;
-    hash = "sha256-J5DBa8zeandkDIXpEaRN6cneZIIG2aRHS5zjmM/H0Uw=";
+    hash = "sha256-6VWAaTjzVDss01aFI53Lg0oNuus5u4TRF/co9DHOhLU=";
   };
 
   propagatedBuildInputs = [
@@ -28,6 +28,10 @@ buildPythonPackage rec {
 
   pythonImportsCheck = [
     "json_stream"
+  ];
+
+  disabledTests = [
+    "test_writer"
   ];
 
   meta = with lib; {

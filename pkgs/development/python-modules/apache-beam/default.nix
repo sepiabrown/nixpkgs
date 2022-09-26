@@ -37,8 +37,8 @@
 , sqlalchemy
 , tenacity
 , typing-extensions
-, scikit-learn
-}:
+, testcontainers
+, scikit-learn }:
 
 buildPythonPackage rec {
   pname = "apache-beam";
@@ -55,7 +55,9 @@ buildPythonPackage rec {
   postPatch = ''
     substituteInPlace setup.py \
       --replace "dill>=0.3.1.1,<0.3.2" "dill" \
-      --replace "pyarrow>=0.15.1,<8.0.0" "pyarrow"
+      --replace "pyarrow>=0.15.1,<8.0.0" "pyarrow" \
+      --replace "numpy>=1.14.3,<1.23.0" "numpy" \
+      --replace "pymongo>=3.8.0,<4.0.0" "pymongo"
   '';
 
   sourceRoot = "source/sdks/python";
@@ -90,6 +92,8 @@ buildPythonPackage rec {
     typing-extensions
   ];
 
+  enableParallelBuilding = true;
+
   pythonImportsCheck = [
     "apache_beam"
   ];
@@ -107,6 +111,7 @@ buildPythonPackage rec {
     scikit-learn
     sqlalchemy
     tenacity
+    testcontainers
   ];
 
   # Make sure we're running the tests for the actually installed
@@ -122,8 +127,6 @@ buildPythonPackage rec {
     #         container_init: Callable[[], Union[PostgresContainer, MySqlContainer]],
     #     E   NameError: name 'MySqlContainer' is not defined
     #
-    # Test relies on the testcontainers package, which is not currently (as of
-    # 2022-04-08) available in nixpkgs.
     "apache_beam/io/external/xlang_jdbcio_it_test.py"
 
     # These tests depend on the availability of specific servers backends.

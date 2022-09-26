@@ -17,7 +17,7 @@
 
 buildPythonPackage rec {
   pname = "ansible-doctor";
-  version = "1.4.0";
+  version = "1.4.4";
   format = "pyproject";
 
   disabled = pythonOlder "3.7";
@@ -25,8 +25,8 @@ buildPythonPackage rec {
   src = fetchFromGitHub {
     owner = "thegeeklab";
     repo = "ansible-doctor";
-    rev = "v${version}";
-    hash = "sha256-onRur31Sa95nsXUYFJdAHySm4nIXqP01nT70IFPwLCo=";
+    rev = "refs/tags/v${version}";
+    hash = "sha256-blCBlSCp7W6tlCa5381ex7yq37iY9v6u7ITHmJEUxl0=";
   };
 
   nativeBuildInputs = [
@@ -52,12 +52,9 @@ buildPythonPackage rec {
 
   postPatch = ''
     substituteInPlace pyproject.toml \
-      --replace 'version = "0.0.0"' 'version = "${version}"' \
-      --replace 'Jinja2 = "3.1.2"' 'Jinja2 = "*"' \
-      --replace 'anyconfig = "0.13.0"' 'anyconfig = "*"' \
-      --replace 'environs = "9.5.0"' 'environs = "*"' \
-      --replace 'jsonschema = "4.6.0"' 'jsonschema = "*"' \
-      --replace '"ruamel.yaml" = "0.17.21"' '"ruamel.yaml" = "*"'
+      --replace 'jsonschema = "4.15.0"' 'jsonschema = "*"' \
+      --replace 'nested-lookup = "0.2.25"' 'nested-lookup = "*"' \
+      --replace 'pathspec = "0.10.1"' 'pathspec = "*"'
   '';
 
   # Module has no tests

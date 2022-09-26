@@ -21,12 +21,12 @@
 
 stdenv.mkDerivation rec {
   pname = "cardinal";
-  version = "22.06";
+  version = "22.09";
 
   src = fetchurl {
     url =
       "https://github.com/DISTRHO/Cardinal/releases/download/${version}/cardinal+deps-${version}.tar.xz";
-    sha256 = "sha256-h7pNoLpB7XkWHZUCQfvJsSnOn37DcP9xuH9kxtfmCos=";
+    sha256 = "sha256-dwxKhX926oGlxlplUzhTiX9cvx58FyO2oIShiQ1SXCs=";
   };
 
   prePatch = ''

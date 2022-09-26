@@ -120,8 +120,10 @@ impure-cmds // appleSourcePackages // chooseLibs // {
     executable = true;
 
     text = ''
-      CODESIGN_ALLOCATE=${targetPrefix}codesign_allocate \
-        ${self.sigtool}/bin/codesign -f -s - "$linkerOutput"
+      if [ "$linkerOutput" != "/dev/null" ]; then
+        CODESIGN_ALLOCATE=${targetPrefix}codesign_allocate \
+          ${self.sigtool}/bin/codesign -f -s - "$linkerOutput"
+      fi
     '';
   };
 
@@ -148,7 +150,11 @@ impure-cmds // appleSourcePackages // chooseLibs // {
 
   lsusb = callPackage ../os-specific/darwin/lsusb { };
 
-  moltenvk = callPackage ../os-specific/darwin/moltenvk { };
+  moltenvk = pkgs.darwin.apple_sdk_11_0.callPackage ../os-specific/darwin/moltenvk {
+    inherit (apple_sdk_11_0.frameworks) AppKit Foundation Metal QuartzCore;
+    inherit (apple_sdk_11_0) MacOSX-SDK Libsystem;
+    inherit (pkgs.darwin) cctools sigtool;
+  };
 
   opencflite = callPackage ../os-specific/darwin/opencflite { };
 

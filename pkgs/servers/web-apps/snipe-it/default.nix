@@ -1,4 +1,4 @@
-{ pkgs, stdenv, lib, fetchFromGitHub, dataDir ? "/var/lib/snipe-it" }:
+{ pkgs, stdenv, lib, fetchFromGitHub, dataDir ? "/var/lib/snipe-it", mariadb }:
 
 let
   package = (import ./composition.nix {
@@ -13,18 +13,19 @@ let
       ln -s ${dataDir}/public/uploads $out/public/uploads
       ln -s ${dataDir}/bootstrap/cache $out/bootstrap/cache
       chmod +x $out/artisan
+      substituteInPlace config/database.php --replace "env('DB_DUMP_PATH', '/usr/local/bin')" "env('DB_DUMP_PATH', '${mariadb}/bin')"
     '';
   });
 
 in package.override rec {
   pname = "snipe-it";
-  version = "6.0.7";
+  version = "6.0.10";
 
   src = fetchFromGitHub {
     owner = "snipe";
     repo = pname;
     rev = "v${version}";
-    sha256 = "09jvkz7j2qb79mjnyrz75015xpgf8l483yha3ma14pzk4pibn620";
+    sha256 = "sha256-RLUcN2gk3uU2aOqs2poShSRfwQJ6CipxBRqJeO2RNzw=";
   };
 
   meta = with lib; {

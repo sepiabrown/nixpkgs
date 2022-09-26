@@ -16,18 +16,21 @@
 , voms
 , zlib
 , enableTests ? true
+  # If not null, the builder will
+  # move "$out/etc" to "$out/etc.orig" and symlink "$out/etc" to externalEtc.
+, externalEtc ? "/etc"
 }:
 
 stdenv.mkDerivation rec {
   pname = "xrootd";
-  version = "5.4.3";
+  version = "5.5.0";
 
   src = fetchFromGitHub {
     owner = "xrootd";
     repo = "xrootd";
     rev = "v${version}";
     fetchSubmodules = true;
-    hash = "sha256-BlMYm4ffSpUxqMjlDVZC59KOuLvwsk/BeBB3VBjAwjs=";
+    hash = "sha256-a8qw8uHxd7OLMMq+HPMB36O0Yjctlnf8DkfEdMvc1NQ=";
   };
 
   outputs = [ "bin" "out" "dev" "man" ];
@@ -68,9 +71,30 @@ stdenv.mkDerivation rec {
     sed -i 's/set\((\s*CMAKE_INSTALL_[A-Z_]\+DIR\s\+"[^"]\+"\s*)\)/define_default\1/g' cmake/XRootDOSDefs.cmake
   '';
 
+  # https://github.com/xrootd/xrootd/blob/master/packaging/rhel/xrootd.spec.in#L665-L675=
+  postInstall = ''
+    mkdir -p "$out/lib/tmpfiles.d"
+    install -m 644 -T ../packaging/rhel/xrootd.tmpfiles "$out/lib/tmpfiles.d/xrootd.conf"
+    mkdir -p "$out/etc/xrootd"
+    install -m 644 -t "$out/etc/xrootd" ../packaging/common/*.cfg
+    install -m 644 -t "$out/etc/xrootd" ../packaging/common/client.conf
+    mkdir -p "$out/etc/xrootd/client.plugins.d"
+    install -m 644 -t "$out/etc/xrootd/client.plugins.d" ../packaging/common/client-plugin.conf.example
+    mkdir -p "$out/etc/logrotate.d"
+    install -m 644 -T ../packaging/common/xrootd.logrotate "$out/etc/logrotate.d/xrootd"
+  '' + lib.optionalString stdenv.isLinux ''
+    mkdir -p "$out/lib/systemd/system"
+    install -m 644 -t "$out/lib/systemd/system" ../packaging/common/*.service ../packaging/common/*.socket
+  '';
+
   cmakeFlags = lib.optionals enableTests [
     "-DENABLE_TESTS=TRUE"
   ];
+
+  postFixup = lib.optionalString (externalEtc != null) ''
+    mv "$out"/etc{,.orig}
+    ln -s ${lib.escapeShellArg externalEtc} "$out/etc"
+  '';
 
   meta = with lib; {
     description = "High performance, scalable fault tolerant data access";

@@ -30,6 +30,10 @@ with lib;
       udev rules from libu2f-host to the system. Udev gained native support
       to handle FIDO security tokens, so this isn't necessary anymore.
     '')
+    (mkRemovedOptionModule [ "hardware" "xow" ] ''
+      The xow package was removed from nixpkgs. Upstream has deprecated
+      the project and users are urged to switch to xone.
+    '')
     (mkRemovedOptionModule [ "networking" "vpnc" ] "Use environment.etc.\"vpnc/service.conf\" instead.")
     (mkRemovedOptionModule [ "networking" "wicd" ] "The corresponding package was removed from nixpkgs.")
     (mkRemovedOptionModule [ "programs" "tilp2" ] "The corresponding package was removed from nixpkgs.")
@@ -44,6 +48,7 @@ with lib;
     (mkRemovedOptionModule [ "services" "cgmanager" "enable"] "cgmanager was deprecated by lxc and therefore removed from nixpkgs.")
     (mkRemovedOptionModule [ "services" "chronos" ] "The corresponding package was removed from nixpkgs.")
     (mkRemovedOptionModule [ "services" "couchpotato" ] "The corresponding package was removed from nixpkgs.")
+    (mkRemovedOptionModule [ "services" "dd-agent" ] "dd-agent was removed from nixpkgs in favor of the newer datadog-agent.")
     (mkRemovedOptionModule [ "services" "deepin" ] "The corresponding packages were removed from nixpkgs.")
     (mkRemovedOptionModule [ "services" "dnscrypt-proxy" ] "Use services.dnscrypt-proxy2 instead")
     (mkRemovedOptionModule [ "services" "firefox" "syncserver" ] "The corresponding package was removed from nixpkgs.")

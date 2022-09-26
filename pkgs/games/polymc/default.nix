@@ -16,21 +16,22 @@
 , openal
 , msaClientID ? ""
 , jdks ? [ jdk jdk8 ]
+, extra-cmake-modules
 }:
 
 stdenv.mkDerivation rec {
   pname = "polymc";
-  version = "1.3.2";
+  version = "1.4.2";
 
   src = fetchFromGitHub {
     owner = "PolyMC";
     repo = "PolyMC";
     rev = version;
-    sha256 = "sha256-hqsyS82UzgCUZ9HjoPKjOLE49fwLntRAh3mVrTsmi3o=";
+    sha256 = "sha256-mqLk7ZcSrtvlUziNUCtnH7xQplXBruuiuN2b1+VX1ng=";
     fetchSubmodules = true;
   };
 
-  nativeBuildInputs = [ cmake file jdk wrapQtAppsHook ];
+  nativeBuildInputs = [ extra-cmake-modules cmake file jdk wrapQtAppsHook ];
   buildInputs = [ qtbase zlib quazip ];
 
   cmakeFlags = lib.optionals (msaClientID != "") [ "-DLauncher_MSA_CLIENT_ID=${msaClientID}" ];
@@ -53,7 +54,7 @@ stdenv.mkDerivation rec {
   in ''
     # xorg.xrandr needed for LWJGL [2.9.2, 3) https://github.com/LWJGL/lwjgl/issues/128
     wrapQtApp $out/bin/polymc \
-      --set GAME_LIBRARY_PATH /run/opengl-driver/lib:${libpath} \
+      --set LD_LIBRARY_PATH /run/opengl-driver/lib:${libpath} \
       --prefix POLYMC_JAVA_PATHS : ${lib.makeSearchPath "bin/java" jdks} \
       --prefix PATH : ${lib.makeBinPath [ xorg.xrandr ]}
   '';

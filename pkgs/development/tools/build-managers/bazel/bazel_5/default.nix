@@ -9,7 +9,7 @@
 # updater
 , python27, python3, writeScript
 # Apple dependencies
-, cctools, libcxx, CoreFoundation, CoreServices, Foundation
+, cctools, libcxx, sigtool, CoreFoundation, CoreServices, Foundation
 # Allow to independently override the jdks used to build and run respectively
 , buildJdk, runJdk
 , runtimeShell
@@ -126,7 +126,9 @@ let
   platforms = lib.platforms.linux ++ lib.platforms.darwin;
 
   system = if stdenv.hostPlatform.isDarwin then "darwin" else "linux";
-  arch = stdenv.hostPlatform.parsed.cpu.name;
+
+  # on aarch64 Darwin, `uname -m` returns "arm64"
+  arch = with stdenv.hostPlatform; if isDarwin && isAarch64 then "arm64" else parsed.cpu.name;
 
   bazelRC = writeTextFile {
     name = "bazel-rc";
@@ -206,6 +208,10 @@ stdenv.mkDerivation rec {
       src = ../bazel_rc.patch;
       bazelSystemBazelRCPath = bazelRC;
     })
+
+    # disable suspend detection during a build inside Nix as this is
+    # not available inside the darwin sandbox
+    ./bazel_darwin_sandbox.patch
   ] ++ lib.optional enableNixHacks ../nix-hacks.patch;
 
 
@@ -376,10 +382,11 @@ stdenv.mkDerivation rec {
       # clang installed from Xcode has a compatibility wrapper that forwards
       # invocations of gcc to clang, but vanilla clang doesn't
       sed -i -e 's;_find_generic(repository_ctx, "gcc", "CC", overriden_tools);_find_generic(repository_ctx, "clang", "CC", overriden_tools);g' tools/cpp/unix_cc_configure.bzl
-
-      sed -i -e 's;/usr/bin/libtool;${cctools}/bin/libtool;g' tools/cpp/unix_cc_configure.bzl
+      sed -i -e 's;env -i codesign --identifier $@ --force --sign;env -i CODESIGN_ALLOCATE=${cctools}/bin/${cctools.targetPrefix}codesign_allocate ${sigtool}/bin/codesign --identifier $@ --force -s;g' tools/osx/BUILD
+      sed -i -e 's;"/usr/bin/libtool";_find_generic(repository_ctx, "libtool", "LIBTOOL", overriden_tools);g' tools/cpp/unix_cc_configure.bzl
       wrappers=( tools/cpp/osx_cc_wrapper.sh tools/cpp/osx_cc_wrapper.sh.tpl )
       for wrapper in "''${wrappers[@]}"; do
+        sed -i -e "s,/usr/bin/gcc,${stdenv.cc}/bin/clang,g" $wrapper
         sed -i -e "s,/usr/bin/install_name_tool,${cctools}/bin/install_name_tool,g" $wrapper
       done
     '';

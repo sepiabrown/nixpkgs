@@ -165,25 +165,25 @@ in
   options = {
 
     services.gnome = {
-      core-os-services.enable = mkEnableOption "essential services for GNOME3";
-      core-shell.enable = mkEnableOption "GNOME Shell services";
-      core-utilities.enable = mkEnableOption "GNOME core utilities";
-      core-developer-tools.enable = mkEnableOption "GNOME core developer tools";
-      games.enable = mkEnableOption "GNOME games";
+      core-os-services.enable = mkEnableOption (lib.mdDoc "essential services for GNOME3");
+      core-shell.enable = mkEnableOption (lib.mdDoc "GNOME Shell services");
+      core-utilities.enable = mkEnableOption (lib.mdDoc "GNOME core utilities");
+      core-developer-tools.enable = mkEnableOption (lib.mdDoc "GNOME core developer tools");
+      games.enable = mkEnableOption (lib.mdDoc "GNOME games");
     };
 
     services.xserver.desktopManager.gnome = {
       enable = mkOption {
         type = types.bool;
         default = false;
-        description = "Enable GNOME desktop manager.";
+        description = lib.mdDoc "Enable GNOME desktop manager.";
       };
 
       sessionPath = mkOption {
         default = [];
         type = types.listOf types.package;
         example = literalExpression "[ pkgs.gnome.gpaste ]";
-        description = ''
+        description = lib.mdDoc ''
           Additional list of packages to be added to the session search path.
           Useful for GNOME Shell extensions or GSettings-conditional autostart.
 
@@ -201,44 +201,44 @@ in
             favorite-apps=[ 'firefox.desktop', 'org.gnome.Calendar.desktop' ]
           '''
         '';
-        description = "List of desktop files to put as favorite apps into gnome-shell. These need to be installed somehow globally.";
+        description = lib.mdDoc "List of desktop files to put as favorite apps into gnome-shell. These need to be installed somehow globally.";
       };
 
       extraGSettingsOverrides = mkOption {
         default = "";
         type = types.lines;
-        description = "Additional gsettings overrides.";
+        description = lib.mdDoc "Additional gsettings overrides.";
       };
 
       extraGSettingsOverridePackages = mkOption {
         default = [];
         type = types.listOf types.path;
-        description = "List of packages for which gsettings are overridden.";
+        description = lib.mdDoc "List of packages for which gsettings are overridden.";
       };
 
-      debug = mkEnableOption "gnome-session debug messages";
+      debug = mkEnableOption (lib.mdDoc "gnome-session debug messages");
 
       flashback = {
-        enableMetacity = mkEnableOption "the standard GNOME Flashback session with Metacity";
+        enableMetacity = mkEnableOption (lib.mdDoc "the standard GNOME Flashback session with Metacity");
 
         customSessions = mkOption {
           type = types.listOf (types.submodule {
             options = {
               wmName = mkOption {
                 type = types.strMatching "[a-zA-Z0-9_-]+";
-                description = "A unique identifier for the window manager.";
+                description = lib.mdDoc "A unique identifier for the window manager.";
                 example = "xmonad";
               };
 
               wmLabel = mkOption {
                 type = types.str;
-                description = "The name of the window manager to show in the session chooser.";
+                description = lib.mdDoc "The name of the window manager to show in the session chooser.";
                 example = "XMonad";
               };
 
               wmCommand = mkOption {
                 type = types.str;
-                description = "The executable of the window manager to use.";
+                description = lib.mdDoc "The executable of the window manager to use.";
                 example = literalExpression ''"''${pkgs.haskellPackages.xmonad}/bin/xmonad"'';
               };
 
@@ -246,22 +246,22 @@ in
                 type = types.bool;
                 default = true;
                 example = false;
-                description = "Whether to enable the GNOME panel in this session.";
+                description = lib.mdDoc "Whether to enable the GNOME panel in this session.";
               };
             };
           });
           default = [];
-          description = "Other GNOME Flashback sessions to enable.";
+          description = lib.mdDoc "Other GNOME Flashback sessions to enable.";
         };
 
         panelModulePackages = mkOption {
           default = [ pkgs.gnome.gnome-applets ];
           defaultText = literalExpression "[ pkgs.gnome.gnome-applets ]";
           type = types.listOf types.path;
-          description = ''
-            Packages containing modules that should be made available to <literal>gnome-panel</literal> (usually for applets).
+          description = lib.mdDoc ''
+            Packages containing modules that should be made available to `gnome-panel` (usually for applets).
 
-            If you're packaging something to use here, please install the modules in <literal>$out/lib/gnome-panel/modules</literal>.
+            If you're packaging something to use here, please install the modules in `$out/lib/gnome-panel/modules`.
           '';
         };
       };
@@ -271,7 +271,7 @@ in
       default = [];
       example = literalExpression "[ pkgs.gnome.totem ]";
       type = types.listOf types.package;
-      description = "Which packages gnome should exclude from the default environment";
+      description = lib.mdDoc "Which packages gnome should exclude from the default environment";
     };
 
   };
@@ -361,7 +361,8 @@ in
       services.gnome.tracker-miners.enable = mkDefault true;
       services.gnome.tracker.enable = mkDefault true;
       services.hardware.bolt.enable = mkDefault true;
-      services.packagekit.enable = mkDefault true;
+      # TODO: Enable once #177946 is resolved
+      # services.packagekit.enable = mkDefault true;
       services.udisks2.enable = true;
       services.upower.enable = config.powerManagement.enable;
       services.xserver.libinput.enable = mkDefault true; # for controlling touchpad settings via gnome control center

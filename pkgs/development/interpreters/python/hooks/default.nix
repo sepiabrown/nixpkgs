@@ -4,8 +4,6 @@
 , makeSetupHook
 , disabledIf
 , isPy3k
-, ensureNewerSourcesForZipFilesHook
-, findutils
 }:
 
 let
@@ -106,7 +104,7 @@ in rec {
       };
     } ./python-imports-check-hook.sh) {};
 
-  pythonNamespacesHook = callPackage ({}:
+  pythonNamespacesHook = callPackage ({ findutils }:
     makeSetupHook {
       name = "python-namespaces-hook.sh";
       substitutions = {
@@ -164,7 +162,15 @@ in rec {
       };
     } ./setuptools-check-hook.sh) {};
 
-  venvShellHook = disabledIf (!isPy3k) (callPackage ({ }:
+  unittestCheckHook = callPackage ({ }:
+    makeSetupHook {
+      name = "unittest-check-hook";
+      substitutions = {
+        inherit pythonCheckInterpreter;
+      };
+    } ./unittest-check-hook.sh) {};
+
+  venvShellHook = disabledIf (!isPy3k) (callPackage ({ ensureNewerSourcesForZipFilesHook }:
     makeSetupHook {
       name = "venv-shell-hook";
       deps = [ ensureNewerSourcesForZipFilesHook ];
@@ -179,9 +185,9 @@ in rec {
       deps = [ wheel ];
     } ./wheel-unpack-hook.sh) {};
 
-  sphinxHook = callPackage ({ sphinx }:
+  sphinxHook = callPackage ({ sphinx, installShellFiles }:
     makeSetupHook {
       name = "python${python.pythonVersion}-sphinx-hook";
-      deps = [ sphinx ];
+      deps = [ sphinx installShellFiles ];
     } ./sphinx-hook.sh) {};
 }

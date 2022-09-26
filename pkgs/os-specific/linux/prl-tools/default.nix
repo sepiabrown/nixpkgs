@@ -1,21 +1,37 @@
-{ stdenv, lib, makeWrapper, p7zip
-, gawk, util-linux, xorg, glib, dbus-glib, zlib, bbe, bash, timetrap, netcat, cups
-, kernel ? null, libsOnly ? false
-, fetchurl, undmg, perl, autoPatchelfHook
+{ stdenv
+, lib
+, makeWrapper
+, p7zip
+, gawk
+, util-linux
+, xorg
+, glib
+, dbus-glib
+, zlib
+, bbe
+, bash
+, timetrap
+, netcat
+, cups
+, kernel ? null
+, libsOnly ? false
+, fetchurl
+, undmg
+, perl
+, autoPatchelfHook
 }:
 
 assert (!libsOnly) -> kernel != null;
-assert lib.elem stdenv.hostPlatform.system [ "x86_64-linux" "i686-linux" "aarch64-linux" ];
 
 stdenv.mkDerivation rec {
-  version = "17.1.4-51567";
+  version = "18.0.2-53077";
   pname = "prl-tools";
 
   # We download the full distribution to extract prl-tools-lin.iso from
   # => ${dmg}/Parallels\ Desktop.app/Contents/Resources/Tools/prl-tools-lin.iso
   src = fetchurl {
-    url =  "https://download.parallels.com/desktop/v${lib.versions.major version}/${version}/ParallelsDesktop-${version}.dmg";
-    sha256 = "sha256-gjLxQOTFuVghv1Bj+zfbNW97q1IN2rurSnPQi13gzRA=";
+    url = "https://download.parallels.com/desktop/v${lib.versions.major version}/${version}/ParallelsDesktop-${version}.dmg";
+    sha256 = "sha256-yrCg3qr96SUCHmT3IAF79/Ha+L82V3nIC6Hb5ugXoGk=";
   };
 
   hardeningDisable = [ "pic" "format" ];
@@ -38,8 +54,6 @@ stdenv.mkDerivation rec {
       ( cd $sourceRoot/kmods; tar -xaf prl_mod.tar.gz )
     fi
   '';
-
-  patches = lib.optionals (lib.versionAtLeast kernel.version "5.18") [ ./prl-tools.patch ];
 
   kernelVersion = lib.optionalString (!libsOnly) kernel.modDirVersion;
   kernelDir = lib.optionalString (!libsOnly) "${kernel.dev}/lib/modules/${kernelVersion}";

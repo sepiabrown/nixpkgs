@@ -78,7 +78,7 @@
 , libGLU
 , libGL
 , libintl
-, libgme
+, game-music-emu
 , openssl
 , x265
 , libxml2
@@ -98,13 +98,13 @@
 
 stdenv.mkDerivation rec {
   pname = "gst-plugins-bad";
-  version = "1.20.1";
+  version = "1.20.3";
 
   outputs = [ "out" "dev" ];
 
   src = fetchurl {
     url = "https://gstreamer.freedesktop.org/src/${pname}/${pname}-${version}.tar.xz";
-    sha256 = "0j1q89dl8369djibc5p27lyj8y8p4maplmdzlryvrw0ib77w5lq9";
+    sha256 = "sha256-ehHBO1XdHSOG3ZAiGeQcv83ajh4Ko+c4GGyVB0s12k8=";
   };
 
   nativeBuildInputs = [
@@ -121,11 +121,9 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
+    gobject-introspection
     gst-plugins-base
     orc
-    # gobject-introspection has to be in both nativeBuildInputs and
-    # buildInputs. The build tries to link against libgirepository-1.0.so
-    gobject-introspection
     json-glib
     ldacbt
     libass
@@ -166,7 +164,7 @@ stdenv.mkDerivation rec {
     gnutls
     libGL
     libGLU
-    libgme
+    game-music-emu
     openssl
     libxml2
     libintl
@@ -294,8 +292,6 @@ stdenv.mkDerivation rec {
     # `applemedia/videotexturecache.h` requires `gst/gl/gl.h`,
     # but its meson build system does not declare the dependency.
     "-Dapplemedia=disabled"
-  ] ++ lib.optionals (stdenv.buildPlatform != stdenv.hostPlatform) [
-    "-Dintrospection=disabled"
   ] ++ (if enableGplPlugins then [
     "-Dgpl=enabled"
   ] else [

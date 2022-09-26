@@ -2,15 +2,15 @@
 
 buildGoModule rec {
   pname = "istioctl";
-  version = "1.14.1";
+  version = "1.15.0";
 
   src = fetchFromGitHub {
     owner = "istio";
     repo = "istio";
     rev = version;
-    sha256 = "sha256-Y8Bo2niIyvBE3BPpnSanFrR8ZHIUdG7iKSOyD6YadIM=";
+    sha256 = "sha256-exLLmrHHXAp/S7z4JwIr8umwxZkmV6/kp/4fd8ODh1I=";
   };
-  vendorSha256 = "sha256-MnSOWJwTOQmHnABRYNJwU9kOr7g51rkUaERksupBTb4=";
+  vendorSha256 = "sha256-A0Haf18ot3WckibSmZe5INjMr7zTrMB6xqqnqpUKV34=";
 
   nativeBuildInputs = [ installShellFiles ];
 

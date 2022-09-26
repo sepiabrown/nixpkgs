@@ -1,4 +1,5 @@
-{ alsa-lib
+{ addOpenGLRunpath
+, alsa-lib
 , at-spi2-atk
 , at-spi2-core
 , atk
@@ -54,16 +55,19 @@
 , wayland
 , wrapGAppsHook
 , xdg-utils
+
+# for custom command line arguments, e.g. "--use-gl=desktop"
+, commandLineArgs ? ""
 }:
 
 stdenv.mkDerivation rec {
-  version = "5.9.18";
+  version = "5.14.14";
   pname = "feishu";
-  packageHash = "5db94058d7ad"; # A hash value used in the download url
+  packageHash = "2844ab12b34f"; # A hash value used in the download url
 
   src = fetchurl {
     url = "https://sf3-cn.feishucdn.com/obj/ee-appcenter/${packageHash}/Feishu-linux_x64-${version}.deb";
-    sha256 = "ffb29b5a184b025d4e4ea468a8f684a7067ab5bfd45867abc370e59be63892c7";
+    sha256 = "c0ca999edc10d8ada08c46b33b15d7db0ced264248abd3ebfdb895d8457e1bec";
   };
 
   nativeBuildInputs = [
@@ -146,14 +150,19 @@ stdenv.mkDerivation rec {
     mkdir -p $out
     mv usr/share $out/
     mv opt/ $out/
-    chmod -R g-w $out
 
     substituteInPlace $out/share/applications/bytedance-feishu.desktop \
       --replace /usr/bin/bytedance-feishu-stable $out/opt/bytedance/feishu/bytedance-feishu
 
-    wrapProgram $out/opt/bytedance/feishu/feishu \
-      --prefix XDG_DATA_DIRS : "$XDG_ICON_DIRS:$GSETTINGS_SCHEMAS_PATH" \
-      --prefix LD_LIBRARY_PATH : ${rpath}:$out/opt/bytedance/feishu
+    # Wrap feishu and vulcan
+    # Feishu is the main executable, vulcan is the builtin browser
+    for executable in $out/opt/bytedance/feishu/{feishu,vulcan/vulcan}; do
+      wrapProgram $executable \
+        --prefix XDG_DATA_DIRS    :  "$XDG_ICON_DIRS:$GSETTINGS_SCHEMAS_PATH" \
+        --prefix LD_LIBRARY_PATH  :  ${rpath}:$out/opt/bytedance/feishu:${addOpenGLRunpath.driverLink}/share \
+        --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--enable-features=UseOzonePlatform --ozone-platform=wayland}}" \
+        ${lib.optionalString (commandLineArgs!="") "--add-flags ${lib.escapeShellArg commandLineArgs}"}
+    done
 
     mkdir -p $out/share/icons/hicolor
     base="$out/opt/bytedance/feishu"
@@ -161,6 +170,9 @@ stdenv.mkDerivation rec {
       mkdir -p $out/share/icons/hicolor/''${size}x''${size}/apps
       ln -s $base/product_logo_$size.png $out/share/icons/hicolor/''${size}x''${size}/apps/bytedance-feishu.png
     done
+
+    mkdir -p $out/bin
+    ln -s $out/opt/bytedance/feishu/bytedance-feishu $out/bin/bytedance-feishu
   '';
 
   meta = with lib; {
@@ -169,5 +181,6 @@ stdenv.mkDerivation rec {
     downloadPage = "https://www.feishu.cn/en/#en_home_download_block";
     license = licenses.unfree;
     platforms = [ "x86_64-linux" ];
+    maintainers = with maintainers; [ billhuang ];
   };
 }

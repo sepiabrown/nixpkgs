@@ -1,5 +1,5 @@
 { lib, stdenv, fetchurl, python3Packages, docutils, help2man, installShellFiles
-, abootimg, acl, apksigner, apktool, binutils-unwrapped, bzip2, cbfstool, cdrkit, colord, colordiff, coreutils, cpio, db, diffutils, dtc
+, abootimg, acl, apksigner, apktool, binutils-unwrapped-all-targets, bzip2, cbfstool, cdrkit, colord, colordiff, coreutils, cpio, db, diffutils, dtc
 , e2fsprogs, enjarify, file, findutils, fontforge-fonttools, ffmpeg, fpc, gettext, ghc, ghostscriptX, giflib, gnumeric, gnupg, gnutar
 , gzip, hdf5, imagemagick, jdk, libarchive, libcaca, llvm, lz4, mono, ocaml, oggvideotools, openssh, openssl, pdftk, pgpdump, poppler_utils, procyon, qemu, R
 , radare2, sng, sqlite, squashfsTools, tcpdump, ubootTools, odt2txt, unzip, wabt, xmlbeans, xxd, xz, zip, zstd
@@ -11,11 +11,11 @@
 # Note: when upgrading this package, please run the list-missing-tools.sh script as described below!
 python3Packages.buildPythonApplication rec {
   pname = "diffoscope";
-  version = "219";
+  version = "222";
 
   src = fetchurl {
     url = "https://diffoscope.org/archive/diffoscope-${version}.tar.bz2";
-    sha256 = "sha256-gD97/2Oyp4PQk63RDXv8l+2dgjqrq/JSmjcB846kP7c=";
+    sha256 = "sha256-2TiDHWPwkAXBHnfQ+1h98F+YvqpxcEmmHXt0EWL3MKY=";
   };
 
   outputs = [ "out" "man" ];
@@ -44,7 +44,7 @@ python3Packages.buildPythonApplication rec {
   #
   # Still missing these tools: docx2txt lipo otool r2pipe
   pythonPath = [
-      binutils-unwrapped bzip2 colordiff coreutils cpio db diffutils
+      binutils-unwrapped-all-targets bzip2 colordiff coreutils cpio db diffutils
       e2fsprogs file findutils fontforge-fonttools gettext gnutar gzip
       libarchive lz4 openssl pgpdump sng sqlite squashfsTools unzip xxd
       xz zip zstd

@@ -1,9 +1,9 @@
-{ lib, buildGoModule, fetchFromGitHub, fetchzip, installShellFiles }:
+{ lib, buildGoModule, fetchFromGitHub, fetchzip, installShellFiles, stdenv }:
 
 let
-  version = "0.31.4";
-  sha256 = "182h6is1kq3yc7il1a0xr5mbrsn3z900dkzxb4m79gl5lsrpb1vm";
-  manifestsSha256 = "0h37ydgykl5kc50zwqn8xyi89aby75937cqaiw1hkpnw9ilc0akz";
+  version = "0.34.0";
+  sha256 = "1znxhjqvch0z0s98v3hvvh1pa3nlv0l6qhlm0f61z64srz3i5d1k";
+  manifestsSha256 = "1fchzr7fb894hdya9bbh59avqsa66wcz06fck60wmwpc93m64cqs";
 
   manifests = fetchzip {
     url =
@@ -23,7 +23,7 @@ in buildGoModule rec {
     inherit sha256;
   };
 
-  vendorSha256 = "sha256-2DeX5si2yVh1C+ikkg9xEpcf2trEBr0qPp+9fgbMfO4=";
+  vendorSha256 = "sha256-0oHcitczG+sW9mkwxY6hCdR2ASpat2XQ+IsLAiqCUb8=";
 
   postUnpack = ''
     cp -r ${manifests} source/cmd/flux/manifests
@@ -46,7 +46,7 @@ in buildGoModule rec {
     $out/bin/flux --version | grep ${version} > /dev/null
   '';
 
-  postInstall = ''
+  postInstall = lib.optionalString (stdenv.hostPlatform == stdenv.buildPlatform) ''
     for shell in bash fish zsh; do
       $out/bin/flux completion $shell > flux.$shell
       installShellCompletion flux.$shell

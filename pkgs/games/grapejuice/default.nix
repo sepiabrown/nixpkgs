@@ -18,26 +18,26 @@
 
 python3Packages.buildPythonApplication rec  {
   pname = "grapejuice";
-  version = "5.1.1";
+  version = "5.5.4";
 
   src = fetchFromGitLab {
     owner = "BrinkerVII";
     repo = "grapejuice";
     rev = "v${version}";
-    sha256 = "sha256-31pxQtKw5sLGnnNdboF7AAIFqsan5pXKHIHtKq/ErRE=";
+    sha256 = "sha256-y4J0589FgNahRmoPkVtHYtc6/OIfUi9bhz6BZrSeWVI=";
   };
 
   nativeBuildInputs = [
     gobject-introspection
     desktop-file-utils
     glib
-    gtk3
     wrapGAppsHook
   ];
 
   buildInputs = [
     cairo
     gettext
+    gtk3
   ];
 
   propagatedBuildInputs = with python3Packages; [
@@ -56,7 +56,9 @@ python3Packages.buildPythonApplication rec  {
 
   makeWrapperArgs = [
     "\${gappsWrapperArgs[@]}"
-    "--prefix PATH : ${lib.makeBinPath [ xdg-user-dirs xdg-utils wine winetricks pciutils glxinfo ]}"
+    "--prefix PATH : ${lib.makeBinPath [ xdg-user-dirs wine winetricks pciutils glxinfo ]}"
+    # make xdg-open overrideable at runtime
+    "--suffix PATH : ${lib.makeBinPath [ xdg-utils ]}"
   ];
 
   postPatch = ''

@@ -96,8 +96,11 @@ self: super: builtins.intersectAttrs super {
 
   # avoid compiling twice by providing executable as a separate output (with small closure size)
   niv = enableSeparateBinOutput (generateOptparseApplicativeCompletion "niv" super.niv);
-  ormolu = enableSeparateBinOutput super.ormolu;
   ghcid = enableSeparateBinOutput super.ghcid;
+  ormolu = generateOptparseApplicativeCompletion "ormolu" (enableSeparateBinOutput super.ormolu);
+
+  # Generate shell completion.
+  cabal2nix = generateOptparseApplicativeCompletion "cabal2nix" super.cabal2nix;
 
   arbtt = overrideCabal (drv: {
     # The test suite needs the packages's executables in $PATH to succeed.
@@ -230,9 +233,6 @@ self: super: builtins.intersectAttrs super {
     preConfigure = "export TZDIR=${pkgs.tzdata}/share/zoneinfo";
   }) super.tz;
 
-  # Nix-specific workaround
-  xmonad = appendPatch ./patches/xmonad_0_17_0-nix.patch (dontCheck super.xmonad);
-
   # https://hydra.nixos.org/build/128665302/nixlog/3
   # Disable tests because they require a running dbus session
   xmonad-dbus = dontCheck super.xmonad-dbus;
@@ -315,6 +315,9 @@ self: super: builtins.intersectAttrs super {
   greenclip = addExtraLibrary pkgs.xorg.libXdmcp super.greenclip;
 
   # The cabal files for these libraries do not list the required system dependencies.
+  libjwt-typed = overrideCabal (drv: {
+    librarySystemDepends = [ pkgs.libjwt ];
+  }) super.libjwt-typed;
   miniball = overrideCabal (drv: {
     librarySystemDepends = [ pkgs.miniball ];
   }) super.miniball;
@@ -494,6 +497,14 @@ self: super: builtins.intersectAttrs super {
   LDAP = dontCheck (overrideCabal (drv: {
     librarySystemDepends = drv.librarySystemDepends or [] ++ [ pkgs.cyrus_sasl.dev ];
   }) super.LDAP);
+
+  # Not running the "example" test because it requires a binary from lsps test
+  # suite which is not part of the output of lsp.
+  lsp-test = overrideCabal (old: { testTarget = "tests func-test"; }) super.lsp-test;
+
+  # the test suite attempts to run the binaries built in this package
+  # through $PATH but they aren't in $PATH
+  dhall-lsp-server = dontCheck super.dhall-lsp-server;
 
   # Expects z3 to be on path so we replace it with a hard
   #
@@ -676,7 +687,6 @@ self: super: builtins.intersectAttrs super {
 
   # Tests access homeless-shelter.
   hie-bios = dontCheck super.hie-bios;
-  hie-bios_0_5_0 = dontCheck super.hie-bios_0_5_0;
 
   # Compiling the readme throws errors and has no purpose in nixpkgs
   aeson-gadt-th =
@@ -735,8 +745,10 @@ self: super: builtins.intersectAttrs super {
     '';
   }) super.haskell-language-server;
 
+  # NOTE: this patch updates the hevm code to work with the latest packages that broke the build
+  # it's temporary until hevm version 0.50.0 is released - https://github.com/ethereum/hevm/milestone/1
   # tests depend on a specific version of solc
-  hevm = dontCheck (doJailbreak super.hevm);
+  hevm = dontCheck (appendPatch ./patches/hevm-update-deps.patch super.hevm);
 
   # hadolint enables static linking by default in the cabal file, so we have to explicitly disable it.
   # https://github.com/hadolint/hadolint/commit/e1305042c62d52c2af4d77cdce5d62f6a0a3ce7b
@@ -858,6 +870,16 @@ self: super: builtins.intersectAttrs super {
     );
   hercules-ci-cnix-store = super.hercules-ci-cnix-store.override { nix = pkgs.nixVersions.nix_2_9; };
 
+  # the testsuite fails because of not finding tsc without some help
+  aeson-typescript = overrideCabal (drv: {
+    testToolDepends = drv.testToolDepends or [] ++ [ pkgs.nodePackages.typescript ];
+    # the testsuite assumes that tsc is in the PATH if it thinks it's in
+    # CI, otherwise trying to install it.
+    #
+    # https://github.com/codedownio/aeson-typescript/blob/ee1a87fcab8a548c69e46685ce91465a7462be89/test/Util.hs#L27-L33
+    preCheck = "export CI=true";
+  }) super.aeson-typescript;
+
   # Enable extra optimisations which increase build time, but also
   # later compiler performance, so we should do this for user's benefit.
   # Flag added in Agda 2.6.2
@@ -921,11 +943,11 @@ self: super: builtins.intersectAttrs super {
   }) super.procex;
 
   # Test suite wants to run main executable
-  fourmolu_0_7_0_1 = overrideCabal (drv: {
+  fourmolu_0_8_2_0 = overrideCabal (drv: {
     preCheck = drv.preCheck or "" + ''
       export PATH="$PWD/dist/build/fourmolu:$PATH"
     '';
-  }) super.fourmolu_0_7_0_1;
+  }) super.fourmolu_0_8_2_0;
 
   # Apply a patch which hardcodes the store path of graphviz instead of using
   # whatever graphviz is in PATH.
@@ -937,6 +959,10 @@ self: super: builtins.intersectAttrs super {
       })
     ] ++ (drv.patches or []);
   }) super.graphviz;
+
+  # Test suite requires AWS access which requires both a network
+  # connection and payment.
+  aws = dontCheck super.aws;
 
   # Test case tries to contact the network
   http-api-data-qq = overrideCabal (drv: {
@@ -963,6 +989,65 @@ self: super: builtins.intersectAttrs super {
     '';
   }) super.jacinda;
 
+  # Smoke test can't be executed in sandbox
+  # https://github.com/georgefst/evdev/issues/25
+  evdev = overrideCabal (drv: {
+    testFlags = drv.testFlags or [] ++ [
+      "-p" "!/Smoke/"
+    ];
+  }) super.evdev;
+
+  # Tests assume dist-newstyle build directory is present
+  cabal-hoogle = dontCheck super.cabal-hoogle;
+
+  nfc = overrideCabal (drv: {
+    isExecutable = true;
+    executableHaskellDepends = with self; drv.executableHaskellDepends or [] ++ [ base base16-bytestring bytestring ];
+    configureFlags = drv.configureFlags or [] ++ [ "-fbuild-examples" ];
+    enableSeparateBinOutput = true;
+  }) super.nfc;
+
+  # Wants to execute cabal-install to (re-)build itself
+  hint = dontCheck super.hint;
+
+  # Make sure that Cabal 3.8.* can be built as-is
+  Cabal_3_8_1_0 = doDistribute (super.Cabal_3_8_1_0.override {
+    Cabal-syntax = self.Cabal-syntax_3_8_1_0;
+    process = self.process_1_6_15_0;
+  });
+
+  # cabal-install switched to build type simple in 3.2.0.0
+  # as a result, the cabal(1) man page is no longer installed
+  # automatically. Instead we need to use the `cabal man`
+  # command which generates the man page on the fly and
+  # install it to $out/share/man/man1 ourselves in this
+  # override.
+  # The commit that introduced this change:
+  # https://github.com/haskell/cabal/commit/91ac075930c87712eeada4305727a4fa651726e7
+  # Since cabal-install 3.8, the cabal man (without the raw) command
+  # uses nroff(1) instead of man(1) for macOS/BSD compatibility. That utility
+  # is not commonly installed on systems, so we add it to PATH. Closure size
+  # penalty is about 10MB at the time of writing this (2022-08-20).
+  cabal-install = overrideCabal (old: {
+    executableToolDepends = [
+      pkgs.buildPackages.makeWrapper
+    ] ++ old.buildToolDepends or [];
+    postInstall = old.postInstall + ''
+      mkdir -p "$out/share/man/man1"
+      "$out/bin/cabal" man --raw > "$out/share/man/man1/cabal.1"
+
+      wrapProgram "$out/bin/cabal" \
+        --prefix PATH : "${pkgs.lib.makeBinPath [ pkgs.groff ]}"
+    '';
+    hydraPlatforms = pkgs.lib.platforms.all;
+    broken = false;
+  }) super.cabal-install;
+
+  keid-render-basic = addBuildTool pkgs.glslang super.keid-render-basic;
+
+  # ghcide-bench tests need network
+  ghcide-bench = dontCheck super.ghcide-bench;
+
 # haskell-language-server plugins all use the same test harness so we give them what we want in this loop.
 } // pkgs.lib.mapAttrs
   (_: overrideCabal (drv: {
@@ -978,11 +1063,14 @@ self: super: builtins.intersectAttrs super {
     hls-floskell-plugin
     hls-fourmolu-plugin
     hls-module-name-plugin
-    hls-ormolu-plugin
     hls-pragmas-plugin
-    hls-splice-plugin;
+    hls-splice-plugin
+    hls-refactor-plugin
+    hls-code-range-plugin
+    hls-explicit-fixity-plugin;
   # Tests have file permissions expections that don‘t work with the nix store.
   hls-stylish-haskell-plugin = dontCheck super.hls-stylish-haskell-plugin;
+  hls-gadt-plugin = dontCheck super.hls-gadt-plugin;
 
   # Flaky tests
   hls-hlint-plugin = dontCheck super.hls-hlint-plugin;
@@ -994,7 +1082,5 @@ self: super: builtins.intersectAttrs super {
   hls-tactics-plugin = dontCheck super.hls-tactics-plugin;
   hls-call-hierarchy-plugin = dontCheck super.hls-call-hierarchy-plugin;
   hls-selection-range-plugin = dontCheck super.hls-selection-range-plugin;
-
-  # Wants to execute cabal-install to (re-)build itself
-  hint = dontCheck super.hint;
+  hls-ormolu-plugin = dontCheck super.hls-ormolu-plugin;
 }

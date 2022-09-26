@@ -4,14 +4,18 @@
 }:
 python3Packages.buildPythonApplication rec {
   pname = "barman";
-  version = "3.0.0";
+  version = "3.1.0";
 
   src = fetchFromGitHub {
     owner = "EnterpriseDB";
     repo = pname;
-    rev = "release/${version}";
-    sha256 = "sha256-WLKtra1kNxvm4iO3NEhMNCSioHL9I8GIgkbtu95IyTQ=";
+    rev = "refs/tags/release/${version}";
+    sha256 = "sha256-xRyKCpO2eBe5lI0pQW8wUee/5ZMDEo7/FLORrp3Sduk=";
   };
+
+  patches = [
+    ./unwrap-subprocess.patch
+  ];
 
   checkInputs = with python3Packages; [
     mock

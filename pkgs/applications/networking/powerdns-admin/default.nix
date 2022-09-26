@@ -19,6 +19,7 @@ let
         src = oldAttrs.src.override {
           inherit version;
           hash = "sha256-yKhbKNN3zHc35G4tnytPRO48Dh3qxr9G3e/HGH0weXo=";
+          sha256 = "";
         };
 
         SETUPTOOLS_SCM_PRETEND_VERSION = version;
@@ -29,7 +30,7 @@ let
   };
 
   pythonDeps = with python.pkgs; [
-    flask flask_assets flask_login flask_sqlalchemy flask_migrate flask-seasurf flask_mail flask-session flask-sslify
+    flask flask_assets flask_login flask-sqlalchemy flask_migrate flask-seasurf flask_mail flask-session flask-sslify
     mysqlclient psycopg2 sqlalchemy
     cffi configobj cryptography bcrypt requests ldap pyotp qrcode dnspython
     gunicorn python3-saml pytz cssmin rjsmin authlib bravado-core

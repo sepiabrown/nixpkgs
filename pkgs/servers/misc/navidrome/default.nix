@@ -23,6 +23,8 @@ let
     hash = "sha256-gTvJI+brdEpdpbEcdQycqw15seI+k5dMDVrjY3v6i14=";
   };
 
+  # FIXME: we currently manually inject a patch for react-scripts in here
+  # See https://github.com/navidrome/navidrome/pull/1767
   ui = callPackage ./ui {
     inherit src version;
   };
@@ -41,7 +43,12 @@ buildGoModule {
 
   buildInputs = [ taglib zlib ];
 
-  CGO_CFLAGS = [ "-Wno-return-local-addr" ];
+  ldflags = [
+    "-X github.com/navidrome/navidrome/consts.gitSha=${src.rev}"
+    "-X github.com/navidrome/navidrome/consts.gitTag=v${version}"
+  ];
+
+  CGO_CFLAGS = lib.optionals stdenv.cc.isGNU [ "-Wno-return-local-addr" ];
 
   prePatch = ''
     cp -r ${ui}/* ui/build
@@ -51,8 +58,6 @@ buildGoModule {
     wrapProgram $out/bin/navidrome \
       --prefix PATH : ${lib.makeBinPath [ ffmpeg ]}
   '';
-
-  doCheck = false;
 
   passthru = {
     inherit ui;

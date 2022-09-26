@@ -16,7 +16,7 @@
 , enablePython ? true
 
 # for determining the latest compatible linuxPackages
-, linuxPackages_5_18 ? pkgs.linuxKernel.packages.linux_5_18
+, linuxPackages_5_15 ? pkgs.linuxKernel.packages.linux_5_15
 }:
 
 let
@@ -203,7 +203,7 @@ let
         changelog = "https://github.com/openzfs/zfs/releases/tag/zfs-${version}";
         license = lib.licenses.cddl;
         platforms = lib.platforms.linux;
-        maintainers = with lib.maintainers; [ hmenke jcumming jonringer wizeman fpletz globin ];
+        maintainers = with lib.maintainers; [ hmenke jcumming jonringer wizeman globin ];
         mainProgram = "zfs";
         # If your Linux kernel version is not yet supported by zfs, try zfsUnstable.
         # On NixOS set the option boot.zfs.enableUnstable.
@@ -217,7 +217,7 @@ in {
   zfsStable = common {
     # check the release notes for compatible kernels
     kernelCompatible = kernel.kernelOlder "5.19";
-    latestCompatibleLinuxPackages = linuxPackages_5_18;
+    latestCompatibleLinuxPackages = linuxPackages_5_15;
 
     # this package should point to the latest release.
     version = "2.1.5";
@@ -228,7 +228,7 @@ in {
   zfsUnstable = common {
     # check the release notes for compatible kernels
     kernelCompatible = kernel.kernelOlder "5.19";
-    latestCompatibleLinuxPackages = linuxPackages_5_18;
+    latestCompatibleLinuxPackages = linuxPackages_5_15;
 
     # this package should point to a version / git revision compatible with the latest kernel release
     # IMPORTANT: Always use a tagged release candidate or commits from the

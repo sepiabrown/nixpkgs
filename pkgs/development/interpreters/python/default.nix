@@ -19,9 +19,14 @@ with pkgs;
     , pythonOnBuildForTarget
     , pythonOnHostForHost
     , pythonOnTargetForTarget
+    , pythonAttr ? null
     , self # is pythonOnHostForTarget
     }: let
       pythonPackages = callPackage
+        # Function that when called
+        # - imports python-packages.nix
+        # - adds spliced package sets to the package set
+        # - applies overrides from `packageOverrides` and `pythonPackagesOverlays`.
         ({ pkgs, stdenv, python, overrides }: let
           pythonPackagesFun = import ../../../top-level/python-packages.nix {
             inherit stdenv pkgs lib;
@@ -74,7 +79,7 @@ with pkgs;
           extra = _: {};
           optionalExtensions = cond: as: if cond then as else [];
           python2Extension = import ../../../top-level/python2-packages.nix;
-          extensions = lib.composeManyExtensions ((optionalExtensions (!self.isPy3k) [python2Extension]) ++ [ overrides ]);
+          extensions = lib.composeManyExtensions ((optionalExtensions (!self.isPy3k) [python2Extension]) ++ pkgs.pythonPackagesExtensions ++ [ overrides ]);
           aliases = self: super: lib.optionalAttrs config.allowAliases (import ../../../top-level/python-aliases.nix lib self super);
         in lib.makeScopeWithSplicing
           pkgs.splicePackages
@@ -117,6 +122,8 @@ with pkgs;
         tests = callPackage ./tests.nix {
           python = self;
         };
+
+        inherit pythonAttr;
   };
 
   sources = {
@@ -133,10 +140,10 @@ with pkgs;
       sourceVersion = {
         major = "3";
         minor = "10";
-        patch = "5";
+        patch = "6";
         suffix = "";
       };
-      sha256 = "sha256-hDfv1bEG7wp1qr+/I9iAYlEgpzqGoireTS4uaNe3RIY=";
+      sha256 = "sha256-95X/h9EdSwx8M7yIUbDChkjYpFg6ohAKmMIrQya20/M=";
     };
   };
 
@@ -160,10 +167,10 @@ in {
     sourceVersion = {
       major = "3";
       minor = "7";
-      patch = "13";
+      patch = "14";
       suffix = "";
     };
-    sha256 = "sha256-mfEGJ134iZw+jLnXwBzmhsIC7ydZUzAUJxlGk95b74Q=";
+    sha256 = "sha256-QVeuMeuBrxnoHDaIJhBJGw+49Q4A+ooXsJXIiQi5xFw=";
     inherit (darwin) configd;
     inherit passthruFun;
   };
@@ -173,10 +180,10 @@ in {
     sourceVersion = {
       major = "3";
       minor = "8";
-      patch = "13";
+      patch = "14";
       suffix = "";
     };
-    sha256 = "sha256-bzCQdwEgQKo5/o8MYduMD6HEUTZ2MpnTdcnldW8Jz1c=";
+    sha256 = "sha256-XXfieCcbqAPpkJpBpPO6ygBhgck62mgqXl/o3EokxfM=";
     inherit (darwin) configd;
     inherit passthruFun;
   };
@@ -199,9 +206,9 @@ in {
       major = "3";
       minor = "11";
       patch = "0";
-      suffix = "b4";
+      suffix = "rc2";
     };
-    sha256 = "sha256-HZO2EWB5A+CAQXwalWf1+79RJMxchvSvu6HI/TTF9vs=";
+    sha256 = "sha256-JbNcx9gsWtNNhnsXmhwWldEpvl7RSiHka2t/I1CotJA=";
     inherit (darwin) configd;
     inherit passthruFun;
   };

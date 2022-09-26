@@ -36,7 +36,7 @@ let
       modDirVersion' = builtins.replaceStrings [ kernel.version ] [ version ] kernel.modDirVersion;
     in kernel.override {
       structuredExtraConfig = import ../os-specific/linux/kernel/hardened/config.nix {
-        inherit lib version;
+        inherit stdenv lib version;
       };
       argsOverride = {
         inherit version;
@@ -168,7 +168,9 @@ in {
 
     linux_5_17 = throw "linux 5.17 was removed because it has reached its end of life upstream";
 
-    linux_5_18 = callPackage ../os-specific/linux/kernel/linux-5.18.nix {
+    linux_5_18 = throw "linux 5.18 was removed because it has reached its end of life upstream";
+
+    linux_5_19 = callPackage ../os-specific/linux/kernel/linux-5.19.nix {
       kernelPatches = [
         kernelPatches.bridge_stp_helper
         kernelPatches.request_key_helper
@@ -188,7 +190,7 @@ in {
        else testing;
 
     linux_testing_bcachefs = callPackage ../os-specific/linux/kernel/linux-testing-bcachefs.nix rec {
-      kernel = linux_5_18;
+      kernel = linux_5_19;
       kernelPatches = kernel.kernelPatches;
    };
 
@@ -218,22 +220,17 @@ in {
       ];
     }).lqx;
 
-    # This contains both the STABLE and EDGE variants of the XanMod kernel
-    xanmodKernels = callPackage ../os-specific/linux/kernel/xanmod-kernels.nix;
-
-    linux_xanmod = (xanmodKernels {
+    # This contains the variants of the XanMod kernel
+    xanmodKernels = callPackage ../os-specific/linux/kernel/xanmod-kernels.nix {
       kernelPatches = [
         kernelPatches.bridge_stp_helper
         kernelPatches.request_key_helper
       ];
-    }).stable;
+    };
 
-    linux_xanmod_latest = (xanmodKernels {
-      kernelPatches = [
-        kernelPatches.bridge_stp_helper
-        kernelPatches.request_key_helper
-      ];
-    }).edge;
+    linux_xanmod = xanmodKernels.lts;
+    linux_xanmod_latest = xanmodKernels.edge;
+    linux_xanmod_tt = xanmodKernels.tt;
 
     linux_libre = deblobKernel packageAliases.linux_default.kernel;
 
@@ -246,7 +243,8 @@ in {
     linux_5_4_hardened = hardenedKernelFor kernels.linux_5_4 { };
     linux_5_10_hardened = hardenedKernelFor kernels.linux_5_10 { };
     linux_5_15_hardened = hardenedKernelFor kernels.linux_5_15 { };
-    linux_5_18_hardened = hardenedKernelFor kernels.linux_5_18 { };
+    linux_5_18_hardened = throw "linux 5.18 was removed because it has reached its end of life upstream";
+    linux_5_19_hardened = hardenedKernelFor kernels.linux_5_19 { };
 
   }));
   /*  Linux kernel modules are inherently tied to a specific kernel.  So
@@ -354,16 +352,20 @@ in {
 
     nvidiaPackages = dontRecurseIntoAttrs (lib.makeExtensible (_: callPackage ../os-specific/linux/nvidia-x11 { }));
 
+    nvidia_x11             = nvidiaPackages.stable;
+    nvidia_x11_beta        = nvidiaPackages.beta;
     nvidia_x11_legacy340   = nvidiaPackages.legacy_340;
     nvidia_x11_legacy390   = nvidiaPackages.legacy_390;
     nvidia_x11_legacy470   = nvidiaPackages.legacy_470;
-    nvidia_x11_beta        = nvidiaPackages.beta;
+    nvidia_x11_production  = nvidiaPackages.production;
     nvidia_x11_vulkan_beta = nvidiaPackages.vulkan_beta;
-    nvidia_x11             = nvidiaPackages.stable;
 
-    # this is not a replacement for nvidia_x11
+    # this is not a replacement for nvidia_x11*
     # only the opensource kernel driver exposed for hydra to build
-    nvidia_x11_beta_open   = nvidiaPackages.beta.open;
+    nvidia_x11_beta_open         = nvidiaPackages.beta.open;
+    nvidia_x11_production_open   = nvidiaPackages.production.open;
+    nvidia_x11_stable_open       = nvidiaPackages.stable.open;
+    nvidia_x11_vulkan_beta_open  = nvidiaPackages.vulkan_beta.open;
 
     openrazer = callPackage ../os-specific/linux/openrazer/driver.nix { };
 
@@ -378,6 +380,8 @@ in {
     rtl8192eu = callPackage ../os-specific/linux/rtl8192eu { };
 
     rtl8189es = callPackage ../os-specific/linux/rtl8189es { };
+
+    rtl8189fs = callPackage ../os-specific/linux/rtl8189fs { };
 
     rtl8723bs = callPackage ../os-specific/linux/rtl8723bs { };
 
@@ -401,7 +405,6 @@ in {
     rtw89 = if lib.versionOlder kernel.version "5.16" then callPackage ../os-specific/linux/rtw89 { } else null;
 
     openafs_1_8 = callPackage ../servers/openafs/1.8/module.nix { };
-    openafs_1_9 = callPackage ../servers/openafs/1.9/module.nix { };
     # Current stable release; don't backport release updates!
     openafs = openafs_1_8;
 
@@ -427,7 +430,7 @@ in {
 
     oci-seccomp-bpf-hook = if lib.versionAtLeast kernel.version "5.4" then callPackage ../os-specific/linux/oci-seccomp-bpf-hook { } else null;
 
-    perf = callPackage ../os-specific/linux/kernel/perf.nix { };
+    perf = callPackage ../os-specific/linux/kernel/perf { };
 
     phc-intel = if lib.versionAtLeast kernel.version "4.10" then callPackage ../os-specific/linux/phc-intel { } else null;
 
@@ -439,7 +442,9 @@ in {
 
     rr-zen_workaround = callPackage ../development/tools/analysis/rr/zen_workaround.nix { };
 
-    sysdig = callPackage ../os-specific/linux/sysdig {};
+    sysdig = callPackage ../os-specific/linux/sysdig {
+      openssl = pkgs.openssl_1_1;
+    };
 
     systemtap = callPackage ../development/tools/profiling/systemtap { };
 
@@ -486,11 +491,11 @@ in {
 
     x86_energy_perf_policy = callPackage ../os-specific/linux/x86_energy_perf_policy { };
 
-    xmm7360-pci = callPackage ../os-specific/linux/xmm7360-pci { };
-
     xone = if lib.versionAtLeast kernel.version "5.4" then callPackage ../os-specific/linux/xone { } else null;
 
     xpadneo = callPackage ../os-specific/linux/xpadneo { };
+
+    ithc = callPackage ../os-specific/linux/ithc { };
 
     zenpower = callPackage ../os-specific/linux/zenpower { };
 
@@ -502,8 +507,13 @@ in {
 
     can-isotp = callPackage ../os-specific/linux/can-isotp { };
 
+    qc71_laptop = callPackage ../os-specific/linux/qc71_laptop { };
+
+    hid-ite8291r3 = callPackage ../os-specific/linux/hid-ite8291r3 { };
+
   } // lib.optionalAttrs config.allowAliases {
     ati_drivers_x11 = throw "ati drivers are no longer supported by any kernel >=4.1"; # added 2021-05-18;
+    xmm7360-pci = throw "Support for the XMM7360 WWAN card was added to the iosm kmod in mainline kernel version 5.18";
   });
 
   hardenedPackagesFor = kernel: overrides: packagesFor (hardenedKernelFor kernel overrides);
@@ -519,7 +529,8 @@ in {
     linux_5_15 = recurseIntoAttrs (packagesFor kernels.linux_5_15);
     linux_5_16 = throw "linux 5.16 was removed because it reached its end of life upstream"; # Added 2022-04-23
     linux_5_17 = throw "linux 5.17 was removed because it reached its end of life upstream"; # Added 2022-06-23
-    linux_5_18 = recurseIntoAttrs (packagesFor kernels.linux_5_18);
+    linux_5_18 = throw "linux 5.18 was removed because it reached its end of life upstream"; # Added 2022-09-17
+    linux_5_19 = recurseIntoAttrs (packagesFor kernels.linux_5_19);
   };
 
   rtPackages = {
@@ -558,12 +569,14 @@ in {
     });
     linux_5_10_hardened = recurseIntoAttrs (hardenedPackagesFor kernels.linux_5_10 { });
     linux_5_15_hardened = recurseIntoAttrs (hardenedPackagesFor kernels.linux_5_15 { });
-    linux_5_18_hardened = recurseIntoAttrs (hardenedPackagesFor kernels.linux_5_18 { });
+    linux_5_18_hardened = throw "linux 5.18 was removed because it has reached its end of life upstream";
+    linux_5_19_hardened = recurseIntoAttrs (hardenedPackagesFor kernels.linux_5_19 { });
 
     linux_zen = recurseIntoAttrs (packagesFor kernels.linux_zen);
     linux_lqx = recurseIntoAttrs (packagesFor kernels.linux_lqx);
     linux_xanmod = recurseIntoAttrs (packagesFor kernels.linux_xanmod);
     linux_xanmod_latest = recurseIntoAttrs (packagesFor kernels.linux_xanmod_latest);
+    linux_xanmod_tt = recurseIntoAttrs (packagesFor kernels.linux_xanmod_tt);
 
     hardkernel_4_14 = recurseIntoAttrs (packagesFor kernels.linux_hardkernel_4_14);
 
@@ -575,7 +588,7 @@ in {
   packageAliases = {
     linux_default = packages.linux_5_15;
     # Update this when adding the newest kernel major version!
-    linux_latest = packages.linux_5_18;
+    linux_latest = packages.linux_5_19;
     linux_mptcp = packages.linux_mptcp_95;
     linux_rt_default = packages.linux_rt_5_4;
     linux_rt_latest = packages.linux_rt_5_10;

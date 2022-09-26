@@ -27,18 +27,13 @@ with python3.pkgs; buildPythonApplication rec {
     freezegun
   ];
   nativeBuildInputs = [ setuptools-scm sphinx sphinxcontrib_newsfeed installShellFiles ];
-  checkInputs = [
-    glibcLocales
-    pytestCheckHook
-  ];
-  LC_ALL = "en_US.UTF-8";
 
   postInstall = ''
     # shell completions
     installShellCompletion --cmd khal \
       --bash <(_KHAL_COMPLETE=bash_source $out/bin/khal) \
-      --fish <(_KHAL_COMPLETE=zsh_source $out/bin/khal) \
-      --zsh <(_KHAL_COMPLETE=fish_source $out/bin/khal)
+      --zsh <(_KHAL_COMPLETE=zsh_source $out/bin/khal) \
+      --fish <(_KHAL_COMPLETE=fish_source $out/bin/khal)
 
     # man page
     PATH="${python3.withPackages (ps: with ps; [ sphinx sphinxcontrib_newsfeed ])}/bin:$PATH" \
@@ -50,6 +45,18 @@ with python3.pkgs; buildPythonApplication rec {
   '';
 
   doCheck = !stdenv.isAarch64;
+
+  checkInputs = [
+    glibcLocales
+    pytestCheckHook
+  ];
+
+  LC_ALL = "en_US.UTF-8";
+
+  disabledTests = [
+    # timing based
+    "test_etag"
+  ];
 
   meta = with lib; {
     broken = stdenv.isDarwin;

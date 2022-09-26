@@ -1,10 +1,10 @@
 { lib
 , stdenv
 , buildGoModule
-, buildGo117Module
 , fetchFromGitHub
 , callPackage
 , config
+, writeShellScript
 
 , cdrtools # libvirt
 }:
@@ -17,17 +17,18 @@ let
      , repo
      , rev
      , version
-     , sha256
-     , vendorSha256
+     , hash ? throw "use hash instead of sha256" # added 2202/09
+     , vendorHash ? throw "use vendorHash instead of vendorSha256" # added 2202/09
      , deleteVendor ? false
      , proxyVendor ? false
      , mkProviderGoModule ? buildGoModule
-     , # Looks like "registry.terraform.io/vancluever/acme"
-       provider-source-address
+       # Looks like "registry.terraform.io/vancluever/acme"
+     , provider-source-address
+     , ...
      }@attrs:
       mkProviderGoModule {
         pname = repo;
-        inherit vendorSha256 version deleteVendor proxyVendor;
+        inherit vendorHash version deleteVendor proxyVendor;
         subPackages = [ "." ];
         doCheck = false;
         # https://github.com/hashicorp/terraform-provider-scaffolding/blob/a8ac8375a7082befe55b71c8cbb048493dd220c2/.goreleaser.yml
@@ -36,7 +37,7 @@ let
         ldflags = [ "-s" "-w" "-X main.version=${version}" "-X main.commit=${rev}" ];
         src = fetchFromGitHub {
           name = "source-${rev}";
-          inherit owner repo rev sha256;
+          inherit owner repo rev hash;
         };
 
         # Move the provider to libexec
@@ -48,7 +49,12 @@ let
         '';
 
         # Keep the attributes around for later consumption
-        passthru = attrs;
+        passthru = attrs // {
+          updateScript = writeShellScript "update" ''
+            provider="$(basename ${provider-source-address})"
+            ./pkgs/applications/networking/cluster/terraform-providers/update-provider --no-build "$provider"
+          '';
+        };
       });
 
   list = lib.importJSON ./providers.json;
@@ -61,16 +67,6 @@ let
     {
       # mkisofs needed to create ISOs holding cloud-init data and wrapped to terraform via deecb4c1aab780047d79978c636eeb879dd68630
       libvirt = automated-providers.libvirt.overrideAttrs (_: { propagatedBuildInputs = [ cdrtools ]; });
-      # fails to build on x86_64-darwin with 1.18
-      lxd = automated-providers.lxd.override { mkProviderGoModule = buildGo117Module; };
-      # fails to build on x86_64-darwin with 1.18
-      netlify = automated-providers.netlify.override { mkProviderGoModule = buildGo117Module; };
-      # fails to build on x86_64-darwin with 1.18
-      pass = automated-providers.pass.override { mkProviderGoModule = buildGo117Module; };
-      # fails to build on x86_64-darwin with 1.18
-      skytap = automated-providers.skytap.override { mkProviderGoModule = buildGo117Module; };
-      # fails to build on x86_64-{darwin,linux} with 1.18
-      tencentcloud = automated-providers.tencentcloud.override { mkProviderGoModule = buildGo117Module; };
     };
 
   # Put all the providers we not longer support in this list.
@@ -81,6 +77,8 @@ let
     in
     lib.optionalAttrs config.allowAliases {
       b2 = removed "b2" "2022/06";
+      dome9 = removed "dome9" "2022/08";
+      ncloud = removed "ncloud" "2022/08";
       opc = archived "opc" "2022/05";
       oraclepaas = archived "oraclepaas" "2022/05";
       template = archived "template" "2022/05";

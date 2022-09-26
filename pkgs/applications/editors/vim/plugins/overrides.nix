@@ -53,7 +53,6 @@
 , zsh
 
   # command-t dependencies
-, rake
 , ruby
 
   # cpsm dependencies
@@ -103,6 +102,7 @@
 , golint
 , gomodifytags
 , gopls
+, gotags
 , gotools
 , iferr
 , impl
@@ -239,9 +239,11 @@ self: super: {
   };
 
   command-t = super.command-t.overrideAttrs (old: {
-    buildInputs = [ ruby rake ];
+    buildInputs = [ ruby ];
     buildPhase = ''
-      rake make
+      substituteInPlace lua/wincent/commandt/lib/Makefile \
+        --replace '/bin/bash' 'bash'
+      make build
       rm ruby/command-t/ext/command-t/*.o
     '';
   });
@@ -253,6 +255,10 @@ self: super: {
       mkdir -p $target/binaries/${tabnine.version}
       ln -s ${tabnine}/bin/ $target/binaries/${tabnine.version}/${tabnine.passthru.platform}
     '';
+  });
+
+  compiler-explorer-nvim = super.compiler-explorer-nvim.overrideAttrs (old: {
+    dependencies = with self; [ plenary-nvim ];
   });
 
   completion-buffers = super.completion-buffers.overrideAttrs (old: {
@@ -824,6 +830,10 @@ self: super: {
     meta.platforms = lib.platforms.all;
   });
 
+  telescope-media-files-nvim = super.telescope-media-files-nvim.overrideAttrs (old: {
+    dependencies = with self; [ telescope-nvim popup-nvim plenary-nvim ];
+  });
+
   telescope-nvim = super.telescope-nvim.overrideAttrs (old: {
     dependencies = with self; [ plenary-nvim ];
   });
@@ -974,7 +984,7 @@ self: super: {
             libiconv
           ];
 
-          cargoSha256 = "sha256-9Vr1gpggfAQlMgM/s8j6FTTYFppHql2PQ7cPtg1wNmo=";
+          cargoSha256 = "sha256-g5yNqDCN1O9x7/HcM8NsZlMwLudDTuPLE5gSpScNQnY=";
         };
       in
       ''
@@ -1041,7 +1051,7 @@ self: super: {
         gomodifytags
         gopls
         # gorename
-        # gotags
+        gotags
         gotools
         # guru
         iferr
@@ -1097,7 +1107,7 @@ self: super: {
   vim-isort = super.vim-isort.overrideAttrs (old: {
     postPatch = ''
       substituteInPlace ftplugin/python_vimisort.vim \
-        --replace 'import vim' 'import vim; import sys; sys.path.append("${python2.pkgs.isort}/${python2.sitePackages}")'
+        --replace 'import vim' 'import vim; import sys; sys.path.append("${python3.pkgs.isort}/${python3.sitePackages}")'
     '';
   });
 

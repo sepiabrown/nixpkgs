@@ -5,27 +5,25 @@
 , openssl
 , zlib
 , stdenv
-, libiconv
 , Security
 }:
 
 rustPlatform.buildRustPackage rec {
   pname = "cargo-edit";
-  version = "0.9.0";
+  version = "0.11.2";
 
   src = fetchFromGitHub {
     owner = "killercup";
     repo = pname;
     rev = "v${version}";
-    hash = "sha256-4N45IBDlIVbZbZgdX2DBmjolFHwzPjHVyWGadhR1FFw=";
+    hash = "sha256-pFQJ2ktn3sMO6DOWlBBe1pJOPytqgqX/EvjGZLnypdY=";
   };
 
-  cargoSha256 = "sha256-o7NDw7P6Flut0ZFnDUdVCmuUzW2P+KXyfu0gApTEx60=";
+  cargoSha256 = "sha256-uTbMiMlCq7qImM5yz1ij0dokJgIMECzdBWst8fwdaoM=";
 
   nativeBuildInputs = [ pkg-config ];
 
   buildInputs = [ openssl zlib ] ++ lib.optionals stdenv.isDarwin [
-    libiconv
     Security
   ];
 

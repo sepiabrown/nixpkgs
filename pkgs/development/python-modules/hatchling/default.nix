@@ -20,7 +20,7 @@
 
 let
   pname = "hatchling";
-  version = "1.0.0";
+  version = "1.8.0";
 in
 buildPythonPackage {
   inherit pname version;
@@ -28,7 +28,7 @@ buildPythonPackage {
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "d235a5fa8aff89e8d9d6d4033594aa4c3bc00ec5e31d3e80c153bfcf951b4f98";
+    sha256 = "sha256-pPmC/coHF9jEa/57UBMC+QqvKlMChF1VC0nIc5aB/rI=";
   };
 
   # listed in backend/src/hatchling/ouroboros.py

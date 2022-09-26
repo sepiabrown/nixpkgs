@@ -44,12 +44,19 @@ let
 
 in stdenv.mkDerivation rec {
   pname = "1password";
-  version = "8.8.0-165.BETA";
+  version = "8.9.6-30.BETA";
 
-  src = fetchurl {
-    url = "https://downloads.1password.com/linux/tar/beta/x86_64/1password-${version}.x64.tar.gz";
-    sha256 = "sha256-ZpKAkuIMeHEFdz/od/sKDh8VXoWOZYO8GjvMiho3D4A=";
-  };
+  src =
+    if stdenv.hostPlatform.isAarch64 then
+      fetchurl {
+        url = "https://downloads.1password.com/linux/tar/beta/aarch64/1password-${version}.arm64.tar.gz";
+        sha256 = "0j0v90i78y1m77gpn65iyjdy1xslv1mar1ihxj9jzcmva0nmdmra";
+      }
+    else
+      fetchurl {
+        url = "https://downloads.1password.com/linux/tar/beta/x86_64/1password-${version}.x64.tar.gz";
+        sha256 = "sha256-xBfpBkYff1X26Iu0Ee03lIiR6UdJOiaG+kZMVotG0Hc=";
+      };
 
   nativeBuildInputs = [ makeWrapper ];
 
@@ -119,8 +126,9 @@ in stdenv.mkDerivation rec {
       # Electron is trying to open udev via dlopen()
       # and for some reason that doesn't seem to be impacted from the rpath.
       # Adding udev to LD_LIBRARY_PATH fixes that.
+      # Make xdg-open overrideable at runtime.
       makeWrapper $out/share/1password/1password $out/bin/1password \
-        --prefix PATH : ${lib.makeBinPath [ xdg-utils ]} \
+        --suffix PATH : ${lib.makeBinPath [ xdg-utils ]} \
         --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ udev ]}
 
       runHook postInstall
@@ -132,6 +140,6 @@ in stdenv.mkDerivation rec {
     sourceProvenance = with sourceTypes; [ binaryNativeCode ];
     license = licenses.unfree;
     maintainers = with maintainers; [ timstott savannidgerinel maxeaubrey sebtm ];
-    platforms = [ "x86_64-linux" ];
+    platforms = [ "x86_64-linux" "aarch64-linux" ];
   };
 }

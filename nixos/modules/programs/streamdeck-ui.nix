@@ -6,12 +6,12 @@ let
   cfg = config.programs.streamdeck-ui;
 in {
   options.programs.streamdeck-ui = {
-    enable = mkEnableOption "streamdeck-ui";
+    enable = mkEnableOption (lib.mdDoc "streamdeck-ui");
 
     autoStart = mkOption {
       default = true;
       type = types.bool;
-      description = "Whether streamdeck-ui should be started automatically.";
+      description = lib.mdDoc "Whether streamdeck-ui should be started automatically.";
     };
   };
 

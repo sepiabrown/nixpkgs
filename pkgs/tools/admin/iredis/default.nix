@@ -4,19 +4,18 @@ with python3Packages;
 
 buildPythonApplication rec {
   pname = "iredis";
-  version = "1.12.0";
+  version = "1.12.1";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "c3031094db0aa03d48b6f9be750e32d3e901942a96cc05283029086cb871cd81";
+    sha256 = "sha256-nLwu47wV5QqgtiyiN9bbKzjlZdgd6Qt5KjBlipwRW1Q=";
   };
 
   postPatch = ''
     substituteInPlace setup.py \
       --replace "click>=7.0,<8.0" "click" \
       --replace "wcwidth==0.1.9" "wcwidth" \
-      --replace "redis>=3.4.0,<4.0.0" "redis" \
-      --replace "mistune>=2.0,<3.0" "mistune"
+      --replace "redis>=3.4.0,<4.0.0" "redis"
   '';
 
   propagatedBuildInputs = [
@@ -24,7 +23,7 @@ buildPythonApplication rec {
     click
     configobj
     importlib-resources
-    mistune_2_0
+    mistune
     packaging
     pendulum
     prompt-toolkit
