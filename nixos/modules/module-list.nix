@@ -104,6 +104,7 @@
   ./i18n/input-method/hime.nix
   ./i18n/input-method/ibus.nix
   ./i18n/input-method/nabi.nix
+  ./i18n/input-method/nimf.nix
   ./i18n/input-method/uim.nix
   ./i18n/input-method/kime.nix
   ./installer/tools/tools.nix

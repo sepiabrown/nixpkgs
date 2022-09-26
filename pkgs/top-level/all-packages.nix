@@ -5916,6 +5916,8 @@ with pkgs;
     inherit (darwin.apple_sdk.frameworks) Security;
   };
 
+  nimf = callPackage ../tools/inputmethods/nimf { };
+
   pax = callPackage ../tools/archivers/pax {
     inherit (pkgs.darwin.apple_sdk.libs) utmp;
   };

@@ -29,7 +29,7 @@ in
   options.i18n = {
     inputMethod = {
       enabled = mkOption {
-        type    = types.nullOr (types.enum [ "ibus" "fcitx" "fcitx5" "nabi" "uim" "hime" "kime" ]);
+        type    = types.nullOr (types.enum [ "ibus" "fcitx" "fcitx5" "nabi" "uim" "hime" "kime" "nimf" ]);
         default = null;
         example = "fcitx";
         description = lib.mdDoc ''

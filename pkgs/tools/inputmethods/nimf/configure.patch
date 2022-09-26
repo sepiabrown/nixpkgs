@@ -1,0 +1,70 @@
+--- nimf-1.3.0hamonikr40.8/configure.ac	2022-05-31 15:10:38.000000000 +0900
++++ configure.ac_bak	2022-09-25 05:16:43.871403457 +0900
+@@ -107,7 +107,7 @@
+ AS_IF([test "x$enable_nimf_anthy" != "xno"],
+       [AC_CHECK_FILE([/var/lib/anthy/anthy.dic], [HAVE_ANTHY_DIC="yes"])])
+ AS_IF([test "x$enable_nimf_anthy" != "xno"],
+-      [AC_CHECK_FILE([/usr/share/anthy/anthy.dic], [HAVE_ANTHY_DIC="yes"])])
++      [AC_CHECK_FILE([@anthy@/share/anthy/anthy.dic], [HAVE_ANTHY_DIC="yes"])])
+ AS_IF([test "x$enable_nimf_anthy" != "xno" -a "x$HAVE_ANTHY_DIC" != "xyes"],
+       [AC_MSG_ERROR([anthy.dic is not found.])])
+ 
+@@ -140,19 +140,7 @@
+   AC_MSG_ERROR([moc for qt5 not found])
+ fi
+ 
+-QT5_LIB_DIR=`pkg-config --variable=libdir Qt5Core`
+-
+-case `pkg-config --variable=includedir Qt5Core` in
+-  */qt5)
+-    QT5_IM_MODULE_DIR=$QT5_LIB_DIR/qt5/plugins/platforminputcontexts
+-    ;;
+-  */qt)
+-    QT5_IM_MODULE_DIR=$QT5_LIB_DIR/qt/plugins/platforminputcontexts
+-    ;;
+-  *)
+-    AC_MSG_ERROR(Can not determine Qt5 plugins/platforminputcontexts directory)
+-    ;;
+-esac
++QT5_IM_MODULE_DIR=$out/@qtPluginPrefix@/platforminputcontexts
+ 
+ AC_SUBST(QT5_IM_MODULE_DIR)
+ 
+@@ -172,24 +160,24 @@
+     ;;
+ esac
+ 
+-GTK3_LIBDIR=`pkg-config --variable=libdir gtk+-3.0`
++GTK3_LIBDIR=$out/etc
+ GTK3_BINARY_VERSION=`pkg-config --variable=gtk_binary_version gtk+-3.0`
+ AC_SUBST(GTK3_LIBDIR)
+ AC_SUBST(GTK3_BINARY_VERSION)
+ AC_PATH_PROGS([GTK_QUERY_IMMODULES3],
+               [gtk-query-immodules-3.0 gtk-query-immodules-3.0-$BITS], [no],
+-              [/usr/bin:$GTK3_LIBDIR/libgtk-3-0])
++              [/usr/bin:@gtk3dev@/bin])
+ if test "x$GTK_QUERY_IMMODULES3" = "xno"; then
+   AC_MSG_ERROR([gtk-query-immodules-3.0 or gtk-query-immodules-3.0-$BITS not found])
+ fi
+ 
+-GTK2_LIBDIR=`pkg-config --variable=libdir gtk+-2.0`
++GTK2_LIBDIR=$out/etc
+ GTK2_BINARY_VERSION=`pkg-config --variable=gtk_binary_version gtk+-2.0`
+ AC_SUBST(GTK2_LIBDIR)
+ AC_SUBST(GTK2_BINARY_VERSION)
+ AC_PATH_PROGS([GTK_QUERY_IMMODULES2],
+               [gtk-query-immodules-2.0 gtk-query-immodules-2.0-$BITS], [no],
+-              [/usr/bin:$GTK2_LIBDIR/libgtk2.0-0])
++              [/usr/bin:@gtk2dev@/bin])
+ if test "x$GTK_QUERY_IMMODULES2" = "xno"; then
+   AC_MSG_ERROR([gtk-query-immodules-2.0 or gtk-query-immodules-2.0-$BITS not found])
+ fi
+@@ -200,7 +188,7 @@
+ 
+ AC_PATH_PROGS([GTK_UPDATE_ICON_CACHE],
+               [gtk-update-icon-cache-3.0 gtk-update-icon-cache], [no],
+-              [/usr/bin:$GTK3_LIBDIR/libgtk-3-0:$GTK2_LIBDIR/libgtk2.0-0])
++              [/usr/bin:@gtk3@/bin:$GTK2_LIBDIR/libgtk2.0-0])
+ if test "x$GTK_UPDATE_ICON_CACHE" = "xno"; then
+   AC_MSG_ERROR([gtk-update-icon-cache-3.0 or gtk-update-icon-cache not found])
+ fi
