@@ -47,7 +47,7 @@ let
     preAutoreconf = ''
       touch ChangeLog
     '';
-  });
+  };
 in
 stdenv.mkDerivation rec {
   pname = "nimf";
