@@ -231,13 +231,15 @@ stdenv.mkDerivation rec {
 
   postInstall = ''
     echo "##### 0 ######"
-    ls #out/bin
+    ls $out/bin
     echo "##### 1 ######"
-    ls $out/include
+    ls $out/etc
     echo "##### 2 ######"
-    ls #out/lib
+    ls $out/include
     echo "##### 3 ######"
-    ls #out/share
+    ls $out/lib
+    echo "##### 4 ######"
+    ls $out/share
     mv $out/etc/gtk-3.0 $out/lib/gtk-3.0
     mv $out/etc/gtk-2.0 $out/lib/gtk-2.0
   '';
