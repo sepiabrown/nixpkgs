@@ -82,6 +82,7 @@ stdenv.mkDerivation rec {
     wayland
     libxklavier
     noto-fonts
+    libhangul
   ];
 
   buildInputs =
