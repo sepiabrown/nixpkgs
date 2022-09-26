@@ -230,7 +230,14 @@ stdenv.mkDerivation rec {
   '';
 
   postInstall = ''
-    glib-compile-schemas $out/share/gsettings-schemas/nimf-1.3.0/glib-2.0/schemas/
+    echo "##### 1 ######"
+    ls $out
+    echo "##### 2 ######"
+    ls #out/etc
+    echo "##### 3 ######"
+    ls #out/etc/gtk-3.0
+    mv $out/etc/gtk-3.0 $out/lib/gtk-3.0
+    mv $out/etc/gtk-2.0 $out/lib/gtk-2.0
   '';
   #  substituteInPlace modules/clients/qt5/Makefile.am \
   #  --replace "-I \''$(QT5_CORE_PRIVATE_INCLUDE_PATH) \\" "\\" \
