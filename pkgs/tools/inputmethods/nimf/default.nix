@@ -10,6 +10,8 @@
 , intltool
 , expat
 , glib
+#, makeWrapper
+, wrapGAppsHook
 , gtk-doc
 , libxkbcommon
 , m17n_lib
@@ -19,7 +21,6 @@
 , qt5
 , gtk2
 , gtk3
-, wrapGAppsHook
 , libayatana-appindicator
 , librsvg
 , wayland
@@ -48,7 +49,7 @@ let
     '';
   };
 in
-stdenv.mkDerivation rec {
+mkDerivation rec {
   pname = "nimf";
   version = "1.3.0";
   src = fetchurl {
@@ -63,17 +64,16 @@ stdenv.mkDerivation rec {
     libtool
     intltool
     glib
+    wrapGAppsHook
     gtk-doc
     libxkbcommon
     m17n_lib
     m17n_db
     librime
     anthy
-    qt5.qtbase
-    qt5.wrapQtAppsHook
+    qtbase
     gtk2
     gtk3
-    wrapGAppsHook
     libayatana-appindicator
     librsvg
     wayland
@@ -85,16 +85,9 @@ stdenv.mkDerivation rec {
   buildInputs =
     [
       gtk3
-      wrapGAppsHook
     ];
 
-  dontWrapQtApps = true;
-
   patches = [
-    #(substituteAll {
-    #  src = ./nimf-settings.patch;
-    #  nimf_gsettings_path = glib.makeSchemaPath "$out" "${pname}-${version}";
-    #})
     (substituteAll {
       src = ./configure.patch;
       inherit anthy;
@@ -104,9 +97,6 @@ stdenv.mkDerivation rec {
       gtk3dev = gtk3.dev;
     })
   ];
-
-    #substituteInPlace bin/nimf-settings/nimf-settings.c \
-    #--subst-var-by nimf_gsettings_path ${glib.makeSchemaPath "$out" "${pname}-${version}"}
 
   postPatch = ''
     substituteInPlace bin/nimf-settings/Makefile.am \
@@ -127,11 +117,11 @@ stdenv.mkDerivation rec {
     mv $out/etc/gtk-2.0 $out/lib/gtk-2.0
   '';
 
-  preFixup = ''
-    gappsWrapperArgs+=(
-      --set GSETTINGS_SCHEMA_DIR ${glib.makeSchemaPath "$out" "${pname}-${version}"}
-    )
-  '';
+  #preFixup = ''
+  #  gappsWrapperArgs+=(
+  #    --set GSETTINGS_SCHEMA_DIR ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+  #  )
+  #'';
   meta = with lib; {
     description = "Nimf IME";
     homepage = "https://remotedesktop.google.com/";
