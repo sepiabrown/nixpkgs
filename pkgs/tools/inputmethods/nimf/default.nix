@@ -12,13 +12,14 @@
 , glib
 #, makeWrapper
 , wrapGAppsHook
+, wrapQtAppsHook
 , gtk-doc
 , libxkbcommon
 , m17n_lib
 , m17n_db
 , librime
 , anthy
-, qt5
+, qtbase
 , gtk2
 , gtk3
 , libayatana-appindicator
@@ -65,14 +66,14 @@ stdenv.mkDerivation rec {
     intltool
     glib
     wrapGAppsHook
+    wrapQtAppsHook
     gtk-doc
     libxkbcommon
     m17n_lib
     m17n_db
     librime
     anthy
-    qt5.qtbase
-    qt5.wrapQtAppsHook
+    qtbase
     gtk2
     gtk3
     libayatana-appindicator
@@ -118,11 +119,12 @@ stdenv.mkDerivation rec {
     mv $out/etc/gtk-2.0 $out/lib/gtk-2.0
   '';
 
-  #preFixup = ''
-  #  gappsWrapperArgs+=(
-  #    --set GSETTINGS_SCHEMA_DIR ${glib.makeSchemaPath "$out" "${pname}-${version}"}
-  #  )
-  #'';
+  dontWrapGApps = true;
+
+  preFixup = ''
+    qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
+  '';
+
   meta = with lib; {
     description = "Nimf IME";
     homepage = "https://remotedesktop.google.com/";
