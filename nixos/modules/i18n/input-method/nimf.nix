@@ -28,9 +28,9 @@ in
   config = mkIf (config.i18n.inputMethod.enabled == "nimf") {
     i18n.inputMethod.package = pkgs.nimf;
     
-    #environment.systemPackages = [
-    #  nimfAutostart
-    #];
+    environment.systemPackages = [
+      nimfAutostart
+    ];
 
     programs.dconf.enable = true;
 
@@ -48,7 +48,7 @@ in
       pkgs.nimf
     ];
 
-    environment.sessionVariables.XDG_DATA_DIRS = [ "${pkgs.glib.getSchemaPath pkgs.nimf}/test" ];
+    environment.sessionVariables.XDG_DATA_DIRS = [ "${pkgs.glib.getSchemaPath pkgs.nimf}" ];
 
     # uses attributes of the linked package
     meta.buildDocsInSandbox = false;
