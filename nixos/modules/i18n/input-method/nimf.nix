@@ -28,9 +28,9 @@ in
   config = mkIf (config.i18n.inputMethod.enabled == "nimf") {
     i18n.inputMethod.package = pkgs.nimf;
     
-    environment.systemPackages = [
-      nimfAutostart
-    ];
+    #environment.systemPackages = [
+    #  nimfAutostart
+    #];
 
     programs.dconf.enable = true;
 
