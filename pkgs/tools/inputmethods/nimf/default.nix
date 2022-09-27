@@ -93,7 +93,7 @@ stdenv.mkDerivation rec {
     (substituteAll {
       src = ./configure.patch;
       inherit anthy;
-      qtPluginPrefix = qt5.qtbase.qtPluginPrefix;
+      qtPluginPrefix = qtbase.qtPluginPrefix;
       gtk2dev = gtk2.dev;
       gtk3 = gtk3;
       gtk3dev = gtk3.dev;
