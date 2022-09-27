@@ -1,32 +1,32 @@
-{  stdenv
-   , lib
-   , fetchurl
-   , fetchFromGitHub
-   , substituteAll
-   , autoreconfHook
-   #, autoconf
-   #, automake
-   , which
-   , pkg-config
-   , libtool
-   , intltool
-   , expat
-   , glib
-   , gtk-doc
-   , libxkbcommon
-   , m17n_lib
-   , m17n_db
-   , librime
-   , anthy
-   , qt5
-   , gtk2
-   , gtk3
-   , wrapGAppsHook
-   , libayatana-appindicator
-   , librsvg
-   , wayland
-   , libxklavier
-   , noto-fonts
+{ stdenv
+, lib
+, fetchurl
+, fetchFromGitHub
+, substituteAll
+, autoreconfHook
+  #, autoconf
+  #, automake
+, which
+, pkg-config
+, libtool
+, intltool
+, expat
+, glib
+, gtk-doc
+, libxkbcommon
+, m17n_lib
+, m17n_db
+, librime
+, anthy
+, qt5
+, gtk2
+, gtk3
+, wrapGAppsHook
+, libayatana-appindicator
+, librsvg
+, wayland
+, libxklavier
+, noto-fonts
 }:
 let
   libhangul = stdenv.mkDerivation {
@@ -63,17 +63,17 @@ stdenv.mkDerivation rec {
     #autoconf
     #automake
     which
-    pkg-config 
-    libtool 
-    intltool 
-    glib 
-    gtk-doc 
-    libxkbcommon 
+    pkg-config
+    libtool
+    intltool
+    glib
+    gtk-doc
+    libxkbcommon
     m17n_lib
     m17n_db
     librime
-    anthy 
-    qt5.qtbase 
+    anthy
+    qt5.qtbase
     qt5.wrapQtAppsHook
     gtk2
     gtk3
@@ -87,10 +87,10 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs =
-  [
-    gtk3
-    wrapGAppsHook
-  ];
+    [
+      gtk3
+      wrapGAppsHook
+    ];
 
   dontWrapQtApps = true;
 
@@ -105,7 +105,7 @@ stdenv.mkDerivation rec {
     })
   ];
 
-    #mkdir -p $out/lib
+  #mkdir -p $out/lib
   postPatch = ''
     substituteInPlace bin/nimf-settings/Makefile.am \
     --replace /etc $out/etc
@@ -120,6 +120,7 @@ stdenv.mkDerivation rec {
   postInstall = ''
     mv $out/etc/gtk-3.0 $out/lib/gtk-3.0
     mv $out/etc/gtk-2.0 $out/lib/gtk-2.0
+    glib-compile-schemas $out/share/gsettings-schemas/nimf-1.3.0/glib-2.0/schemas/
   '';
 
   meta = with lib; {
