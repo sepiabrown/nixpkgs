@@ -106,6 +106,9 @@ stdenv.mkDerivation rec {
   ];
 
   postPatch = ''
+    substituteInPlace bin/nimf-settings/nimf-settings.c \
+    --subst-var-by nimf_gsettings_path ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+
     substituteInPlace bin/nimf-settings/Makefile.am \
     --replace /etc $out/etc
 
