@@ -49,7 +49,7 @@ let
     '';
   };
 in
-mkDerivation rec {
+stdenv.mkDerivation rec {
   pname = "nimf";
   version = "1.3.0";
   src = fetchurl {
@@ -71,7 +71,8 @@ mkDerivation rec {
     m17n_db
     librime
     anthy
-    qtbase
+    qt5.qtbase
+    qt5.wrapQtAppsHook
     gtk2
     gtk3
     libayatana-appindicator
