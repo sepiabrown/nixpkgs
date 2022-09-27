@@ -119,14 +119,14 @@ stdenv.mkDerivation rec {
 
   dontWrapGApps = true;
 
-  preFixup = ''
-    qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
-  '';
+  #preFixup = ''
+  #  qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
+  #'';
 
   meta = with lib; {
     description = "Nimf IME";
-    homepage = "https://remotedesktop.google.com/";
-    license = licenses.mit;
+    homepage = "https://github.com/hamonikr/nimf";
+    license = licenses.lgpl3Plus;
     platforms = [ "x86_64-linux" ];
     maintainers = with maintainers; [ sepiabrown ];
   };
