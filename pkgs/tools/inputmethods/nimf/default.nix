@@ -4,8 +4,6 @@
 , fetchFromGitHub
 , substituteAll
 , autoreconfHook
-  #, autoconf
-  #, automake
 , which
 , pkg-config
 , libtool
@@ -54,14 +52,12 @@ stdenv.mkDerivation rec {
   pname = "nimf";
   version = "1.3.0";
   src = fetchurl {
-    url = "https://github.com/hamonikr/nimf/archive/refs/tags/1.3.0hamonikr40.8.tar.gz";
+    url = "https://github.com/hamonikr/${pname}/archive/refs/tags/${version}hamonikr40.8.tar.gz";
     sha256 = "sha256-uhxFOciSXRbDBsWo4J5xgPbxc3Fzb0Dn1QHNkOxohsE=";
   };
 
   nativeBuildInputs = [
     autoreconfHook
-    #autoconf
-    #automake
     which
     pkg-config
     libtool
@@ -96,6 +92,10 @@ stdenv.mkDerivation rec {
 
   patches = [
     (substituteAll {
+      src = ./nimf-settings.patch;
+      nimf_gsettings_path = glib.makeSchemaPath "$out" "${pname}-${version}";
+    })
+    (substituteAll {
       src = ./configure.patch;
       inherit anthy;
       qtPluginPrefix = qt5.qtbase.qtPluginPrefix;
@@ -105,7 +105,6 @@ stdenv.mkDerivation rec {
     })
   ];
 
-  #mkdir -p $out/lib
   postPatch = ''
     substituteInPlace bin/nimf-settings/Makefile.am \
     --replace /etc $out/etc
@@ -115,12 +114,14 @@ stdenv.mkDerivation rec {
 
     substituteInPlace data/Makefile.am \
     --replace /etc $out/etc
+
+    substituteInPlace data/imsettings/Makefile.am \
+    --replace /etc $out/etc
   '';
 
   postInstall = ''
     mv $out/etc/gtk-3.0 $out/lib/gtk-3.0
     mv $out/etc/gtk-2.0 $out/lib/gtk-2.0
-    glib-compile-schemas $out/share/gsettings-schemas/nimf-1.3.0/glib-2.0/schemas/
   '';
 
   meta = with lib; {
