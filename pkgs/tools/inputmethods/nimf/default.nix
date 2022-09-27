@@ -119,9 +119,9 @@ stdenv.mkDerivation rec {
 
   dontWrapGApps = true;
 
-  #preFixup = ''
-  #  qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
-  #'';
+  preFixup = ''
+    qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
+  '';
 
   meta = with lib; {
     description = "Nimf IME";
