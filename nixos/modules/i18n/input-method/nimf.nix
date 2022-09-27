@@ -11,7 +11,7 @@ let
       Name=Nimf
       GenericName=Input Method
       Comment=Start Input Method
-      Exec=${pkgs.nimf}/bin/nimf
+      Exec=${pkgs.nimf}/bin/nimf &
       Icon=nimf-logo
       Terminal=false
       Type=Application
