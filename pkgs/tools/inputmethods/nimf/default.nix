@@ -88,9 +88,14 @@ stdenv.mkDerivation rec {
     ];
 
   patches = [
+    ./nimf-settings.patch
+    ./im-nimf-qt5.patch
+    ./nimf-utils.patch
+    ./nimf-server.patch
     (substituteAll {
       src = ./configure.patch;
       inherit anthy;
+      #qt5 = qt5.qtbase;
       qtPluginPrefix = qt5.qtbase.qtPluginPrefix;
       gtk2dev = gtk2.dev;
       gtk3 = gtk3;
@@ -99,6 +104,18 @@ stdenv.mkDerivation rec {
   ];
 
   postPatch = ''
+    substituteInPlace bin/nimf-settings/nimf-settings.c \
+    --subst-var-by nimf_gsettings_path ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+
+    substituteInPlace modules/clients/qt5/im-nimf-qt5.cpp \
+    --subst-var-by nimf_gsettings_path ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+
+    substituteInPlace libnimf/nimf-utils.c \
+    --subst-var-by nimf_gsettings_path ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+
+    substituteInPlace libnimf/nimf-server.c \
+    --subst-var-by nimf_gsettings_path ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+
     substituteInPlace bin/nimf-settings/Makefile.am \
     --replace /etc $out/etc
 
