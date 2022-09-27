@@ -10,9 +10,7 @@
 , intltool
 , expat
 , glib
-#, makeWrapper
 , wrapGAppsHook
-, wrapQtAppsHook
 , gtk-doc
 , libxkbcommon
 , m17n_lib
@@ -66,7 +64,7 @@ stdenv.mkDerivation rec {
     intltool
     glib
     wrapGAppsHook
-    wrapQtAppsHook
+    qt5.wrapQtAppsHook
     gtk-doc
     libxkbcommon
     m17n_lib
