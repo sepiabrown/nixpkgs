@@ -91,10 +91,10 @@ stdenv.mkDerivation rec {
   dontWrapQtApps = true;
 
   patches = [
-    (substituteAll {
-      src = ./nimf-settings.patch;
-      nimf_gsettings_path = glib.makeSchemaPath "$out" "${pname}-${version}";
-    })
+    #(substituteAll {
+    #  src = ./nimf-settings.patch;
+    #  nimf_gsettings_path = glib.makeSchemaPath "$out" "${pname}-${version}";
+    #})
     (substituteAll {
       src = ./configure.patch;
       inherit anthy;
@@ -105,10 +105,10 @@ stdenv.mkDerivation rec {
     })
   ];
 
-  postPatch = ''
-    substituteInPlace bin/nimf-settings/nimf-settings.c \
-    --subst-var-by nimf_gsettings_path ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+    #substituteInPlace bin/nimf-settings/nimf-settings.c \
+    #--subst-var-by nimf_gsettings_path ${glib.makeSchemaPath "$out" "${pname}-${version}"}
 
+  postPatch = ''
     substituteInPlace bin/nimf-settings/Makefile.am \
     --replace /etc $out/etc
 
@@ -127,6 +127,11 @@ stdenv.mkDerivation rec {
     mv $out/etc/gtk-2.0 $out/lib/gtk-2.0
   '';
 
+  preFixup = ''
+    gappsWrapperArgs+=(
+      --set GSETTINGS_SCHEMA_DIR ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+    )
+  '';
   meta = with lib; {
     description = "Nimf IME";
     homepage = "https://remotedesktop.google.com/";
