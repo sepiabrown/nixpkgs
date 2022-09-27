@@ -121,7 +121,8 @@ stdenv.mkDerivation rec {
 
   preFixup = ''
     qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
-    qtWrapperArgs+=(--set GSETTINGS_SCHEMA_DIR ${glib.makeSchemaPath "$out" "${pname}-${version}"})
+    qtWrapperArgs+=(--prefix GSETTINGS_SCHEMA_DIR ${glib.makeSchemaPath "$out" "${pname}-${version}"})
+    qtWrapperArgs+=(--prefix XDG_DATA_DIRS ${glib.makeSchemaPath "$out" "${pname}-${version}"})
   '';
 
   meta = with lib; {
