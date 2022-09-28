@@ -116,6 +116,7 @@ stdenv.mkDerivation rec {
   postInstall = ''
     mv $out/etc/gtk-3.0 $out/lib/gtk-3.0
     mv $out/etc/gtk-2.0 $out/lib/gtk-2.0
+    rm -rf $out/etc/xdg/autostart
   '';
 
   dontWrapGApps = true;
