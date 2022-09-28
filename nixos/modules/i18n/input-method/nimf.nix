@@ -48,7 +48,7 @@ in
     #  pkgs.nimf
     #];
 
-    #environment.sessionVariables.XDG_DATA_DIRS = [ "/home/sepiabrown/test/glib-2.0/schemas" ];
+    environment.sessionVariables.XDG_DATA_DIRS = [ "/home/sepiabrown/test/glib-2.0/schemas" ];
 
     #environment.sessionVariables.GSETTINGS_SCHEMA_DIR = [ "/home/sepiabrown/test/glib-2.0/schemas" ];
 
