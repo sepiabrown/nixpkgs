@@ -122,10 +122,11 @@ stdenv.mkDerivation rec {
 
   #dontWrapQtApps = true;
 
+      #--set GSETTINGS_SCHEMA_DIR : "/home/sepiabrown/test/glib-2.0/schemas"
   preFixup = ''
     qtWrapperArgs+=(
       "''${gappsWrapperArgs[@]}"
-      --prefix GSETTINGS_SCHEMA_DIR : "/home/sepiabrown/test/glib-2.0/schemas"
+      --set GSETTINGS_SCHEMA_DIR : "/home/sepiabrown/test/glib-2.0"
     )
   '';
 
