@@ -34,9 +34,9 @@ in
 
     programs.dconf.enable = true;
 
-    services.dbus.packages = [
-      pkgs.nimf
-    ];
+    #services.dbus.packages = [
+    #  pkgs.nimf
+    #];
 
     environment.variables = {
       GTK_IM_MODULE = "nimf";
@@ -44,11 +44,13 @@ in
       XMODIFIERS    = "@im=nimf";
     };
 
-    xdg.portal.extraPortals = mkIf config.xdg.portal.enable [
-      pkgs.nimf
-    ];
+    #xdg.portal.extraPortals = mkIf config.xdg.portal.enable [
+    #  pkgs.nimf
+    #];
 
-    environment.sessionVariables.XDG_DATA_DIRS = [ "${pkgs.glib.getSchemaPath pkgs.nimf}" ];
+    environment.sessionVariables.XDG_DATA_DIRS = [ "/home/sepiabrown/test/glib-2.0/schemas" ];
+
+    environment.sessionVariables.GSETTINGS_SCHEMA_DIR = [ "/home/sepiabrown/test/glib-2.0/schemas" ];
 
     # uses attributes of the linked package
     meta.buildDocsInSandbox = false;
