@@ -138,8 +138,8 @@ stdenv.mkDerivation rec {
 
   preFixup = ''
     qtWrapperArgs+=(
-      --set XDG_DATA_DIRS ${glib.makeSchemaPath "$out" "${pname}-${version}"}
-      --set GSETTINGS_SCHEMA_DIR ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+      "''${gappsWrapperArgs[@]}"
+      --prefix GSETTINGS_SCHEMA_DIR : "/home/sepiabrown/test/glib-2.0/schemas"
     )
   '';
 
