@@ -116,16 +116,22 @@ stdenv.mkDerivation rec {
   postInstall = ''
     mv $out/etc/gtk-3.0 $out/lib/gtk-3.0
     mv $out/etc/gtk-2.0 $out/lib/gtk-2.0
-    rm -rf $out/etc/xdg/autostart
   '';
 
   dontWrapGApps = true;
 
+  dontWrapQtApps = true;
+
+  #preFixup = ''
+  #  qtWrapperArgs+=(
+  #    "''${gappsWrapperArgs[@]}"
+  #    --prefix GSETTINGS_SCHEMA_DIR : "/home/sepiabrown/test/glib-2.0/schemas"
+  #  )
+  #'';
+
   preFixup = ''
-    qtWrapperArgs+=(
-      "''${gappsWrapperArgs[@]}"
-      --prefix GSETTINGS_SCHEMA_DIR : "/home/sepiabrown/test/glib-2.0/schemas"
-    )
+    wrapQtApp "$out/bin/nimf" --prefix GSETTINGS_SCHEMA_DIR : "/home/sepiabrown/test/glib-2.0/schemas"
+    wrapQtApp "$out/bin/nimf-settings" --prefix GSETTINGS_SCHEMA_DIR : "/home/sepiabrown/test/glib-2.0/schemas"
   '';
 
   meta = with lib; {
