@@ -120,22 +120,12 @@ stdenv.mkDerivation rec {
 
   dontWrapGApps = true;
 
-  #dontWrapQtApps = true;
-
-      #--set GSETTINGS_SCHEMA_DIR : "/home/sepiabrown/test/glib-2.0/schemas"
   preFixup = ''
     qtWrapperArgs+=(
       "''${gappsWrapperArgs[@]}"
-      --set GSETTINGS_SCHEMA_DIR "/home/sepiabrown/test/glib-2.0"
+      --prefix GSETTINGS_SCHEMA_DIR : ${glib.makeSchemaPath "$out" "${pname}-${version}"}
     )
   '';
-
-    #wrapQtApp "$out/bin/nimf" --prefix GSETTINGS_SCHEMA_DIR : "/home/sepiabrown/test/glib-2.0/schemas"
-    #wrapQtApp "$out/bin/nimf-settings" --prefix GSETTINGS_SCHEMA_DIR : "/home/sepiabrown/test/glib-2.0/schemas"
-  #preFixup = ''
-  #  wrapProgram "$out/bin/nimf" --prefix GSETTINGS_SCHEMA_DIR : "/home/sepiabrown/test/glib-2.0/schemas"
-  #  wrapProgram "$out/bin/nimf-settings" --prefix GSETTINGS_SCHEMA_DIR : "/home/sepiabrown/test/glib-2.0/schemas"
-  #'';
 
   meta = with lib; {
     description = "Nimf IME";

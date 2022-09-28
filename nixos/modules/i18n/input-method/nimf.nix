@@ -36,12 +36,9 @@ in
       XMODIFIERS    = "@im=nimf";
     };
 
-    #environment.sessionVariables.XDG_DATA_DIRS = [ "/home/sepiabrown/test/glib-2.0/schemas" ];
-
-    environment.sessionVariables.GSETTINGS_SCHEMA_DIR = [ "/home/sepiabrown/test/glib-2.0/schemas" ];
+    environment.sessionVariables.GSETTINGS_SCHEMA_DIR = [ "${pkgs.glib.getSchemaPath pkgs.nimf}" ];
 
     # uses attributes of the linked package
     meta.buildDocsInSandbox = false;
-    #services.xserver.displayManager.sessionCommands = "${pkgs.nimf}/bin/nimf &";
   };
 }
