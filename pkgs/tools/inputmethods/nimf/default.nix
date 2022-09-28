@@ -126,7 +126,7 @@ stdenv.mkDerivation rec {
   preFixup = ''
     qtWrapperArgs+=(
       "''${gappsWrapperArgs[@]}"
-      --set GSETTINGS_SCHEMA_DIR : "/home/sepiabrown/test/glib-2.0"
+      --set GSETTINGS_SCHEMA_DIR "/home/sepiabrown/test/glib-2.0"
     )
   '';
 
