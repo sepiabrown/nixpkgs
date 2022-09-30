@@ -128,7 +128,6 @@ stdenv.mkDerivation rec {
     busybox
     dpkg
     autoPatchelfHook
-    makeWrapper
     wrapGAppsHook
     glib
     libhangul
