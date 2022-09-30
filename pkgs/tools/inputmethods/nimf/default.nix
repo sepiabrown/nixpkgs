@@ -107,127 +107,52 @@ in
 stdenv.mkDerivation rec {
   pname = "nimf";
   version = "1.3.0";
-  src = fetchurl { #inputs.nimf_src;
-    url = "https://nimfsoft.art/downloads/opensuse/nimf-2022.03.05-1.leap15.x86_64.rpm";
-    sha256 = "sha256-sU0BI2m424RP6M/963la26V7MXQFlUYW+0wlqJz7bko=";
-    #sha256 = lib.fakeSha256;
-  };
-  sourceRoot = ".";
-  unpackCmd = "rpm2cpio $src | cpio -idmv";
-  #unpackPhase = "rpmextract $src";
-  installPhase = ''
-    runHook preInstall
-    mkdir -p $out
-    mv usr/{bin,share} $out
-    mv usr/lib64 $out/lib
-    mv etc $out
-    glib-compile-schemas $out/share/glib-2.0/schemas
-    runHook postInstall
-  '';
-
-  nativeBuildInputs = [ 
-    busybox
-    dpkg
-    autoPatchelfHook
-    wrapGAppsHook
-    glib
-    libhangul
-    libanthy1
-    libsunpinyin3v5
-    anthy
-    libyaml
-    m17n_lib
-    librime
-    libayatana-appindicator #
-    libappindicator
-    libxklavier
-    qt5.qtbase
-    qt5.wrapQtAppsHook
-    #qt6.qtbase
-    #qt6.wrapQtAppsHook
-    gtk2 #
-    #gtk3 #
-    gtk4 #
-  ];
-
-  dontConfigure = true;
-
-  dontBuild = true;
-
-  dontWrapGApps = true;
-
-  preFixup = ''
-    qtWrapperArgs+=(
-      "''${gappsWrapperArgs[@]}"
-      --prefix GSETTINGS_SCHEMA_DIR : ${glib.makeSchemaPath "$out" "${pname}-${version}"}
-      --prefix XDG_DATA_DIRS : ${glib.makeSchemaPath "$out" "${pname}-${version}"}
-    )
-  '';
-  #src = fetchurl {
-  #  url = "https://github.com/hamonikr/${pname}/archive/refs/tags/${version}hamonikr40.8.tar.gz";
-  #  sha256 = "sha256-uhxFOciSXRbDBsWo4J5xgPbxc3Fzb0Dn1QHNkOxohsE=";
+  #src = fetchurl { #inputs.nimf_src;
+  #  url = "https://nimfsoft.art/downloads/opensuse/nimf-2022.03.05-1.leap15.x86_64.rpm";
+  #  sha256 = "sha256-sU0BI2m424RP6M/963la26V7MXQFlUYW+0wlqJz7bko=";
+  #  #sha256 = lib.fakeSha256;
   #};
+  #sourceRoot = ".";
+  #unpackCmd = "rpm2cpio $src | cpio -idmv";
+  ##unpackPhase = "rpmextract $src";
+  #installPhase = ''
+  #  runHook preInstall
+  #  mkdir -p $out
+  #  mv usr/{bin,share} $out
+  #  mv usr/lib64 $out/lib
+  #  mv etc $out
+  #  glib-compile-schemas $out/share/glib-2.0/schemas
+  #  runHook postInstall
+  #'';
 
-  #nativeBuildInputs = [
-  #  autoreconfHook
-  #  which
-  #  pkg-config
-  #  libtool
-  #  intltool
-  #  glib
+  #nativeBuildInputs = [ 
+  #  busybox
+  #  dpkg
+  #  autoPatchelfHook
   #  wrapGAppsHook
-  #  qt5.wrapQtAppsHook
-  #  gtk-doc
-  #  libxkbcommon
-  #  m17n_lib
-  #  m17n_db
-  #  librime
-  #  anthy
-  #  qt5.qtbase
-  #  gtk2
-  #  gtk3
-  #  libayatana-appindicator
-  #  librsvg
-  #  wayland
-  #  libxklavier
-  #  noto-fonts
+  #  glib
   #  libhangul
+  #  libanthy1
+  #  libsunpinyin3v5
+  #  anthy
+  #  libyaml
+  #  m17n_lib
+  #  librime
+  #  libayatana-appindicator #
+  #  libappindicator
+  #  libxklavier
+  #  qt5.qtbase
+  #  qt5.wrapQtAppsHook
+  #  #qt6.qtbase
+  #  #qt6.wrapQtAppsHook
+  #  gtk2 #
+  #  #gtk3 #
+  #  gtk4 #
   #];
 
-  ##buildInputs = [
-  ##  librime
-  ##];
+  #dontConfigure = true;
 
-  #patches = [
-  #  (substituteAll {
-  #    src = ./configure.patch;
-  #    inherit anthy;
-  #    #qt5 = qt5.qtbase;
-  #    qtPluginPrefix = qt5.qtbase.qtPluginPrefix;
-  #    gtk2dev = gtk2.dev;
-  #    gtk3 = gtk3;
-  #    gtk3dev = gtk3.dev;
-  #  })
-  #];
-
-  #postPatch = ''
-  #  substituteInPlace bin/nimf-settings/Makefile.am \
-  #  --replace /etc $out/etc
-
-  #  substituteInPlace data/apparmor-abstractions/Makefile.am \
-  #  --replace /etc $out/etc
-
-  #  substituteInPlace data/Makefile.am \
-  #  --replace /etc $out/etc
-
-  #  substituteInPlace data/imsettings/Makefile.am \
-  #  --replace /etc $out/etc
-  #'';
-
-  #postInstall = ''
-  #  mv $out/etc/gtk-3.0 $out/lib/gtk-3.0
-  #  mv $out/etc/gtk-2.0 $out/lib/gtk-2.0
-  #'';
+  #dontBuild = true;
 
   #dontWrapGApps = true;
 
@@ -235,8 +160,84 @@ stdenv.mkDerivation rec {
   #  qtWrapperArgs+=(
   #    "''${gappsWrapperArgs[@]}"
   #    --prefix GSETTINGS_SCHEMA_DIR : ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+  #    --prefix XDG_DATA_DIRS : ${glib.makeSchemaPath "$out" "${pname}-${version}"}
   #  )
   #'';
+
+  src = fetchurl {
+    url = "https://github.com/hamonikr/${pname}/archive/refs/tags/${version}hamonikr40.8.tar.gz";
+    sha256 = "sha256-uhxFOciSXRbDBsWo4J5xgPbxc3Fzb0Dn1QHNkOxohsE=";
+  };
+
+  nativeBuildInputs = [
+    autoreconfHook
+    which
+    pkg-config
+    libtool
+    intltool
+    glib
+    wrapGAppsHook
+    qt5.wrapQtAppsHook
+    gtk-doc
+    libxkbcommon
+    m17n_lib
+    m17n_db
+    librime
+    anthy
+    qt5.qtbase
+    gtk2
+    gtk3
+    libayatana-appindicator
+    librsvg
+    wayland
+    libxklavier
+    noto-fonts
+    libhangul
+  ];
+
+  #buildInputs = [
+  #  librime
+  #];
+
+  patches = [
+    (substituteAll {
+      src = ./configure.patch;
+      inherit anthy;
+      #qt5 = qt5.qtbase;
+      qtPluginPrefix = qt5.qtbase.qtPluginPrefix;
+      gtk2dev = gtk2.dev;
+      gtk3 = gtk3;
+      gtk3dev = gtk3.dev;
+    })
+  ];
+
+  postPatch = ''
+    substituteInPlace bin/nimf-settings/Makefile.am \
+    --replace /etc $out/etc
+
+    substituteInPlace data/apparmor-abstractions/Makefile.am \
+    --replace /etc $out/etc
+
+    substituteInPlace data/Makefile.am \
+    --replace /etc $out/etc
+
+    substituteInPlace data/imsettings/Makefile.am \
+    --replace /etc $out/etc
+  '';
+
+  postInstall = ''
+    mv $out/etc/gtk-3.0 $out/lib/gtk-3.0
+    mv $out/etc/gtk-2.0 $out/lib/gtk-2.0
+  '';
+
+  dontWrapGApps = true;
+
+  preFixup = ''
+    qtWrapperArgs+=(
+      "''${gappsWrapperArgs[@]}"
+      --prefix GSETTINGS_SCHEMA_DIR : ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+    )
+  '';
 
   meta = with lib; {
     description = "Nimf IME";
