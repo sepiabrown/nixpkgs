@@ -26,6 +26,7 @@
 , qt5
 , gtk2
 , gtk3
+, gtk4
 , libayatana-appindicator
 , libappindicator
 , librsvg
