@@ -241,6 +241,13 @@ let
     #    --prefix GSETTINGS_SCHEMA_DIR : ${glib.makeSchemaPath "$out" "${pname}-${version}"}
     #  )
     #'';
+    meta = with lib; {
+      description = "Nimf IME";
+      homepage = "https://github.com/hamonikr/nimf";
+      license = licenses.lgpl3Plus;
+      platforms = [ "x86_64-linux" ];
+      maintainers = with maintainers; [ sepiabrown ];
+    };
   };
 in
   buildFHSUserEnvBubblewrap {
@@ -248,13 +255,5 @@ in
     targetPkgs = pkgs: [ nimf_unwrapped ];
     multiPkgs = pkgs: [  ];
     runScript = "nimf";
-  };
-
-  meta = with lib; {
-    description = "Nimf IME";
-    homepage = "https://github.com/hamonikr/nimf";
-    license = licenses.lgpl3Plus;
-    platforms = [ "x86_64-linux" ];
-    maintainers = with maintainers; [ sepiabrown ];
   };
 }
