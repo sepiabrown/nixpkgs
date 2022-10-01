@@ -113,7 +113,7 @@ let
     };
     sourceRoot = ".";
     unpackCmd = "rpm2cpio $src | cpio -idmv";
-    #unpackPhase = "rpmextract $src";
+    #unpackCmd = "rpmextract $src";
     installPhase = ''
       runHook preInstall
       mkdir -p $out
@@ -155,13 +155,17 @@ let
   
     dontWrapGApps = true;
   
+    #dontWrapQtApps = true;
+
     preFixup = ''
       qtWrapperArgs+=(
         "''${gappsWrapperArgs[@]}"
-        --prefix GSETTINGS_SCHEMA_DIR : ${glib.makeSchemaPath "$out" "${pname}-${version}"}
-        --prefix XDG_DATA_DIRS : ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+        --prefix GSETTINGS_SCHEMA_DIR : "/usr/share/glib-2.0/schemas"
+        --prefix XDG_DATA_DIRS : "/usr/share/glib-2.0/schemas"
       )
     '';
+        #--prefix GSETTINGS_SCHEMA_DIR : ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+        #--prefix XDG_DATA_DIRS : ${glib.makeSchemaPath "$out" "${pname}-${version}"}
   
     #src = fetchurl {
     #  url = "https://github.com/hamonikr/${pname}/archive/refs/tags/${version}hamonikr40.8.tar.gz";
@@ -241,7 +245,7 @@ let
 in
   buildFHSUserEnvBubblewrap {
     name = "nimf";
-    targetPkgs = pkgs: [ packages.nimf_unwrapped ];
+    targetPkgs = pkgs: [ nimf_unwrapped ];
     multiPkgs = pkgs: [  ];
     runScript = "nimf";
   };
