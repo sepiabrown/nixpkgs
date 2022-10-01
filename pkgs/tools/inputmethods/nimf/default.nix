@@ -255,5 +255,5 @@ in
     name = "nimf";
     targetPkgs = pkgs: [ nimf_unwrapped ];
     multiPkgs = pkgs: [  ];
-    runScript = "nimf";
+    runScript = "nimf-settings";
   }
