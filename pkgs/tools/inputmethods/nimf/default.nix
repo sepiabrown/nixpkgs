@@ -255,5 +255,4 @@ in
     targetPkgs = pkgs: [ nimf_unwrapped ];
     multiPkgs = pkgs: [  ];
     runScript = "nimf";
-  };
-}
+  }
