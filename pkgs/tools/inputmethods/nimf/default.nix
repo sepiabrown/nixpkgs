@@ -108,26 +108,27 @@ let
     pname = "nimf";
     version = "2022.09.29";
     src = fetchurl { #inputs.nimf_src;
-      url = "https://nimfsoft.art/downloads/opensuse/nimf-2022.03.05-1.leap15.x86_64.rpm";
-      sha256 = "sha256-sU0BI2m424RP6M/963la26V7MXQFlUYW+0wlqJz7bko=";
-      #sha256 = lib.fakeSha256;
+      url = "https://nimfsoft.art/downloads/archlinux/x86_64/nimf-2022.10.01-20221001-x86_64.pkg.tar.zst";
+      #sha256 = "sha256-sU0BI2m424RP6M/963la26V7MXQFlUYW+0wlqJz7bko=";
+      sha256 = lib.fakeSha256;
     };
     sourceRoot = ".";
-    unpackCmd = "rpm2cpio $src | cpio -idmv";
-    #unpackCmd = "rpmextract $src";
+    #unpackCmd = "rpm2cpio $src | cpio -idmv";
+    #unpackCmd = "tar -xvf $src";
     installPhase = ''
       runHook preInstall
       mkdir -p $out
-      mv usr/{bin,share} $out
-      mv usr/lib64 $out/lib
+      mv usr/{bin,lib,share} $out
       mv etc $out
+      rm -r $out/lib/qt
       glib-compile-schemas $out/share/glib-2.0/schemas
       runHook postInstall
     '';
   
     nativeBuildInputs = [ 
-      busybox
-      dpkg
+      zstd
+      #busybox
+      #dpkg
       autoPatchelfHook
       wrapGAppsHook
       glib
@@ -161,12 +162,12 @@ let
     preFixup = ''
       qtWrapperArgs+=(
         "''${gappsWrapperArgs[@]}"
-        --prefix GSETTINGS_SCHEMA_DIR : "/usr/share/glib-2.0/schemas"
-        --prefix XDG_DATA_DIRS : "/usr/share/glib-2.0/schemas"
+        --prefix GSETTINGS_SCHEMA_DIR : ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+        --prefix XDG_DATA_DIRS : ${glib.makeSchemaPath "$out" "${pname}-${version}"}
       )
     '';
-        #--prefix GSETTINGS_SCHEMA_DIR : ${glib.makeSchemaPath "$out" "${pname}-${version}"}
-        #--prefix XDG_DATA_DIRS : ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+        #--prefix GSETTINGS_SCHEMA_DIR : "/usr/share/glib-2.0/schemas"
+        #--prefix XDG_DATA_DIRS : "/usr/share/glib-2.0/schemas"
   
     #src = fetchurl {
     #  url = "https://github.com/hamonikr/${pname}/archive/refs/tags/${version}hamonikr40.8.tar.gz";
@@ -251,9 +252,10 @@ let
     };
   };
 in
-  buildFHSUserEnvBubblewrap {
-    name = "nimf";
-    targetPkgs = pkgs: [ nimf_unwrapped ];
-    multiPkgs = pkgs: [  ];
-    runScript = "nimf-settings";
-  }
+  nimf_unwrapped
+  #buildFHSUserEnvBubblewrap {
+  #  name = "nimf";
+  #  targetPkgs = pkgs: [ nimf_unwrapped ];
+  #  multiPkgs = pkgs: [  ];
+  #  runScript = "nimf-settings";
+  #}
