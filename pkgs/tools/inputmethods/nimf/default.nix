@@ -26,6 +26,7 @@
 , anthy
 , libyaml
 , qt5
+, qt6
 , gtk2
 , gtk3
 , gtk4
@@ -143,10 +144,10 @@ let
       libayatana-appindicator #
       libappindicator
       libxklavier
-      qt5.qtbase
-      qt5.wrapQtAppsHook
-      #qt6.qtbase
-      #qt6.wrapQtAppsHook
+      #qt5.qtbase
+      #qt5.wrapQtAppsHook
+      qt6.qtbase
+      qt6.wrapQtAppsHook
       gtk2 #
       #gtk3 #
       gtk4 #
