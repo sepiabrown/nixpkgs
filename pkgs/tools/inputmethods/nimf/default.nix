@@ -1,6 +1,4 @@
 { stdenv
-, buildFHSUserEnvBubblewrap
-, zstd
 , lib
 , autoPatchelfHook
 , busybox
@@ -26,7 +24,6 @@
 , anthy
 , libyaml
 , qt5
-, qt6
 , gtk2
 , gtk3
 , gtk4
@@ -110,27 +107,26 @@ let
     pname = "nimf";
     version = "2022.09.29";
     src = fetchurl { #inputs.nimf_src;
-      url = "https://nimfsoft.art/downloads/archlinux/x86_64/nimf-2022.10.01-20221001-x86_64.pkg.tar.zst";
-      sha256 = "sha256-Ag6qs5f48bS6sbB/DjDmJp+T3wKTDiy1X9//WlSZbso=";
+      url = "https://nimfsoft.art/downloads/opensuse/nimf-2022.03.05-1.leap15.x86_64.rpm";
+      sha256 = "sha256-sU0BI2m424RP6M/963la26V7MXQFlUYW+0wlqJz7bko=";
       #sha256 = lib.fakeSha256;
     };
     sourceRoot = ".";
-    #unpackCmd = "rpm2cpio $src | cpio -idmv";
-    #unpackCmd = "tar -xvf $src";
+    unpackCmd = "rpm2cpio $src | cpio -idmv";
+    #unpackPhase = "rpmextract $src";
     installPhase = ''
       runHook preInstall
       mkdir -p $out
-      mv usr/{bin,lib,share} $out
+      mv usr/{bin,share} $out
+      mv usr/lib64 $out/lib
       mv etc $out
-      rm -r $out/lib/qt
       glib-compile-schemas $out/share/glib-2.0/schemas
       runHook postInstall
     '';
   
     nativeBuildInputs = [ 
-      zstd
-      #busybox
-      #dpkg
+      busybox
+      dpkg
       autoPatchelfHook
       wrapGAppsHook
       glib
@@ -144,10 +140,10 @@ let
       libayatana-appindicator #
       libappindicator
       libxklavier
-      #qt5.qtbase
-      #qt5.wrapQtAppsHook
-      qt6.qtbase
-      qt6.wrapQtAppsHook
+      qt5.qtbase
+      qt5.wrapQtAppsHook
+      #qt6.qtbase
+      #qt6.wrapQtAppsHook
       gtk2 #
       #gtk3 #
       gtk4 #
@@ -159,17 +155,14 @@ let
   
     dontWrapGApps = true;
   
-    #dontWrapQtApps = true;
-
-    preFixup = ''
-      qtWrapperArgs+=(
-        "''${gappsWrapperArgs[@]}"
-        --prefix GSETTINGS_SCHEMA_DIR : ${glib.makeSchemaPath "$out" "${pname}-${version}"}
-        --prefix XDG_DATA_DIRS : ${glib.makeSchemaPath "$out" "${pname}-${version}"}
-      )
-    '';
-        #--prefix GSETTINGS_SCHEMA_DIR : "/usr/share/glib-2.0/schemas"
-        #--prefix XDG_DATA_DIRS : "/usr/share/glib-2.0/schemas"
+    dontWrapQtApps = true;
+    #preFixup = ''
+    #  qtWrapperArgs+=(
+    #    "''${gappsWrapperArgs[@]}"
+    #    --prefix GSETTINGS_SCHEMA_DIR : ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+    #    --prefix XDG_DATA_DIRS : ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+    #  )
+    #'';
   
     #src = fetchurl {
     #  url = "https://github.com/hamonikr/${pname}/archive/refs/tags/${version}hamonikr40.8.tar.gz";
@@ -245,19 +238,20 @@ let
     #    --prefix GSETTINGS_SCHEMA_DIR : ${glib.makeSchemaPath "$out" "${pname}-${version}"}
     #  )
     #'';
-    meta = with lib; {
-      description = "Nimf IME";
-      homepage = "https://github.com/hamonikr/nimf";
-      license = licenses.lgpl3Plus;
-      platforms = [ "x86_64-linux" ];
-      maintainers = with maintainers; [ sepiabrown ];
-    };
   };
 in
-  nimf_unwrapped
-  #buildFHSUserEnvBubblewrap {
-  #  name = "nimf";
-  #  targetPkgs = pkgs: [ nimf_unwrapped ];
-  #  multiPkgs = pkgs: [  ];
-  #  runScript = "nimf-settings";
-  #}
+  buildFHSUserEnvBubblewrap {
+    name = "nimf";
+    targetPkgs = pkgs: [ packages.nimf_unwrapped ];
+    multiPkgs = pkgs: [  ];
+    runScript = "nimf";
+  };
+
+  meta = with lib; {
+    description = "Nimf IME";
+    homepage = "https://github.com/hamonikr/nimf";
+    license = licenses.lgpl3Plus;
+    platforms = [ "x86_64-linux" ];
+    maintainers = with maintainers; [ sepiabrown ];
+  };
+}
