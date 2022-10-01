@@ -1,5 +1,6 @@
 { stdenv
 , buildFHSUserEnvBubblewrap
+, zstd
 , lib
 , autoPatchelfHook
 , busybox
