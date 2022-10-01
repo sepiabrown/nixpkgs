@@ -110,8 +110,8 @@ let
     version = "2022.09.29";
     src = fetchurl { #inputs.nimf_src;
       url = "https://nimfsoft.art/downloads/archlinux/x86_64/nimf-2022.10.01-20221001-x86_64.pkg.tar.zst";
-      #sha256 = "sha256-sU0BI2m424RP6M/963la26V7MXQFlUYW+0wlqJz7bko=";
-      sha256 = lib.fakeSha256;
+      sha256 = "sha256-Ag6qs5f48bS6sbB/DjDmJp+T3wKTDiy1X9//WlSZbso=";
+      #sha256 = lib.fakeSha256;
     };
     sourceRoot = ".";
     #unpackCmd = "rpm2cpio $src | cpio -idmv";
