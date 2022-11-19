@@ -28,11 +28,12 @@
 , polkit
 , libsecret
 , evolution-data-server
+, nixosTests
 }:
 
 stdenv.mkDerivation rec {
   pname = "phosh";
-  version = "0.21.0";
+  version = "0.21.1";
 
   src = fetchFromGitLab {
     domain = "gitlab.gnome.org";
@@ -41,7 +42,7 @@ stdenv.mkDerivation rec {
     repo = pname;
     rev = "v${version}";
     fetchSubmodules = true; # including gvc and libcall-ui which are designated as subprojects
-    sha256 = "sha256-NJLuOUBQmgphGMFZN3MsIOP99YI+CxyR+JuybX3Vnpc=";
+    sha256 = "sha256-I0BWwEKvOYQ1s2IpvV70GWxhARdX6AZ+B4ypnTlLlDw=";
   };
 
   nativeBuildInputs = [
@@ -122,13 +123,15 @@ stdenv.mkDerivation rec {
     providedSessions = [
       "sm.puri.Phosh"
     ];
+
+    tests.phosh = nixosTests.phosh;
   };
 
   meta = with lib; {
     description = "A pure Wayland shell prototype for GNOME on mobile devices";
     homepage = "https://gitlab.gnome.org/World/Phosh/phosh";
     license = licenses.gpl3Plus;
-    maintainers = with maintainers; [ jtojnar masipcat zhaofengli ];
+    maintainers = with maintainers; [ masipcat zhaofengli ];
     platforms = platforms.linux;
   };
 }

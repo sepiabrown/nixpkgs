@@ -12,17 +12,17 @@ let
 in
 buildGoModule rec {
   pname = "opentelemetry-collector";
-  version = "0.60.0";
+  version = "0.64.1";
 
   src = fetchFromGitHub {
     owner = "open-telemetry";
     repo = "opentelemetry-collector";
     rev = "v${version}";
-    sha256 = "sha256-zES2795gyMQ/VoRR4/dpUsqJlGnxl0Ac9Gb05lboWlI=";
+    sha256 = "sha256-qYQWPhvWVNUqsQLTLUd4SOfW0YiXPyGBrtX8AY15FNg=";
   };
   # there is a nested go.mod
   sourceRoot = "source/cmd/otelcorecol";
-  vendorSha256 = "sha256-9YKeHCFrN7drHJpk2k9M0VGvZ54kSSb9bAiyDFEiX+g=";
+  vendorSha256 = "sha256-uq5o/wtmgGMthUqK86x+uKV7jFAd9koKucnBCKGUJMo=";
 
   preBuild = ''
     # set the build version, can't be done via ldflags
