@@ -521,6 +521,7 @@ in buildPythonPackage {
     inherit cudaPackages;
     deps = bazel-build.deps;
     libtensorflow = bazel-build.out;
+    format_tensorflow = format;
   };
 
   inherit (bazel-build) meta;
