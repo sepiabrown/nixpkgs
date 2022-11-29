@@ -311,6 +311,7 @@ in buildPythonPackage rec {
     cudaArchList = final_cudaArchList;
     # At least for 1.10.2 `torch.fft` is unavailable unless BLAS provider is MKL. This attribute allows for easy detection of its availability.
     blasProvider = blas.provider;
+    format_custom_torch = format;
   };
 
   meta = with lib; {
