@@ -20,12 +20,12 @@ let
   pyVerNoDot = builtins.replaceStrings [ "." ] [ "" ] python.pythonVersion;
   srcs = import ./binary-hashes.nix version;
   unsupported = throw "Unsupported system";
-  version = "1.12.1";
+  version = "1.11.0";
 in buildPythonPackage {
   inherit version;
 
-  pname = "torch";
-  # Don't forget to update torch to the same version.
+  pname = "pytorch";
+  # Don't forget to update pytorch to the same version.
 
   format = "wheel";
 
@@ -68,14 +68,13 @@ in buildPythonPackage {
   pythonImportsCheck = [ "torch" ];
 
   meta = with lib; {
-    description = "PyTorch: Tensors and Dynamic neural networks in Python with strong GPU acceleration";
+    description = "Open source, prototype-to-production deep learning platform";
     homepage = "https://pytorch.org/";
     changelog = "https://github.com/pytorch/pytorch/releases/tag/v${version}";
     # Includes CUDA and Intel MKL, but redistributions of the binary are not limited.
     # https://docs.nvidia.com/cuda/eula/index.html
     # https://www.intel.com/content/www/us/en/developer/articles/license/onemkl-license-faq.html
     license = licenses.bsd3;
-    sourceProvenance = with sourceTypes; [ binaryNativeCode ];
     platforms = platforms.linux ++ platforms.darwin;
     hydraPlatforms = []; # output size 3.2G on 1.11.0
     maintainers = with maintainers; [ junjihashimoto ];
