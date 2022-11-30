@@ -26,7 +26,7 @@
 , eggUnpackHook
 , eggBuildHook
 , eggInstallHook
-, emoji
+#, emoji
 }:
 
 { name ? "${attrs.pname}-${attrs.version}"
@@ -127,7 +127,7 @@ let
       ensureNewerSourcesForZipFilesHook  # move to wheel installer (pip) or builder (setuptools, flit, ...)?
       pythonRemoveTestsDirHook
     ] ++ lib.optionals ((lib.hasPrefix "tensorflow-gpu" (attrs.pname or "")) || (lib.hasPrefix "quarto" (attrs.pname or "")) ) [
-      emoji
+      python.pkgs.emoji
     ] ++ lib.optionals catchConflicts [
       setuptools pythonCatchConflictsHook
     ] ++ lib.optionals removeBinBytecode [
