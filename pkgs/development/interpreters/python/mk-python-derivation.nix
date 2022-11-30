@@ -137,8 +137,8 @@ let
       flitBuildHook
     ] ++ lib.optionals (format == "pyproject") [
       pipBuildHook
-    ] ++ lib.optionals (format == "wheel" && attrs.pname != !(lib.hasPrefix "tensorflow-gpu" name) ) [
-      (lib.warnIf !(lib.hasPrefix "tensorflow-gpu" name) ("${attrs.pname} not tensorflow-gpu mkpythonderivation") (wheelUnpackHook))
+    ] ++ lib.optionals (format == "wheel" && attrs.pname != (! (lib.hasPrefix "tensorflow-gpu" name)) ) [
+      (lib.warnIf (! (lib.hasPrefix "tensorflow-gpu" name)) ("${attrs.pname} not tensorflow-gpu mkpythonderivation") (wheelUnpackHook))
     ] ++ lib.optionals (format == "egg") [
       eggUnpackHook eggBuildHook eggInstallHook
     ] ++ lib.optionals (!(format == "other") || dontUsePipInstall) [
