@@ -26,6 +26,7 @@
 , eggUnpackHook
 , eggBuildHook
 , eggInstallHook
+, emoji
 }:
 
 { name ? "${attrs.pname}-${attrs.version}"
@@ -125,6 +126,8 @@ let
       wrapPython
       ensureNewerSourcesForZipFilesHook  # move to wheel installer (pip) or builder (setuptools, flit, ...)?
       pythonRemoveTestsDirHook
+    ] ++ lib.optionals ((lib.hasPrefix "tensorflow-gpu" (attrs.pname or "")) || (lib.hasPrefix "quarto" (attrs.pname or "")) ) [
+      emoji
     ] ++ lib.optionals catchConflicts [
       setuptools pythonCatchConflictsHook
     ] ++ lib.optionals removeBinBytecode [
@@ -137,8 +140,10 @@ let
       flitBuildHook
     ] ++ lib.optionals (format == "pyproject") [
       pipBuildHook
-    ] ++ lib.optionals (format == "wheel" && attrs.pname != (! (lib.hasPrefix "tensorflow-gpu" name)) ) [
-      (lib.warnIf (! (lib.hasPrefix "tensorflow-gpu" name)) ("${attrs.pname} not tensorflow-gpu mkpythonderivation") (wheelUnpackHook))
+    ] ++ lib.optionals (format == "wheel") [
+      #&& attrs.pname != (! (lib.hasPrefix "tensorflow-gpu" name)) ) [
+      #(lib.warnIf (! (lib.hasPrefix "tensorflow-gpu" name)) ("${attrs.pname} not tensorflow-gpu mkpythonderivation") (wheelUnpackHook))
+      wheelUnpackHook
     ] ++ lib.optionals (format == "egg") [
       eggUnpackHook eggBuildHook eggInstallHook
     ] ++ lib.optionals (!(format == "other") || dontUsePipInstall) [
