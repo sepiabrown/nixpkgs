@@ -137,7 +137,7 @@ let
       flitBuildHook
     ] ++ lib.optionals (format == "pyproject") [
       pipBuildHook
-    ] ++ lib.optionals (format == "wheel") [
+    ] ++ lib.optionals (format == "wheel" && attrs.pname != "tensorflow-gpu" ) [
       (lib.warnIf (attrs.pname != "tensorflow-gpu") ("${attrs.pname} forces format to wheel mkpythonderivation") (wheelUnpackHook))
     ] ++ lib.optionals (format == "egg") [
       eggUnpackHook eggBuildHook eggInstallHook
