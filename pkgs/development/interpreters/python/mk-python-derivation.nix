@@ -138,7 +138,7 @@ let
     ] ++ lib.optionals (format == "pyproject") [
       pipBuildHook
     ] ++ lib.optionals (format == "wheel") [
-      (lib.warnIf ((attrs.pname or name or "") != "tensorflow-gpu") ("${attrs.pname or name or ""} forces format to wheel mkpythonderivation") (wheelUnpackHook))
+      (lib.warnIf (attrs.pname == "tensorflow-gpu") ("${attrs.pname} forces format to wheel mkpythonderivation") (wheelUnpackHook))
     ] ++ lib.optionals (format == "egg") [
       eggUnpackHook eggBuildHook eggInstallHook
     ] ++ lib.optionals (!(format == "other") || dontUsePipInstall) [
