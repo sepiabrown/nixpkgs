@@ -1,14 +1,14 @@
 { lib, stdenv, fetchFromGitHub, cmake, ninja, mbedtls, sqlite }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "nanomq";
-  version = "0.13.0";
+  version = "0.13.6";
 
   src = fetchFromGitHub {
     owner = "emqx";
     repo = "nanomq";
-    rev = version;
-    hash = "sha256-fxV/X34yohh/bxOsnoVngBKiwqABQDthLgZxvomC0+g=";
+    rev = finalAttrs.version;
+    hash = "sha256-CZxUDuuXuC2MqiJZiJ/JwlORou6OXeuSieLG4LAnhuA=";
     fetchSubmodules = true;
   };
 
@@ -33,4 +33,4 @@ stdenv.mkDerivation rec {
     maintainers = with maintainers; [ sikmir ];
     platforms = platforms.unix;
   };
-}
+})
